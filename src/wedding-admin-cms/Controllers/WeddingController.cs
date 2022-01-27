@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using wedding_admin_cms.Persistance;
+using wedding_admin_cms.Persistance.Entities;
 
 namespace wedding_admin_cms.Controllers
 {
