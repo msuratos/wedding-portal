@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Col, Nav, NavItem, NavLink, Row,
-  TabContent, TabPane, Form, FormGroup,
-  Label, Input, Button, Card, CardBody, Table
+  TabContent, TabPane, FormGroup,
+  Label, Input, Button, Table
 } from 'reactstrap';
+import { addRole, getRoles } from '../apis/roleApi';
 
 const FetchData = () => {
   const [activeTab, setActiveTab] = useState('1');
@@ -12,7 +13,11 @@ const FetchData = () => {
   const [groom, setGroom] = useState('');
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [roleDescription, setRoleDescription] = useState('');
+  const [roleName, setRoleName] = useState('');
   const [wedding, setWedding] = useState({});
+
+  const roleFormRef = useRef();
 
   const createWedding = async () => {
     setLoading(true);
@@ -26,6 +31,12 @@ const FetchData = () => {
 
     setWedding(respData);
     setLoading(false);
+  };
+
+  const createRole = async (e) => {
+    e.preventDefault();
+    const newRole = await addRole({ description: roleDescription, name: roleName });
+    setRoles([...roles, newRole]);
   };
 
   const WeddingTable = ({ wedding }) => {
@@ -50,6 +61,15 @@ const FetchData = () => {
       </table>
     );
   };
+
+  useEffect(() => {
+    const init = async () => {
+      const roles = await getRoles();
+      setRoles(roles);
+    };
+
+    init();
+  }, []);
 
   return (
     <div>
@@ -94,53 +114,51 @@ const FetchData = () => {
           }
         </TabPane>
         <TabPane tabId="2">
-          <Card>
-            <CardBody>
-              <Row>
-                <Col sm={12}>
-                  <Form>
-                    <FormGroup row>
-                      <Label for="role-name" sm={2}>Role Name</Label>
-                      <Col sm={10}>
-                        <Input id="role-name" name="name" placeholder="Name of role" type="text" />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label for="role-desc" sm={2}>Description</Label>
-                      <Col sm={10}>
-                        <Input id="role-desc" name="description" placeholder="Describe the role" type="textarea" />
-                      </Col>
-                    </FormGroup>
-                    <Row>
-                      <Col sm={6}><Button style={{ width: '100%' }} type='submit' color='primary'>Submit</Button></Col>
-                      <Col sm={6}><Button style={{ width: '100%' }} color='secondary'>Cancel</Button></Col>
-                    </Row>
-                  </Form>
-                </Col>
-              </Row>
-              <Row style={{marginTop: '15px'}}>
-                <Col sm={12}>
-                  <Table className='table table-striped'>
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {roles.map(el => (
-                        <tr key={el.id}>
-                          <td scope="row">{el.name}</td>
-                          <td scope="row">{el.description}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </Col>
-              </Row>
-            </CardBody>
-          </Card>
+          <Row style={{ marginTop: '15px' }}>
+            <Col sm={12}>
+              <form onSubmit={createRole}>
+                <FormGroup row>
+                  <Label for="name" sm={2}>Role Name</Label>
+                  <Col sm={10}>
+                    <Input id="name" name="name" placeholder="Name of role" type="text" value={roleName} onChange={e => setRoleName(e.target.value)} />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="description" sm={2}>Description</Label>
+                  <Col sm={10}>
+                    <Input id="description" name="description" placeholder="Describe the role" type="textarea" value={roleDescription}
+                      onChange={e => setRoleDescription(e.target.value)} />
+                  </Col>
+                </FormGroup>
+                <Row>
+                  <Col sm={6}><Button style={{ width: '100%' }} type='submit' color='primary'>Submit</Button></Col>
+                  <Col sm={6}><Button style={{ width: '100%' }} color='secondary'>Cancel</Button></Col>
+                </Row>
+              </form>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: '15px' }}>
+            <Col sm={12}>
+              <Table className='table table-striped'>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {roles.map(el => (
+                    <tr key={el.id}>
+                      <td scope="row">{el.id}</td>
+                      <td scope="row">{el.name}</td>
+                      <td scope="row">{el.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
         </TabPane>
       </TabContent>
     </div>
