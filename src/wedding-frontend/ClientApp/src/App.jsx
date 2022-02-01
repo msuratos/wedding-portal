@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 const App = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [weddingDate, setWeddingDate] = useState(new Date('07/08/2022 13:00:00 GMT-07:00'));
+
+  const weddingDate = new Date('07/08/2022 13:00:00 GMT-07:00');
 
   const calculateTimeLeft = () => {
     const currentdate = new Date();
