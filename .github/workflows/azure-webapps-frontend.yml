@@ -49,15 +49,12 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-            
-      - name: change directory to frontend
-        run: cd ./src/wedding-frontend/
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: cd ./src/wedding-frontend && dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: cd ./src/wedding-frontend && dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
