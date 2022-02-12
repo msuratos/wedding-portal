@@ -1,0 +1,95 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appservicePlanName": {
+      "type": "string"
+    },
+    "adminUrlDisplayName": {
+      "type": "string",
+      "metadata": {
+        "description": "Url name for the wedding admin application"
+      }
+    },
+    "frontendUrlDisplayName": {
+      "type": "string",
+      "metadata": {
+        "description": "Url name for the wedding admin application"
+      }
+    },
+    "sku": {
+      "type": "string"
+    },
+    "skucode": {
+      "type": "string"
+    },
+    "workerSize": {
+      "type": "string"
+    },
+    "workerSizeId": {
+      "type": "string"
+    },
+    "numberOfWorkers": {
+      "type": "string"
+    }
+  },
+  "functions": [],
+  "variables": {},
+  "resources": [
+    {
+      "apiVersion": "2021-02-01",
+      "name": "[parameters('appservicePlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "kind": "linux",
+      "tags": {},
+      "properties": {
+        "name": "[parameters('appservicePlanName')]",
+        "workerSize": "[parameters('workerSize')]",
+        "workerSizeId": "[parameters('workerSizeId')]",
+        "numberOfWorkers": "[parameters('numberOfWorkers')]",
+        "reserved": true,
+        "zoneRedundant": false
+      },
+      "sku": {
+        "Tier": "[parameters('sku')]",
+        "Name": "[parameters('skuCode')]"
+      }
+    },
+    {
+      "name": "[parameters('adminUrlDisplayName')]",
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2020-12-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/appservice-plan-linux-01')]": "Resource",
+        "displayName": "[parameters('adminUrlDisplayName')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', 'appservice-plan-linux-01')]"
+      ],
+      "properties": {
+        "name": "[parameters('adminUrlDisplayName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', 'appservice-plan-linux-01')]"
+      }
+    },
+    {
+      "name": "[parameters('frontendUrlDisplayName')]",
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2020-12-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/appservice-plan-linux-01')]": "Resource",
+        "displayName": "[parameters('frontendUrlDisplayName')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', 'appservice-plan-linux-01')]"
+      ],
+      "properties": {
+        "name": "[parameters('frontendUrlDisplayName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', 'appservice-plan-linux-01')]"
+      }
+    }
+  ],
+  "outputs": {}
+}

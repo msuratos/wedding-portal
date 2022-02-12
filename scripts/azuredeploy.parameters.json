@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appservicePlanName": {
+        "value": "appservice-plan-linux-01"
+    },
+    "adminUrlDisplayName": {
+      "value": "suratos-admin"
+    },
+    "frontendUrlDisplayName": {
+      "value": "suratos-frontend"
+    },
+    "numberOfWorkers": {
+      "value": "1"
+    },
+    "sku": {
+      "value": "Free"
+    },
+    "skucode": {
+      "value": "F1"
+    },
+    "workerSize": {
+      "value": "0"
+    },
+    "workerSizeId": {
+      "value": "0"
+    }
+  }
+}
