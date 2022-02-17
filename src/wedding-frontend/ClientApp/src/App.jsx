@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import { Grid, Typography } from '@mui/material';
+
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import ChurchIcon from '@mui/icons-material/Church';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+
 import './App.css';
 
 const App = () => {
@@ -29,10 +36,12 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header countdown-header">
-        <h1>
+        <Typography variant="h4" gutterBottom>
           Melvin & Erlynn Suratos Wedding
-          <h5>July 8, 2022</h5>
-        </h1>
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          July 8, 2022
+        </Typography>
         <div className="countdown-body">
           <span className="countdown-number">{timeLeft.days}</span> <span className="countdown-label">Days</span> &nbsp;&nbsp;
           <span className="countdown-number">{timeLeft.hours}</span> <span className="countdown-label">Hrs</span> &nbsp;&nbsp;
@@ -41,6 +50,35 @@ const App = () => {
           <label>Until the wedding!</label>
         </div>
       </header>
+      <Grid container alignItems="center" spacing={3}>
+        {/* Cermony Details */}
+        <Grid item xs={6}>
+          <Typography variant="subtitle2" gutterBottom>
+            <ChurchIcon />Cermony Location:
+          </Typography>
+        </Grid>
+        <Grid item xs={6}><a href="https://maps.google.com/?q=Holy%20Spirit%20Catholic%20Church">Holy Spirit Catholic Church</a></Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle2" gutterBottom>
+            <AccessTimeIcon />Cermony Time:
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>1:00 PM</Grid>
+
+        {/* Reception Details */}
+        <Grid item xs={6}>
+          <Typography variant="subtitle2" gutterBottom>
+            <WarehouseIcon />Reception Location:
+          </Typography>
+        </Grid>
+        <Grid item xs={6}><a href="https://maps.google.com/?q=Simple%20Affair">Simple Affair</a></Grid>
+        <Grid item xs={6}>
+          <Typography variant="subtitle2" gutterBottom>
+            <AccessAlarmIcon />Reception Time:
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>5:00 PM</Grid>
+      </Grid>
     </div>
   );
 }

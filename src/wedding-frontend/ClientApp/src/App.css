@@ -1,16 +1,16 @@
 .App {
   background-color: rgb(118, 145, 170);
   height: 100vh;
-  text-align: center;
 }
 
 .App-header {
+  align-items: center;
+  color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: center;
+  text-align: center;
 }
 
 .countdown-body {
