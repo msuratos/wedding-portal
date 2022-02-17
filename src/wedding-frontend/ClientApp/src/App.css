@@ -1,0 +1,34 @@
+.App {
+  background-color: rgb(118, 145, 170);
+  height: 100vh;
+}
+
+.App-header {
+  align-items: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  justify-content: center;
+  text-align: center;
+}
+
+.countdown-body {
+  border: #FFFFFF solid 1px;
+  border-radius: 1rem;
+  margin: 2rem .5rem;
+  padding: 1.25rem;
+}
+
+.countdown-header {
+  font-size: x-large;
+}
+
+.countdown-label {
+  color: rgb(233, 233, 233);
+}
+
+.countdown-number {
+  font-size: xx-large;
+  color: rgb(155, 207, 255);
+}
