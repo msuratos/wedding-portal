@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
-import { PublicClientApplication } from '@azure/msal-browser';
+import { PublicClientApplication, InteractionStatus } from '@azure/msal-browser';
 import { AuthenticatedTemplate, UnauthenticatedTemplate, MsalProvider, useMsal, useIsAuthenticated } from "@azure/msal-react";
-import { msalConfig, b2cPolicies } from "./utils/authConfig";
+import { msalConfig, loginRequest } from "./utils/authConfig";
 
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -14,31 +14,35 @@ const rootElement = document.getElementById('root');
 const msalInstance = new PublicClientApplication(msalConfig);
 
 const Login = () => {
-  const msal = useMsal();
-  const isAuthenticated = useIsAuthenticated();
+  const { instance, accounts, inProgress } = useMsal();
 
-  useEffect(() => {
-    if (!isAuthenticated)
-      msal.instance.loginRedirect(b2cPolicies.authorities.signUpSignIn);
-  }, []);
-
-  return (
-    <div>
-      <h3>Login</h3>
-      <p>Redirecting you to login with Azure B2C</p>
-    </div>
-  );
+  if (accounts.length > 0) {
+    return <span>There are currently {accounts.length} users signed in!</span>
+  } else if (inProgress === "login") {
+    return <span>Login is currently in progress!</span>
+  } else {
+    return (
+      <>
+        <h3>Login!</h3>
+        <span>There are currently no users signed in!</span>
+        <div>
+          {/* TODO: something wrong with the B2C /oauth2/token endpoint. Look at network request */}
+          <button onClick={() => instance.loginRedirect(loginRequest)}>Login</button>
+        </div>
+      </>
+    );
+  }
 };
 
 ReactDOM.render(
-  <BrowserRouter basename={baseUrl}>
-    <MsalProvider instance={msalInstance}>
-      <AuthenticatedTemplate>
+  <MsalProvider instance={msalInstance}>
+    <AuthenticatedTemplate>
+      <BrowserRouter basename={baseUrl}>
         <App />
-      </AuthenticatedTemplate>
-      <UnauthenticatedTemplate>
-        <Login />
-      </UnauthenticatedTemplate>
-    </MsalProvider>
-  </BrowserRouter>,
+      </BrowserRouter>
+    </AuthenticatedTemplate>
+    <UnauthenticatedTemplate>
+      <Login />
+    </UnauthenticatedTemplate>
+  </MsalProvider>,
   rootElement);

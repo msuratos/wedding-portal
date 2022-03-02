@@ -11,15 +11,15 @@ import { LogLevel } from "@azure/msal-browser";
  * To learn more about custom policies, visit: https://docs.microsoft.com/en-us/azure/active-directory-b2c/custom-policy-overview
  */
 export const b2cPolicies = {
-    names: {
-        signUpSignIn: "B2C_1_signupsignin1"
-    },
-    authorities: {
-        signUpSignIn: {
-            authority: "https://syzmicb2c.b2clogin.com/syzmicb2c.onmicrosoft.com/B2C_1_signupsignin1",
-        }
-    },
-    authorityDomain: "syzmicb2c.b2clogin.com"
+  names: {
+    signUpSignIn: "B2C_1_signupsignin1"
+  },
+  authorities: {
+    signUpSignIn: {
+      authority: "https://syzmicb2c.b2clogin.com/syzmicb2c.onmicrosoft.com/B2C_1_signupsignin1",
+    }
+  },
+  authorityDomain: "syzmicb2c.b2clogin.com"
 }
 
 
@@ -29,41 +29,41 @@ export const b2cPolicies = {
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md 
  */
 export const msalConfig = {
-    auth: {
-        clientId: "3619d463-acfe-4a4a-bb7c-cd20212c6901", // This is the ONLY mandatory field that you need to supply.
-        authority: b2cPolicies.authorities.signUpSignIn.authority, // Choose SUSI as your default authority.
-        knownAuthorities: [b2cPolicies.authorityDomain], // Mark your B2C tenant's domain as trusted.
-        redirectUri: "/", // You must register this URI on Azure Portal/App Registration. Defaults to window.location.origin
-        postLogoutRedirectUri: "/", // Indicates the page to navigate after logout.
-        navigateToLoginRequestUrl: false, // If "true", will navigate back to the original request location before processing the auth code response.
-    },
-    cache: {
-        cacheLocation: "sessionStorage", // Configures cache location. "sessionStorage" is more secure, but "localStorage" gives you SSO between tabs.
-        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
-    },
-    system: {
-        loggerOptions: {
-            loggerCallback: (level, message, containsPii) => {
-                if (containsPii) {
-                    return;
-                }
-                switch (level) {
-                    case LogLevel.Error:
-                        console.error(message);
-                        return;
-                    case LogLevel.Info:
-                        console.info(message);
-                        return;
-                    case LogLevel.Verbose:
-                        console.debug(message);
-                        return;
-                    case LogLevel.Warning:
-                        console.warn(message);
-                        return;
-                }
-            }
+  auth: {
+    clientId: "3619d463-acfe-4a4a-bb7c-cd20212c6901", // This is the ONLY mandatory field that you need to supply.
+    authority: b2cPolicies.authorities.signUpSignIn.authority, // Choose SUSI as your default authority.
+    knownAuthorities: [b2cPolicies.authorityDomain], // Mark your B2C tenant's domain as trusted.
+    redirectUri: "/", // You must register this URI on Azure Portal/App Registration. Defaults to window.location.origin
+    postLogoutRedirectUri: "/", // Indicates the page to navigate after logout.
+    navigateToLoginRequestUrl: false, // If "true", will navigate back to the original request location before processing the auth code response.
+  },
+  cache: {
+    cacheLocation: "sessionStorage", // Configures cache location. "sessionStorage" is more secure, but "localStorage" gives you SSO between tabs.
+    storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+  },
+  system: {
+    loggerOptions: {
+      loggerCallback: (level, message, containsPii) => {
+        if (containsPii) {
+          return;
         }
+        switch (level) {
+          case LogLevel.Error:
+            console.error(message);
+            return;
+          case LogLevel.Info:
+            console.info(message);
+            return;
+          case LogLevel.Verbose:
+            console.debug(message);
+            return;
+          case LogLevel.Warning:
+            console.warn(message);
+            return;
+        }
+      }
     }
+  }
 };
 
 /**
@@ -71,10 +71,10 @@ export const msalConfig = {
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
 export const protectedResources = {
-    apiHello: {
-        endpoint: "http://localhost:5000/hello",
-        scopes: ["https://fabrikamb2c.onmicrosoft.com/helloapi/demo.read"], // e.g. api://xxxxxx/access_as_user
-    },
+  apiWeddingPortal: {
+    endpoint: "http://localhost:44303",
+    scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"], // e.g. api://xxxxxx/access_as_user
+  },
 }
 
 /**
@@ -83,6 +83,6 @@ export const protectedResources = {
  * For more information about OIDC scopes, visit: 
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
- export const loginRequest = {
-    scopes: [...protectedResources.apiHello.scopes]
+export const loginRequest = {
+  scopes: [...protectedResources.apiWeddingPortal.scopes]
 };
