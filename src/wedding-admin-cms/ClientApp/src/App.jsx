@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+
 import { Layout } from './components/Layout';
 import Home from './pages/Home';
 import EditWedding from './pages/EditWedding';

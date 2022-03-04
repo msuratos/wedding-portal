@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import { 
+  Collapse, Container, Navbar, NavbarText,
+  NavbarBrand, NavbarToggler, NavItem, NavLink 
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { useMsal } from "@azure/msal-react";
+
 import './NavMenu.css';
 
 export const NavMenu = () => {
   const [collapsed, setCollapsed] = useState(true);
+
+  const msal = useMsal();
+  const { name, username} = msal.accounts[0];
 
   const toggleNavbar = () => {
     setCollapsed(!collapsed);
@@ -23,6 +31,9 @@ export const NavMenu = () => {
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/edit-wedding">Edit Wedding(s)</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavbarText>Hello, {name} ({username})!</NavbarText>
               </NavItem>
             </ul>
           </Collapse>
