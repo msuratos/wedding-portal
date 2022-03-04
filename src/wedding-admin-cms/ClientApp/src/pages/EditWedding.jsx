@@ -5,14 +5,20 @@ import {
   Label, Input, Button, Table
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
+
+import WeddingTable from '../components/WeddingTable';
 import { addRole, getRoles } from '../apis/roleApi';
+import { createWedding, getWedding } from '../apis/weddingApi';
 
 const EditWedding = () => {
   const [activeTab, setActiveTab] = useState('1');
   const [bride, setBride] = useState('');
+  const [ceremony, setCeremony] = useState('');
   const [ceremonyDate, setCeremonyDate] = useState(undefined);
   const [groom, setGroom] = useState('');
   const [loading, setLoading] = useState(false);
+  const [reception, setReception] = useState('');
+  const [receptionDate, setReceptionDate] = useState(undefined);
   const [roles, setRoles] = useState([]);
   const [roleDescription, setRoleDescription] = useState('');
   const [roleName, setRoleName] = useState('');
@@ -28,20 +34,12 @@ const EditWedding = () => {
     }
   }, [accounts]);
 
-  const createWedding = async () => {
+  const callCreateWedding = async () => {
     setLoading(true);
 
-    const formData = { bride, groom, ceremonyDate };
+    const formData = { bride, groom, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
     const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const response = await fetch('wedding', {
-      method: 'POST', body: JSON.stringify(formData),
-      headers:
-      {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${tokenCache.accessToken}`
-      }
-    });
-    const respData = await response.json();
+    const respData = await createWedding(formData, tokenCache);
 
     setWedding(respData);
     setLoading(false);
@@ -54,42 +52,14 @@ const EditWedding = () => {
     setRoles([...roles, newRole]);
   };
 
-  const getWedding = async () => {
+  const callGetWedding = async () => {
     setLoading(true);
 
     const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const response = await fetch('wedding', {
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${tokenCache.accessToken}` }
-    });
-    const respData = await response.json();
+    const respData = await getWedding(tokenCache);
 
     setWedding(respData);
     setLoading(false);
-  };
-
-  // TOOD: put this in a separate file in components folder(?)
-  const WeddingTable = ({ wedding }) => {
-    return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
-        <thead>
-          <tr>
-            <th>Wedding Id</th>
-            <th>Date</th>
-            <th>Bride</th>
-            <th>Groom</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr key={wedding?.weddingId}>
-            <td>{wedding?.weddingId}</td>
-            <td>{wedding?.ceremonyDate ? new Date(wedding.ceremonyDate).toLocaleString('en-US') : null}</td>
-            <td>{wedding?.bride}</td>
-            <td>{wedding?.groom}</td>
-          </tr>
-        </tbody>
-      </table>
-    );
   };
 
   useEffect(() => {
@@ -131,13 +101,25 @@ const EditWedding = () => {
                       <Col md={10}><input type="text" id="groom" value={groom} onChange={e => setGroom(e.target.value)} /></Col>
                     </Row>
                     <Row>
-                      <Col md={2}><label htmlFor="date">Cremony Date</label></Col>
-                      <Col md={10}><input type="datetime-local" id="date" value={ceremonyDate} onChange={e => setCeremonyDate(e.target.value)} /></Col>
+                      <Col md={2}><label htmlFor="ceremony-date">Cremony Date</label></Col>
+                      <Col md={10}><input type="datetime-local" id="ceremony-date" value={ceremonyDate} onChange={e => setCeremonyDate(e.target.value)} /></Col>
+                    </Row>
+                    <Row>
+                      <Col md={2}><label htmlFor="ceremony">Cremony Location</label></Col>
+                      <Col md={10}><input id="ceremony" value={ceremony} onChange={e => setCeremony(e.target.value)} /></Col>
+                    </Row>
+                    <Row>
+                      <Col md={2}><label htmlFor="reception-date">Reception Date</label></Col>
+                      <Col md={10}><input type="datetime-local" id="reception-date" value={receptionDate} onChange={e => setReceptionDate(e.target.value)} /></Col>
+                    </Row>
+                  <Row>
+                      <Col md={2}><label htmlFor="reception">Reception Location</label></Col>
+                      <Col md={10}><input id="reception" value={reception} onChange={e => setReception(e.target.value)} /></Col>
                     </Row>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '15px' }}>
-                    <input type="submit" className="btn btn-primary" value="Create Wedding" onClick={createWedding} />
-                    <input type="button" className="btn btn-secondary" value="Get Wedding" onClick={getWedding} />
+                    <input type="submit" className="btn btn-primary" value="Create Wedding" onClick={callCreateWedding} />
+                    <input type="button" className="btn btn-secondary" value="Get Wedding" onClick={callGetWedding} />
                   </div>
                   <WeddingTable wedding={wedding} />
                 </div>
