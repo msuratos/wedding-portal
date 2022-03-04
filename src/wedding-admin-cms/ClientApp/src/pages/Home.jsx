@@ -1,6 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useMsal } from '@azure/msal-react';
+
+import WeddingTable from '../components/WeddingTable';
+import { getWedding } from '../apis/weddingApi';
 
 const Home = () => {
+  const [wedding, setWedding] = useState({});
+
+  const msal = useMsal();
+  const { accounts, instance } = msal;
+
+  useEffect(() => {
+    async function getData() {
+      const silentRequest = {
+        scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
+        account: accounts[0]
+      };
+
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const respData = await getWedding(tokenCache);
+      setWedding(respData);
+    };
+
+    getData();
+  }, [accounts, instance]);
+
   return (
     <div>
       <h1>Welcome to your Wedding Portal,</h1>
@@ -15,6 +39,7 @@ const Home = () => {
         <li><strong>Manage your entourage!</strong>. For example, click <em>Edit Weddings</em> to continue</li>
         <li><strong>Manage your roles in your entourage!</strong>. For example, click <em>Edit Weddings</em> to continue</li>
       </ul>
+      <WeddingTable wedding={wedding} />
     </div>
   );
 };
