@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Col, Nav, NavItem, NavLink, Row,
   TabContent, TabPane, FormGroup,
@@ -16,8 +16,6 @@ const EditWedding = () => {
   const [roleDescription, setRoleDescription] = useState('');
   const [roleName, setRoleName] = useState('');
   const [wedding, setWedding] = useState({});
-
-  const roleFormRef = useRef();
 
   const createWedding = async () => {
     setLoading(true);
@@ -142,17 +140,17 @@ const EditWedding = () => {
               <Table className='table table-striped'>
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th scope="row">#</th>
+                    <th scope="row">Name</th>
+                    <th scope="row">Description</th>
                   </tr>
                 </thead>
                 <tbody>
                   {roles.map(el => (
                     <tr key={el.id}>
-                      <td scope="row">{el.id}</td>
-                      <td scope="row">{el.name}</td>
-                      <td scope="row">{el.description}</td>
+                      <td>{el.id}</td>
+                      <td>{el.name}</td>
+                      <td>{el.description}</td>
                     </tr>
                   ))}
                 </tbody>
