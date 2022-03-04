@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Web.Resource;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,10 +12,14 @@ using wedding_admin_cms.Persistance.Entities;
 
 namespace wedding_admin_cms.Controllers
 {
-  [Route("api/[controller]")]
+  [Authorize]
   [ApiController]
+  [Route("api/[controller]")]
+  [RequiredScope(scopeRequiredByAPI)]
   public class RoleController : ControllerBase
   {
+    const string scopeRequiredByAPI = "user.access";
+
     private readonly ILogger<RoleController> _logger;
     private readonly WeddingDbContext _dbContext;
 
