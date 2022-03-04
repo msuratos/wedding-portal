@@ -1,4 +1,4 @@
-﻿export const createWedding = async (request, tokenCache) => {
+export const createWedding = async (request, tokenCache) => {
   const resp = await fetch('wedding', {
     method: 'POST', body: JSON.stringify(request),
     headers:
