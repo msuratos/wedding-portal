@@ -1,16 +1,22 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Web.Resource;
 using wedding_admin_cms.Persistance;
 using wedding_admin_cms.Persistance.Entities;
 
 namespace wedding_admin_cms.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
+    [RequiredScope(scopeRequiredByAPI)]
     public class WeddingController : ControllerBase
     {
+        const string scopeRequiredByAPI = "user.access";
+
         private readonly ILogger<WeddingController> _logger;
         private readonly WeddingDbContext _dbContext;
 

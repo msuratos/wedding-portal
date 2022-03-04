@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Col, Nav, NavItem, NavLink, Row,
   TabContent, TabPane, FormGroup,
   Label, Input, Button, Table
 } from 'reactstrap';
+import { useMsal } from '@azure/msal-react';
 import { addRole, getRoles } from '../apis/roleApi';
 
 const EditWedding = () => {
@@ -17,13 +18,31 @@ const EditWedding = () => {
   const [roleName, setRoleName] = useState('');
   const [wedding, setWedding] = useState({});
 
+  const msal = useMsal();
+  const { instance, accounts } = msal;
+
+  const silentRequest = useMemo(() => {
+    return {
+      scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
+      account: accounts[0]
+    }
+  }, [accounts]);
+
   const createWedding = async () => {
     setLoading(true);
 
     const formData = { bride, groom, ceremonyDate };
     console.log('form data', formData);
 
-    const response = await fetch('wedding', { method: 'POST', body: JSON.stringify(formData), headers: { 'Content-Type': 'application/json' } });
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const response = await fetch('wedding', {
+      method: 'POST', body: JSON.stringify(formData),
+      headers:
+      {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${tokenCache.accessToken}`
+      }
+    });
     const respData = await response.json();
     console.log(respData);
 
@@ -33,7 +52,8 @@ const EditWedding = () => {
 
   const createRole = async (e) => {
     e.preventDefault();
-    const newRole = await addRole({ description: roleDescription, name: roleName });
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const newRole = await addRole({ description: roleDescription, name: roleName, token: tokenCache.accessToken });
     setRoles([...roles, newRole]);
   };
 
@@ -62,12 +82,13 @@ const EditWedding = () => {
 
   useEffect(() => {
     const init = async () => {
-      const roles = await getRoles();
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const roles = await getRoles(tokenCache.accessToken);
       setRoles(roles);
     };
 
     init();
-  }, []);
+  }, [instance, silentRequest]);
 
   return (
     <div>

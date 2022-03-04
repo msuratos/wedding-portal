@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web;
 using wedding_admin_cms.Persistance;
 
 namespace wedding_admin_cms
@@ -25,6 +27,16 @@ namespace wedding_admin_cms
 
             services.AddControllersWithViews();
             services.AddDbContext<WeddingDbContext>(opt => opt.UseSqlServer("Name=WeddingDbContext"));
+
+            // Adds Microsoft Identity platform (AAD v2.0) support to protect this Api
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddMicrosoftIdentityWebApi(options =>
+                        {
+                            Configuration.Bind("AzureAdB2C", options);
+                            options.TokenValidationParameters.NameClaimType = "name";
+                        },
+                        options => { Configuration.Bind("AzureAdB2C", options); }
+                    );
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -50,8 +62,10 @@ namespace wedding_admin_cms
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
