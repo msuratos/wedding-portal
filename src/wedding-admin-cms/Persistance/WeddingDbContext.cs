@@ -12,6 +12,7 @@ namespace wedding_admin_cms.Persistance
 
     public virtual DbSet<Entourage> Entourages { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<UsersToWedding> UsersToWeddings { get; set; }
     public virtual DbSet<Wedding> Weddings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,7 +24,9 @@ namespace wedding_admin_cms.Persistance
         build.Property(prop => prop.Bride).IsRequired().HasMaxLength(100);
         build.Property(prop => prop.Groom).IsRequired().HasMaxLength(100);
         build.Property(prop => prop.CeremonyDate).IsRequired();
-        build.HasMany<Entourage>(nav => nav.Entourage).WithOne(nav => nav.Wedding).HasForeignKey(fk => fk.EntourageOfWeddingId);
+
+        build.HasMany<Entourage>().WithOne(nav => nav.Wedding).HasForeignKey(fk => fk.EntourageOfWeddingId);
+        build.HasMany<UsersToWedding>().WithOne(nav => nav.Wedding).HasForeignKey(fk => fk.WeddingId);
       });
 
       modelBuilder.Entity<Entourage>(build =>
@@ -39,6 +42,15 @@ namespace wedding_admin_cms.Persistance
         build.HasKey(key => key.RoleId);
         build.Property(prop => prop.RoleId).UseIdentityColumn();
         build.Property(prop => prop.Description);
+      });
+
+      modelBuilder.Entity<UsersToWedding>(build =>
+      {
+        build.HasKey(key => key.UsersToWeddingId);
+        build.Property(prop => prop.UsersToWeddingId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
+        build.Property(prop => prop.UserName).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.DisplayName).IsRequired();
+        build.Property(prop => prop.UserRoles).IsRequired().HasConversion<string>();
       });
     }
   }
