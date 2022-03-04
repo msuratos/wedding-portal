@@ -14,24 +14,20 @@ const rootElement = document.getElementById('root');
 const msalInstance = new PublicClientApplication(msalConfig);
 
 const Login = () => {
-  const { instance, accounts, inProgress } = useMsal();
+  const { instance, inProgress } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
 
-  if (accounts.length > 0) {
-    return <span>There are currently {accounts.length} users signed in!</span>
-  } else if (inProgress === "login") {
-    return <span>Login is currently in progress!</span>
-  } else {
-    return (
-      <>
-        <h3>Login!</h3>
-        <span>There are currently no users signed in!</span>
-        <div>
-          {/* TODO: something wrong with the B2C /oauth2/token endpoint. Look at network request */}
-          <button onClick={() => instance.loginRedirect(loginRequest)}>Login</button>
-        </div>
-      </>
-    );
-  }
+  useEffect(() => {
+    if (!isAuthenticated && inProgress === InteractionStatus.None)
+      instance.loginRedirect(loginRequest);
+  }, [inProgress, instance, isAuthenticated]);
+
+  return (
+    <>
+      <h3>Login</h3>
+      <p>Attempting log you in.. redirecting...</p>
+    </>
+  );
 };
 
 ReactDOM.render(
