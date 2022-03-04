@@ -32,8 +32,6 @@ const EditWedding = () => {
     setLoading(true);
 
     const formData = { bride, groom, ceremonyDate };
-    console.log('form data', formData);
-
     const tokenCache = await instance.acquireTokenSilent(silentRequest);
     const response = await fetch('wedding', {
       method: 'POST', body: JSON.stringify(formData),
@@ -44,7 +42,6 @@ const EditWedding = () => {
       }
     });
     const respData = await response.json();
-    console.log(respData);
 
     setWedding(respData);
     setLoading(false);
@@ -57,6 +54,21 @@ const EditWedding = () => {
     setRoles([...roles, newRole]);
   };
 
+  const getWedding = async () => {
+    setLoading(true);
+
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const response = await fetch('wedding', {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${tokenCache.accessToken}` }
+    });
+    const respData = await response.json();
+
+    setWedding(respData);
+    setLoading(false);
+  };
+
+  // TOOD: put this in a separate file in components folder(?)
   const WeddingTable = ({ wedding }) => {
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
@@ -125,7 +137,7 @@ const EditWedding = () => {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '15px' }}>
                     <input type="submit" className="btn btn-primary" value="Create Wedding" onClick={createWedding} />
-                    <input type="button" className="btn btn-secondary" value="Get Wedding" />
+                    <input type="button" className="btn btn-secondary" value="Get Wedding" onClick={getWedding} />
                   </div>
                   <WeddingTable wedding={wedding} />
                 </div>

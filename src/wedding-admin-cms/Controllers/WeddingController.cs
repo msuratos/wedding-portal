@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web.Resource;
 using wedding_admin_cms.Persistance;
@@ -25,6 +26,17 @@ namespace wedding_admin_cms.Controllers
     {
       _logger = logger;
       _dbContext = dbContext;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetWeddingForLogin(CancellationToken cancellationToken)
+    {
+      // TODO: validate the username and wedding. Make sure only one wedding per user(?)
+      var username = User.Claims.SingleOrDefault(s => s.Type == "emails").Value;
+      var userToWedding = await _dbContext.UsersToWeddings.Include(i => i.Wedding).SingleOrDefaultAsync(s => s.UserName == username, cancellationToken);
+      var wedding = userToWedding.Wedding;
+
+      return Ok(wedding);
     }
 
     [HttpPost]
