@@ -21,10 +21,10 @@ export const NavMenu = () => {
   return (
     <header>
       <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
-        <Container>
+        <Container fluid>
           <NavbarBrand tag={Link} to="/">Wedding Portal</NavbarBrand>
           <NavbarToggler onClick={toggleNavbar} className="mr-2" />
-          <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!collapsed} navbar>
+          <Collapse className="d-sm-inline-flex" isOpen={!collapsed} navbar>
             <ul className="navbar-nav flex-grow">
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
@@ -32,6 +32,8 @@ export const NavMenu = () => {
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/edit-wedding">Edit Wedding(s)</NavLink>
               </NavItem>
+            </ul>
+            <ul className="navbar-nav ml-auto">
               <NavItem>
                 <NavbarText>Hello, {name} ({username})!</NavbarText>
               </NavItem>
