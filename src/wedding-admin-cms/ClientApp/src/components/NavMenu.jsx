@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  Collapse, Container, Navbar, NavbarText,
+import {
+  Collapse, Container, Dropdown, DropdownItem,
+  DropdownMenu, DropdownToggle, Navbar, NavbarText,
   NavbarBrand, NavbarToggler, NavItem, NavLink 
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -10,13 +11,14 @@ import './NavMenu.css';
 
 export const NavMenu = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState(false);
 
-  const msal = useMsal();
-  const { name, username} = msal.accounts[0];
+  const { accounts, instance } = useMsal();
+  const { name, username } = accounts[0];
 
   const toggleNavbar = () => {
     setCollapsed(!collapsed);
-  }
+  };
 
   return (
     <header>
@@ -35,7 +37,15 @@ export const NavMenu = () => {
             </ul>
             <ul className="navbar-nav ml-auto">
               <NavItem>
-                <NavbarText>Hello, {name} ({username})!</NavbarText>
+                <Dropdown toggle={() => setOpenDropdown(!openDropdown)} isOpen={openDropdown}>
+                  <DropdownToggle caret outline>
+                    Hello, {name}!
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem header>{username}</DropdownItem>
+                    <DropdownItem onClick={() => instance.logoutRedirect()}>Logout</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </NavItem>
             </ul>
           </Collapse>
