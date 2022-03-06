@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Collapse, Container, Dropdown, DropdownItem,
-  DropdownMenu, DropdownToggle, Navbar, NavbarText,
+  DropdownMenu, DropdownToggle, Navbar,
   NavbarBrand, NavbarToggler, NavItem, NavLink 
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
