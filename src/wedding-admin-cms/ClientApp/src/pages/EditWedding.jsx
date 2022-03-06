@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Col, Nav, NavItem, NavLink, Row,
+  Col, Dropdown, DropdownItem, DropdownMenu,
+  DropdownToggle, Nav, NavItem, NavLink, Row,
   TabContent, TabPane, FormGroup,
   Label, Input, Button, Table
 } from 'reactstrap';
@@ -8,15 +9,19 @@ import { useMsal } from '@azure/msal-react';
 
 import WeddingTable from '../components/WeddingTable';
 import { addRole, getRoles } from '../apis/roleApi';
-import { createWedding, getWedding } from '../apis/weddingApi';
+import { addEntourage, createWedding, getWedding } from '../apis/weddingApi';
 
 const EditWedding = () => {
   const [activeTab, setActiveTab] = useState('1');
   const [bride, setBride] = useState('');
   const [ceremony, setCeremony] = useState('');
   const [ceremonyDate, setCeremonyDate] = useState(undefined);
+  const [entourage, setEntourage] = useState([]);
+  const [entourageName, setEntourageName] = useState('');
+  const [entourageRole, setEntourageRole] = useState(0);
   const [groom, setGroom] = useState('');
   const [loading, setLoading] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
   const [reception, setReception] = useState('');
   const [receptionDate, setReceptionDate] = useState(undefined);
   const [roles, setRoles] = useState([]);
@@ -45,6 +50,19 @@ const EditWedding = () => {
     setLoading(false);
   };
 
+  const createEntourage = async (e) => {
+    e.preventDefault();
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const newEntourage = await addEntourage(
+      {
+        name: entourageName, roleIdOfEntourage: entourageRole,
+        entourageOfWeddingId: wedding.weddingId, token: tokenCache.accessToken
+      }
+    );
+
+    setEntourage([...entourage, newEntourage]);
+  };
+
   const createRole = async (e) => {
     e.preventDefault();
     const tokenCache = await instance.acquireTokenSilent(silentRequest);
@@ -65,8 +83,16 @@ const EditWedding = () => {
   useEffect(() => {
     const init = async () => {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
-      const roles = await getRoles(tokenCache.accessToken);
-      setRoles(roles);
+
+      // call getRoles and getWedding at the same time
+      const rolesPromise = getRoles(tokenCache.accessToken);
+      const weddingPromise = getWedding(tokenCache);
+
+      // wait for the promises to resolve
+      const resp = await Promise.all([rolesPromise, weddingPromise]);
+
+      setRoles(resp[0]);
+      setWedding(resp[1]);
     };
 
     init();
@@ -80,6 +106,9 @@ const EditWedding = () => {
         </NavItem>
         <NavItem>
           <NavLink active={activeTab === '2'} onClick={() => setActiveTab('2')}>Edit Roles</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink active={activeTab === '3'} onClick={() => setActiveTab('3')}>Edit Entourage</NavLink>
         </NavItem>
       </Nav>
       <TabContent activeTab={activeTab}>
@@ -166,6 +195,59 @@ const EditWedding = () => {
                       <td>{el.id}</td>
                       <td>{el.name}</td>
                       <td>{el.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tabId="3">
+          <Row style={{ marginTop: '15px' }}>
+            <Col sm={12}>
+              <form onSubmit={createEntourage}>
+                <FormGroup row>
+                  <Label for="name" sm={2}>Entourage Name</Label>
+                  <Col sm={10}>
+                    <Input id="name" name="name" placeholder="Name of entourage" type="text" value={entourageName} onChange={e => setEntourageName(e.target.value)} />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="entourage-role" sm={2}>Entourage Role</Label>
+                  <Col sm={10}>
+                    <Dropdown toggle={() => setOpenDropdown(!openDropdown)} isOpen={openDropdown}>
+                      <DropdownToggle caret outline>
+                        {entourageRole !== 0 ? entourageRole : 'Assign a role'}
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        {roles.map((el, i) => {
+                          return <DropdownItem key={`role-item-${i}`} onClick={() => setEntourageRole(el.id)}>{el.name}</DropdownItem>
+                        })}
+                      </DropdownMenu>
+                    </Dropdown>
+                  </Col>
+                </FormGroup>
+                <Row>
+                  <Col sm={6}><Button style={{ width: '100%' }} type='submit' color='primary'>Submit</Button></Col>
+                  <Col sm={6}><Button style={{ width: '100%' }} color='secondary'>Cancel</Button></Col>
+                </Row>
+              </form>
+            </Col>
+          </Row>
+          <Row style={{ marginTop: '15px' }}>
+            <Col sm={12}>
+              <Table className='table table-striped'>
+                <thead>
+                  <tr>
+                    <th scope="row">Name</th>
+                    <th scope="row">Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {entourage.map(el => (
+                    <tr key={el.entourageId}>
+                      <td>{el.name}</td>
+                      <td>{el.roleIdOfEntourage}</td>
                     </tr>
                   ))}
                 </tbody>

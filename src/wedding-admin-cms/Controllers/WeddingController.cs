@@ -63,5 +63,14 @@ namespace wedding_admin_cms.Controllers
 
       return Ok(dto);
     }
+
+    [HttpPost("entourage")]
+    public async Task<IActionResult> AddEntourage([FromBody]Entourage dto, CancellationToken cancellationToken)
+    {
+      await _dbContext.Entourages.AddAsync(dto, cancellationToken);
+      await _dbContext.SaveChangesAsync(cancellationToken);
+
+      return Ok(dto);
+    }
   }
 }

@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{31AD69E2-02D2-4857-B6E4-75941F72BCAD}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\azure-webapps-frontend.yml = ..\.github\workflows\azure-webapps-frontend.yml
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{BD3E3F13-B83B-43CA-AEDF-72428D859FA1}"
