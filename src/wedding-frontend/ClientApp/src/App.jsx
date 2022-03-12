@@ -50,8 +50,10 @@ const App = () => {
           <label>Until the wedding!</label>
         </div>
       </header>
+      { /* Hide details until further notice */}
+      {/* 
       <Grid container alignItems="center" spacing={3}>
-        {/* Cermony Details */}
+        // Ceremoney Details
         <Grid item xs={6}>
           <Typography variant="subtitle2" gutterBottom>
             <ChurchIcon />Cermony Location:
@@ -65,7 +67,7 @@ const App = () => {
         </Grid>
         <Grid item xs={6}>1:00 PM</Grid>
 
-        {/* Reception Details */}
+        // Reception Details
         <Grid item xs={6}>
           <Typography variant="subtitle2" gutterBottom>
             <WarehouseIcon />Reception Location:
@@ -79,6 +81,7 @@ const App = () => {
         </Grid>
         <Grid item xs={6}>5:00 PM</Grid>
       </Grid>
+      */}
     </div>
   );
 }
