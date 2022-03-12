@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
-import ChurchIcon from '@mui/icons-material/Church';
-import WarehouseIcon from '@mui/icons-material/Warehouse';
 
 import './App.css';
 
