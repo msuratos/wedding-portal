@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
-
+import weddingPic from './assets/wedding.jpeg';
 import './App.css';
 
 const App = () => {
@@ -31,53 +31,53 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header countdown-header">
-        <Typography variant="h4" gutterBottom>
-          Melvin & Erlynn Suratos Wedding
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          July 8, 2022
-        </Typography>
-        <div className="countdown-body">
-          <span className="countdown-number">{timeLeft.days}</span> <span className="countdown-label">Days</span> &nbsp;&nbsp;
-          <span className="countdown-number">{timeLeft.hours}</span> <span className="countdown-label">Hrs</span> &nbsp;&nbsp;
-          <span className="countdown-number">{timeLeft.minutes}</span> <span className="countdown-label">Mins</span> &nbsp;&nbsp;
-          <span className="countdown-number">{timeLeft.seconds}</span> <span className="countdown-label">Secs</span><br />
-          <label>Until the wedding!</label>
-        </div>
-      </header>
-      { /* Hide details until further notice */}
-      {/* 
-      <Grid container alignItems="center" spacing={3}>
-        // Ceremoney Details
-        <Grid item xs={6}>
-          <Typography variant="subtitle2" gutterBottom>
-            <ChurchIcon />Cermony Location:
-          </Typography>
-        </Grid>
-        <Grid item xs={6}><a href="https://maps.google.com/?q=Holy%20Spirit%20Catholic%20Church">Holy Spirit Catholic Church</a></Grid>
-        <Grid item xs={6}>
-          <Typography variant="subtitle2" gutterBottom>
-            <AccessTimeIcon />Cermony Time:
-          </Typography>
-        </Grid>
-        <Grid item xs={6}>1:00 PM</Grid>
-
-        // Reception Details
-        <Grid item xs={6}>
-          <Typography variant="subtitle2" gutterBottom>
-            <WarehouseIcon />Reception Location:
-          </Typography>
-        </Grid>
-        <Grid item xs={6}><a href="https://maps.google.com/?q=Simple%20Affair">Simple Affair</a></Grid>
-        <Grid item xs={6}>
-          <Typography variant="subtitle2" gutterBottom>
-            <AccessAlarmIcon />Reception Time:
-          </Typography>
-        </Grid>
-        <Grid item xs={6}>5:00 PM</Grid>
+      <Grid container spacing={2} style={{
+        background: `url(${weddingPic}) no-repeat 50% top transparent`,
+        backgroundSize: 'cover', height: window.innerWidth > 500 ? '50vh' : '40vh'
+      }}>
       </Grid>
-      */}
+      <div className="detail-container">
+        <div className="detail-header">
+          <Grid container>
+            <Grid item xs={12} md={12}>
+              <Typography variant="h5" className="message" gutterBottom>
+                Wedding 2.0
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Typography variant="h4" className="persons" gutterBottom>
+                MELVIN SURATOS & ERLYNN SURATOS
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={12} sx={{textAlign: 'center', justifyContent: 'center'}}>
+              <p className="theme-ribbon-date">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50.9px" height="35.4px" viewBox="0 0 50.9 35.4" enableBackground="new 0 0 50.9 35.4">
+                  <polygon className="theme-header-ribbon-arrow" points="0,35.4 2.9,35.4 15.6,18.9 21.2,18.9 8.6,35.4 11.6,35.4 24.2,18.9 29.8,18.9 17.2,35.4 20.2,35.4 32.8,18.9 38.5,18.9 25.8,35.4 28.8,35.4 41.4,18.9 47.1,18.9 34.4,35.4 37.4,35.4 50.9,17.7 37.4,0 34.4,0 47.1,16.5 41.4,16.5 28.8,0 25.8,0 38.5,16.5 32.8,16.5 20.2,0 17.2,0 29.8,16.5 24.2,16.5 11.6,0 8.6,0 21.2,16.5 15.6,16.5 2.9,0 0,0 13.5,17.7 "></polygon>
+                </svg>
+                <span>July 8, 2022</span>
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50.9px" height="35.4px" viewBox="0 0 50.9 35.4" enableBackground="new 0 0 50.9 35.4">
+                  <polygon className="theme-header-ribbon-arrow" points="50.9,0 48,0 35.3,16.5 29.7,16.5 42.3,0 39.4,0 26.7,16.5 21.1,16.5 33.7,0 30.7,0 18.1,16.5 12.5,16.5 25.1,0 22.1,0 9.5,16.5 3.8,16.5 16.5,0 13.5,0 0,17.7 13.5,35.4 16.5,35.4 3.8,18.9 9.5,18.9 22.1,35.4 25.1,35.4 12.5,18.9 18.1,18.9 30.7,35.4 33.7,35.4 21.1,18.9 26.7,18.9 39.4,35.4 42.3,35.4 29.7,18.9 35.3,18.9 48,35.4 50.9,35.4 37.4,17.7 "></polygon>
+                </svg>
+              </p>
+            </Grid>
+          </Grid>
+        </div>
+      </div>
+      <Grid container>
+        <Grid item xs={12} md={12}>
+          <div className="countdown-body">
+            <span className="countdown-number">{timeLeft.days}</span> <span className="countdown-label">Days</span> &nbsp;&nbsp;
+            <span className="countdown-number">{timeLeft.hours}</span> <span className="countdown-label">Hrs</span> &nbsp;&nbsp;
+            <span className="countdown-number">{timeLeft.minutes}</span> <span className="countdown-label">Mins</span> &nbsp;&nbsp;
+            <span className="countdown-number">{timeLeft.seconds}</span> <span className="countdown-label">Secs</span><br />
+          </div>
+        </Grid>
+        <Grid item xs={12} md={12} sx={{ textAlign: 'center' }}>
+          <Grid item xs={12} md={12} sx={{ textAlign: 'center' }}>
+            Until the wedding!
+          </Grid>
+        </Grid>
+      </Grid>
     </div>
   );
 }

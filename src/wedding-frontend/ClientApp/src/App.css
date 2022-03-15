@@ -1,22 +1,14 @@
-.App {
+﻿.App {
   background-color: rgb(118, 145, 170);
   height: 100vh;
-}
-
-.App-header {
-  align-items: center;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  justify-content: center;
-  text-align: center;
 }
 
 .countdown-body {
   border: #FFFFFF solid 1px;
   border-radius: 1rem;
-  margin: 2rem .5rem;
+  display: flex;
+  justify-content: center;
+  margin: 1rem .5rem;
   padding: 1.25rem;
 }
 
@@ -32,3 +24,66 @@
   font-size: xx-large;
   color: rgb(155, 207, 255);
 }
+
+.date {
+  color: white;
+  text-align: center;
+}
+
+.detail-container {
+  margin: 15px auto 0;
+  padding: 0 10px 15px;
+}
+
+.detail-header {
+  border: 2px solid white;
+  border-radius: 1rem;
+}
+
+.persons {
+  color: white;
+  text-align: center;
+}
+
+.message {
+  border-bottom: 2px white solid;
+  color: white;
+  position: relative;
+  text-align: center;
+}
+
+  .message::before {
+    border-right: 2px solid white;
+    content: '🤵🏽';
+    left: 0;
+    padding: 0 5px;
+    position: absolute;
+    top: 0;
+  }
+
+  .message::after {
+    border-left: 2px solid white;
+    content: '👰🏽';
+    padding: 0 5px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+.theme-header-ribbon-arrow {
+  fill: white !important;
+}
+
+.theme-ribbon-date {
+  color: white;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+  .theme-ribbon-date svg:first-child {
+    float: left;
+  }
+
+  .theme-ribbon-date svg:last-child {
+    float: right;
+  }
