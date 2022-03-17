@@ -46,15 +46,14 @@
 
 .persons {
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, Bondoni, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Abril Fatface', cursive, 'Roboto', sans-serif !important;
   text-align: center;
 }
 
 .message {
   border-bottom: 2px white solid;
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, Bondoni !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Abril Fatface', cursive !important;
   position: relative;
   text-align: center;
 }

@@ -48,7 +48,7 @@ const App = () => {
               <Typography variant="h5" className="persons" gutterBottom>
                 MELVIN & ERLYNN
               </Typography>
-              <Typography variant="h3" sx={{ color: 'white', fontFamily: 'Allura', textAlign: 'center' }} gutterButton>
+              <Typography variant="h3" sx={{ color: 'white', fontFamily: '\'Dancing Script\', cursive', textAlign: 'center' }} gutterButton>
                 Suratos
               </Typography>
             </Grid>
