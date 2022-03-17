@@ -3,7 +3,7 @@
 .App {
   background-color: rgb(118, 145, 170);
   height: 100%;
-  position: absolute;
+  position: relative;
 }
 
 .countdown-body {

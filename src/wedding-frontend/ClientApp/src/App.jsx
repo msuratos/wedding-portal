@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 
 import weddingPic from './assets/wedding.jpeg';
@@ -100,6 +100,18 @@ const App = () => {
           <Grid item xs={12} md={12} sx={{ textAlign: 'center' }}>
             Until the wedding!
           </Grid>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} sx={{p: 5}}>
+        <Grid item xs={12} md={12}>
+          <p>Hi family & friends!,</p>
+          <p>
+            We can't wait to celebrate our wedding 2.0 with you guys! Please save our date FRIDAY, July 8, 2022, for our Catholic church wedding & reception to follow.
+            Our website is currently under construction, so please check back with this QR code for the website, as well as future updates & more information.
+            We will send the official invites ASAP. Thanks & can't wait to see y'all!
+          </p>
+          <p>With love,</p>
+          <p>Melvin & Erlynn 😊</p>
         </Grid>
       </Grid>
     </div>
