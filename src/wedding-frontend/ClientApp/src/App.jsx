@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 
 import weddingPic from './assets/wedding.jpeg';
