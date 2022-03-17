@@ -45,8 +45,11 @@ const App = () => {
               </Typography>
             </Grid>
             <Grid item xs={12} md={12}>
-              <Typography variant="h4" className="persons" gutterBottom>
-                MELVIN SURATOS & ERLYNN SURATOS
+              <Typography variant="h5" className="persons" gutterBottom>
+                MELVIN & ERLYNN
+              </Typography>
+              <Typography variant="h3" sx={{ color: 'white', fontFamily: 'Allura', textAlign: 'center' }} gutterButton>
+                Suratos
               </Typography>
             </Grid>
             <Grid item xs={12} md={12} sx={{textAlign: 'center', justifyContent: 'center'}}>
@@ -66,10 +69,31 @@ const App = () => {
       <Grid container>
         <Grid item xs={12} md={12}>
           <div className="countdown-body">
-            <span className="countdown-number">{timeLeft.days}</span> <span className="countdown-label">Days</span> &nbsp;&nbsp;
-            <span className="countdown-number">{timeLeft.hours}</span> <span className="countdown-label">Hrs</span> &nbsp;&nbsp;
-            <span className="countdown-number">{timeLeft.minutes}</span> <span className="countdown-label">Mins</span> &nbsp;&nbsp;
-            <span className="countdown-number">{timeLeft.seconds}</span> <span className="countdown-label">Secs</span><br />
+            <span className="countdown-number">
+              {timeLeft.days}
+              <span className="countdown-label">Days</span>
+            </span>
+
+            &nbsp;&nbsp;
+
+            <span className="countdown-number">
+              {timeLeft.hours}
+              <span className="countdown-label">Hrs</span>
+            </span>
+
+            &nbsp;&nbsp;
+
+            <span className="countdown-number">
+              {timeLeft.minutes}
+              <span className="countdown-label">Mins</span>
+            </span>
+
+            &nbsp;&nbsp;
+
+            <span className="countdown-number">
+              {timeLeft.seconds}
+              <span className="countdown-label">Secs</span>
+            </span>
           </div>
         </Grid>
         <Grid item xs={12} md={12} sx={{ textAlign: 'center' }}>

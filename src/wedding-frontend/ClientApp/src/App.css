@@ -1,4 +1,6 @@
-﻿.App {
+﻿@import url('https://fonts.googleapis.com/css?family=Allura');
+
+.App {
   background-color: rgb(118, 145, 170);
   height: 100%;
   position: absolute;
@@ -19,11 +21,12 @@
 
 .countdown-label {
   color: rgb(233, 233, 233);
+  font-size: medium;
 }
 
 .countdown-number {
-  font-size: xx-large;
   color: rgb(155, 207, 255);
+  font-size: xx-large;
 }
 
 .date {
@@ -43,12 +46,15 @@
 
 .persons {
   color: white;
+  font-family: -apple-system, BlinkMacSystemFont, Bondoni, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
   text-align: center;
 }
 
 .message {
   border-bottom: 2px white solid;
   color: white;
+  font-family: -apple-system, BlinkMacSystemFont, Bondoni !important;
   position: relative;
   text-align: center;
 }
