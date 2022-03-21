@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 
 import weddingPic from './assets/wedding.jpeg';
 import './App.css';
+import Typography from '@mui/material/Typography';
 
 const App = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -40,14 +41,10 @@ const App = () => {
         <div className="detail-header">
           <Grid container>
             <Grid item xs={12} md={12}>
-              <Typography variant="h5" className="message" gutterBottom>
-                Wedding 2.0
-              </Typography>
+              <h3 className="message">Wedding 2.0</h3>
             </Grid>
             <Grid item xs={12} md={12}>
-              <Typography variant="h5" className="persons" gutterBottom>
-                MELVIN & ERLYNN
-              </Typography>
+              <h2 className="persons">MELVIN & ERLYNN</h2>
               <Typography variant="h3" sx={{ color: 'white', fontFamily: '\'Dancing Script\', cursive', textAlign: 'center' }} gutterButton>
                 Suratos
               </Typography>
