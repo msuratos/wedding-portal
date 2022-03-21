@@ -93,13 +93,8 @@ const App = () => {
             </span>
           </div>
         </Grid>
-        <Grid item xs={12} md={12} sx={{ textAlign: 'center' }}>
-          <Grid item xs={12} md={12} sx={{ textAlign: 'center' }}>
-            Until the wedding!
-          </Grid>
-        </Grid>
       </Grid>
-      <Grid container spacing={2} sx={{p: 5}}>
+      <Grid container spacing={2} sx={{pl: 5, pr: 5}}>
         <Grid item xs={12} md={12}>
           <p>Hi family & friends!,</p>
           <p>
