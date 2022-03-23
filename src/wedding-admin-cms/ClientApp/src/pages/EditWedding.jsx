@@ -20,6 +20,7 @@ const EditWedding = () => {
   const [entourageName, setEntourageName] = useState('');
   const [entourageRole, setEntourageRole] = useState(0);
   const [groom, setGroom] = useState('');
+  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [messageForEveryone, setMessageForEveryone] = useState('');
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -43,7 +44,7 @@ const EditWedding = () => {
   const callCreateWedding = async () => {
     setLoading(true);
 
-    const formData = { bride, groom, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
+    const formData = { bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
     const tokenCache = await instance.acquireTokenSilent(silentRequest);
     const respData = await createWedding(formData, tokenCache);
 
@@ -139,6 +140,10 @@ const EditWedding = () => {
                     <Row>
                       <Col md={2}><label htmlFor="groom">Groom</label></Col>
                       <Col md={10}><input type="text" id="groom" value={groom} onChange={e => setGroom(e.target.value)} /></Col>
+                    </Row>
+                    <Row>
+                      <Col md={2}><label htmlFor="lastname">Family Name</label></Col>
+                      <Col md={10}><input type="text" id="lastname" value={lastName} onChange={e => setLastName(e.target.value)} /></Col>
                     </Row>
                     <Row>
                       <Col md={2}><label htmlFor="ceremony-date">Cremony Date</label></Col>
