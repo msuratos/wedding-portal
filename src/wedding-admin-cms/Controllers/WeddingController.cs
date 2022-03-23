@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,9 +37,29 @@ namespace wedding_admin_cms.Controllers
       // TODO: validate the username and wedding. Make sure only one wedding per user(?)
       var username = User.Claims.SingleOrDefault(s => s.Type == "emails").Value;
       var userToWedding = await _dbContext.UsersToWeddings.Include(i => i.Wedding).SingleOrDefaultAsync(s => s.UserName == username, cancellationToken);
-      var wedding = userToWedding.Wedding;
+      var wedding = userToWedding?.Wedding;
 
       return Ok(wedding);
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> AddWeddingToUser([FromQuery] Guid weddingId, CancellationToken cancellationToken)
+    {
+      var username = User.Claims.SingleOrDefault(s => s.Type == "emails").Value;
+      var displayname = User.Claims.SingleOrDefault(s => s.Type == "name").Value;
+
+      var userToWedding = new UsersToWedding()
+      {
+        DisplayName = displayname,
+        UserName = username,
+        UserRoles = UsersToWedding.UserRole.Primary,
+        WeddingId = weddingId
+      };
+
+      await _dbContext.UsersToWeddings.AddAsync(userToWedding, cancellationToken);
+      await _dbContext.SaveChangesAsync(cancellationToken);
+
+      return Ok();
     }
 
     [HttpPost]
