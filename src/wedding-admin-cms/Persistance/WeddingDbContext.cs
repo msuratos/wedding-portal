@@ -23,6 +23,9 @@ namespace wedding_admin_cms.Persistance
         build.Property(prop => prop.WeddingId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
         build.Property(prop => prop.Bride).IsRequired().HasMaxLength(100);
         build.Property(prop => prop.Groom).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.LastName).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.MessageToEveryone).IsUnicode(true);
+        build.Property(prop => prop.UrlSubDomain).HasMaxLength(100);
         build.Property(prop => prop.CeremonyDate).IsRequired();
 
         build.HasMany<Entourage>().WithOne(nav => nav.Wedding).HasForeignKey(fk => fk.EntourageOfWeddingId);

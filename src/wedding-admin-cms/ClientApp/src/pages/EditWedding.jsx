@@ -9,7 +9,7 @@ import { useMsal } from '@azure/msal-react';
 
 import WeddingTable from '../components/WeddingTable';
 import { addRole, getRoles } from '../apis/roleApi';
-import { addEntourage, createWedding, getWedding } from '../apis/weddingApi';
+import { addEntourage, createWedding, editMessageApi, getWedding } from '../apis/weddingApi';
 
 const EditWedding = () => {
   const [activeTab, setActiveTab] = useState('1');
@@ -21,6 +21,7 @@ const EditWedding = () => {
   const [entourageRole, setEntourageRole] = useState(0);
   const [groom, setGroom] = useState('');
   const [loading, setLoading] = useState(false);
+  const [messageForEveryone, setMessageForEveryone] = useState('');
   const [openDropdown, setOpenDropdown] = useState(false);
   const [reception, setReception] = useState('');
   const [receptionDate, setReceptionDate] = useState(undefined);
@@ -80,6 +81,13 @@ const EditWedding = () => {
     setLoading(false);
   };
 
+  const editMessage = async (e) => {
+    e.preventDefault();
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const respData = await editMessageApi({ messageForEveryone, weddingId: wedding.weddingId }, tokenCache.accessToken);
+    console.log('message has been updated', respData);
+  };
+
   useEffect(() => {
     const init = async () => {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
@@ -105,10 +113,13 @@ const EditWedding = () => {
           <NavLink active={activeTab === '1'} onClick={() => setActiveTab('1')}>Edit Wedding</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink active={activeTab === '2'} onClick={() => setActiveTab('2')}>Edit Roles</NavLink>
+          <NavLink active={activeTab === '2'} onClick={() => setActiveTab('2')}>Edit Message</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink active={activeTab === '3'} onClick={() => setActiveTab('3')}>Edit Entourage</NavLink>
+          <NavLink active={activeTab === '3'} onClick={() => setActiveTab('3')}>Edit Roles</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink active={activeTab === '4'} onClick={() => setActiveTab('4')}>Edit Entourage</NavLink>
         </NavItem>
       </Nav>
       <TabContent activeTab={activeTab}>
@@ -141,7 +152,7 @@ const EditWedding = () => {
                       <Col md={2}><label htmlFor="reception-date">Reception Date</label></Col>
                       <Col md={10}><input type="datetime-local" id="reception-date" value={receptionDate} onChange={e => setReceptionDate(e.target.value)} /></Col>
                     </Row>
-                  <Row>
+                    <Row>
                       <Col md={2}><label htmlFor="reception">Reception Location</label></Col>
                       <Col md={10}><input id="reception" value={reception} onChange={e => setReception(e.target.value)} /></Col>
                     </Row>
@@ -156,6 +167,23 @@ const EditWedding = () => {
           }
         </TabPane>
         <TabPane tabId="2">
+          <form onSubmit={editMessage}>
+            <Row style={{ marginTop: '15px' }}>
+              <Col sm={12}>
+                <Label for="messageForEveryone" sm={2}>Message for guests</Label>
+                <Col sm={10}>
+                  <Input id="messageForEveryone" name="messageForEveryone" placeholder="Message..."
+                    type="textarea" value={messageForEveryone} onChange={e => setMessageForEveryone(e.target.value)} />
+                </Col>
+              </Col>
+            </Row>
+            <Row style={{ marginTop: '15px' }}>
+              <Col sm={6}><Button style={{ width: '100%' }} type='submit' color='primary'>Submit</Button></Col>
+              <Col sm={6}><Button style={{ width: '100%' }} color='secondary'>Cancel</Button></Col>
+            </Row>
+          </form>
+        </TabPane>
+        <TabPane tabId="3">
           <Row style={{ marginTop: '15px' }}>
             <Col sm={12}>
               <form onSubmit={createRole}>
@@ -202,7 +230,7 @@ const EditWedding = () => {
             </Col>
           </Row>
         </TabPane>
-        <TabPane tabId="3">
+        <TabPane tabId="4">
           <Row style={{ marginTop: '15px' }}>
             <Col sm={12}>
               <form onSubmit={createEntourage}>

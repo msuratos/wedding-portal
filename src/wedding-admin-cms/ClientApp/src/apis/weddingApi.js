@@ -22,6 +22,17 @@ export const createWedding = async (request, tokenCache) => {
   return await resp.json();
 };
 
+export const editMessageApi = async (request, token) => {
+  const resp = await fetch('wedding/message', {
+    method: 'POST', body: JSON.stringify(request),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return await resp.json();
+};
+
 export const getWedding = async (tokenCache) => {
   const resp = await fetch('wedding', {
     method: 'GET',
