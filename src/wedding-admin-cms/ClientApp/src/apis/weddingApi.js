@@ -41,3 +41,16 @@ export const getWedding = async (tokenCache) => {
 
   return await resp.json();
 };
+
+export const updateWedding = async (request, tokenCache) => {
+  const resp = await fetch('wedding', {
+    method: 'PUT',
+    body: JSON.stringify(request),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${tokenCache.accessToken}`
+    }
+  });
+
+  return await resp.json();
+};

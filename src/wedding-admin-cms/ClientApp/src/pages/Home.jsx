@@ -7,7 +7,7 @@ import { getWedding } from '../apis/weddingApi';
 
 const Home = () => {
   const [weddingId, setWeddingId] = useState('');
-  const [wedding, setWedding] = useState({});
+  const [weddings, setWeddings] = useState([]);
 
   const msal = useMsal();
   const { accounts, instance } = msal;
@@ -36,7 +36,7 @@ const Home = () => {
       try {
         const tokenCache = await instance.acquireTokenSilent(silentRequest);
         const respData = await getWedding(tokenCache);
-        setWedding(respData);
+        setWeddings([respData]);
       }
       catch (error) {
         console.error(error);
@@ -60,19 +60,19 @@ const Home = () => {
         <li><strong>Manage your entourage!</strong>. For example, click <em>Edit Weddings</em> to continue</li>
         <li><strong>Manage your roles in your entourage!</strong>. For example, click <em>Edit Weddings</em> to continue</li>
       </ul>
-      <WeddingTable wedding={wedding} />
       <Row>
         <Col xs={12}>
           <FormGroup row>
-            <Col xs={10}>
+            <Col xs={12} md={8}>
               <Input name="weddingid" placeholder="Wedding ID" value={weddingId} onChange={(e) => setWeddingId(e.target.value)} />
             </Col>
-            <Col xs={2}>
-              <Button color="primary" onClick={addWedding}>Add Wedding</Button>
+            <Col xs={12} md={4}>
+              <Button color="primary" style={{ width: '100%' }} onClick={addWedding}>Add Wedding</Button>
             </Col>
           </FormGroup>
         </Col>
       </Row>
+      <WeddingTable weddings={weddings} />
     </div>
   );
 };
