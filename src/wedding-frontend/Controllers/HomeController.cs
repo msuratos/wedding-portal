@@ -29,7 +29,7 @@ namespace wedding_frontend.Controllers
     public async Task<Wedding> Get(CancellationToken cancellationToken)
     {
       var currentDomain = Request.Host.Host;
-      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => s.UrlSubDomain.Contains(currentDomain), cancellationToken);
+      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => currentDomain.Contains(s.UrlSubDomain), cancellationToken);
 
       _logger.LogInformation("Attempting to get wedding information based on url: {0} - {1}", currentDomain, JsonConvert.SerializeObject(wedding));
 
