@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 
 import weddingPic from './assets/wedding.jpeg';
@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 
 const App = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  const weddingDate = new Date('07/08/2022 13:00:00 GMT-07:00');
+  const [wedding, setWedding] = useState({});
+  const [weddingDate, setWeddingDate] = useState(new Date());
 
   const calculateTimeLeft = () => {
     const currentdate = new Date();
@@ -30,6 +30,18 @@ const App = () => {
 
   setTimeout(() => calculateTimeLeft(), 1000);
 
+  useEffect(() => {
+    async function getWeddingInfo() {
+      const resp = await fetch('home');
+      const wedding = await resp.json();
+
+      setWedding(wedding);
+      setWeddingDate(new Date(wedding.ceremonyDate));
+    }
+
+    getWeddingInfo();
+  }, []);
+
   return (
     <div className="App">
       <Grid container spacing={2} style={{
@@ -44,9 +56,9 @@ const App = () => {
               <h3 className="message">Wedding 2.0</h3>
             </Grid>
             <Grid item xs={12} md={12}>
-              <h2 className="persons">MELVIN & ERLYNN</h2>
-              <Typography variant="h3" sx={{ color: 'white', fontFamily: '\'Dancing Script\', cursive', textAlign: 'center' }} gutterButton>
-                Suratos
+              <h2 className="persons">{wedding?.groom} & {wedding?.bride}</h2>
+              <Typography variant="h3" sx={{ color: 'white', fontFamily: '\'Dancing Script\', cursive', textAlign: 'center' }} gutterBottom>
+                {wedding?.lastName}
               </Typography>
             </Grid>
             <Grid item xs={12} md={12} sx={{textAlign: 'center', justifyContent: 'center'}}>
@@ -54,7 +66,7 @@ const App = () => {
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50.9px" height="35.4px" viewBox="0 0 50.9 35.4" enableBackground="new 0 0 50.9 35.4">
                   <polygon className="theme-header-ribbon-arrow" points="0,35.4 2.9,35.4 15.6,18.9 21.2,18.9 8.6,35.4 11.6,35.4 24.2,18.9 29.8,18.9 17.2,35.4 20.2,35.4 32.8,18.9 38.5,18.9 25.8,35.4 28.8,35.4 41.4,18.9 47.1,18.9 34.4,35.4 37.4,35.4 50.9,17.7 37.4,0 34.4,0 47.1,16.5 41.4,16.5 28.8,0 25.8,0 38.5,16.5 32.8,16.5 20.2,0 17.2,0 29.8,16.5 24.2,16.5 11.6,0 8.6,0 21.2,16.5 15.6,16.5 2.9,0 0,0 13.5,17.7 "></polygon>
                 </svg>
-                <span>July 8, 2022</span>
+                <span>{weddingDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50.9px" height="35.4px" viewBox="0 0 50.9 35.4" enableBackground="new 0 0 50.9 35.4">
                   <polygon className="theme-header-ribbon-arrow" points="50.9,0 48,0 35.3,16.5 29.7,16.5 42.3,0 39.4,0 26.7,16.5 21.1,16.5 33.7,0 30.7,0 18.1,16.5 12.5,16.5 25.1,0 22.1,0 9.5,16.5 3.8,16.5 16.5,0 13.5,0 0,17.7 13.5,35.4 16.5,35.4 3.8,18.9 9.5,18.9 22.1,35.4 25.1,35.4 12.5,18.9 18.1,18.9 30.7,35.4 33.7,35.4 21.1,18.9 26.7,18.9 39.4,35.4 42.3,35.4 29.7,18.9 35.3,18.9 48,35.4 50.9,35.4 37.4,17.7 "></polygon>
                 </svg>
@@ -96,14 +108,7 @@ const App = () => {
       </Grid>
       <Grid container spacing={2} sx={{pl: 5, pr: 5}}>
         <Grid item xs={12} md={12}>
-          <p>Hi family & friends!,</p>
-          <p>
-            We can't wait to celebrate our wedding 2.0 with you guys! Please save our date FRIDAY, July 8, 2022, for our Catholic church wedding & reception to follow.
-            Our website is currently under construction, so please check back with this QR code for the website, as well as future updates & more information.
-            We will send the official invites ASAP. Thanks & can't wait to see y'all!
-          </p>
-          <p>With love,</p>
-          <p>Melvin & Erlynn 😊</p>
+          <pre>{wedding?.messageToEveryone}</pre>
         </Grid>
       </Grid>
     </div>

@@ -1,27 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using wedding_frontend.Persistance;
+using wedding_frontend.Persistance.Entities;
 
 namespace wedding_frontend.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class HomeController : ControllerBase
+  [ApiController]
+  [Route("[controller]")]
+  public class HomeController : ControllerBase
+  {
+    private readonly ILogger<HomeController> _logger;
+    private readonly WeddingDbContext _dbContext;
+
+    public HomeController(ILogger<HomeController> logger, WeddingDbContext dbContext)
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public string Get()
-        {
-            return "Api for wedding portal";
-        }
+      _logger = logger;
+      _dbContext = dbContext;
     }
+
+    [HttpGet]
+    public async Task<Wedding> Get(CancellationToken cancellationToken)
+    {
+      _logger.LogInformation("Getting wedding information based on url");
+
+      var currentDomain = Request.Host.Host;
+      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => s.UrlSubDomain.Contains(currentDomain), cancellationToken);
+
+      return wedding;
+    }
+  }
 }
