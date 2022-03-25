@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using wedding_frontend.Persistance;
 using wedding_frontend.Persistance.Entities;
 
@@ -27,10 +28,10 @@ namespace wedding_frontend.Controllers
     [HttpGet]
     public async Task<Wedding> Get(CancellationToken cancellationToken)
     {
-      _logger.LogInformation("Getting wedding information based on url");
-
       var currentDomain = Request.Host.Host;
       var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => s.UrlSubDomain.Contains(currentDomain), cancellationToken);
+
+      _logger.LogInformation("Attempting to get wedding information based on url: {0} - {1}", currentDomain, JsonConvert.SerializeObject(wedding));
 
       return wedding;
     }
