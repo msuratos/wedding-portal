@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Col, Dropdown, DropdownItem, DropdownMenu,
   DropdownToggle, Nav, NavItem, NavLink, Row,
-  TabContent, TabPane, FormGroup,
+  TabContent, TabPane, FormGroup, UncontrolledAlert,
   Label, Input, Button, Table, Form
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
@@ -24,6 +24,8 @@ const EditWedding = () => {
   const [loading, setLoading] = useState(false);
   const [messageForEveryone, setMessageForEveryone] = useState('');
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [showSuccessAlert, setSuccessShowAlert] = useState(false);
+  const [showErrorAlert, setErrorShowAlert] = useState(false);
   const [reception, setReception] = useState('');
   const [receptionDate, setReceptionDate] = useState(undefined);
   const [roles, setRoles] = useState([]);
@@ -44,52 +46,103 @@ const EditWedding = () => {
   const callCreateWedding = async () => {
     setLoading(true);
 
-    const formData = { bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const respData = await createWedding(formData, tokenCache);
+    try {
+      const formData = { bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const respData = await createWedding(formData, tokenCache);
 
-    setWedding(respData);
-    setLoading(false);
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+
+      setWedding(respData);
+      setLoading(false);
+    }
+    catch (error) {
+      console.error(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
   const createEntourage = async (e) => {
     e.preventDefault();
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const newEntourage = await addEntourage(
-      {
-        name: entourageName, roleIdOfEntourage: entourageRole,
-        entourageOfWeddingId: wedding.weddingId, token: tokenCache.accessToken
-      }
-    );
 
-    setEntourage([...entourage, newEntourage]);
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const newEntourage = await addEntourage(
+        {
+          name: entourageName, roleIdOfEntourage: entourageRole,
+          entourageOfWeddingId: wedding.weddingId, token: tokenCache.accessToken
+        }
+      );
+
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+
+      setEntourage([...entourage, newEntourage]);
+    }
+    catch (error) {
+      console.error(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
   const createRole = async (e) => {
     e.preventDefault();
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const newRole = await addRole({ description: roleDescription, name: roleName, token: tokenCache.accessToken });
-    setRoles([...roles, newRole]);
+
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const newRole = await addRole({ description: roleDescription, name: roleName, token: tokenCache.accessToken });
+      setRoles([...roles, newRole]);
+
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+    }
+    catch (error) {
+      console.error(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
   const callUpdateWedding = async () => {
     setLoading(true);
 
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const respData = await updateWedding({
-      bride, groom, lastName, ceremonyDate, ceremonyLocation: ceremony,
-      receptionLocation: reception, receptionDate
-    }, tokenCache);
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const respData = await updateWedding({
+        bride, groom, lastName, ceremonyDate, ceremonyLocation: ceremony,
+        receptionLocation: reception, receptionDate
+      }, tokenCache);
 
-    setWedding(respData);
-    setLoading(false);
+      setWedding(respData);
+      setLoading(false);
+
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+    }
+    catch (error) {
+      console.error(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
   const editMessage = async (e) => {
     e.preventDefault();
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const respData = await editMessageApi({ messageForEveryone, weddingId: wedding.weddingId }, tokenCache.accessToken);
-    console.log('message has been updated', respData);
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const respData = await editMessageApi({ messageForEveryone, weddingId: wedding.weddingId }, tokenCache.accessToken);
+      console.log('message has been updated', respData);
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+    }
+    catch (error) {
+      console.log(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
   useEffect(() => {
@@ -136,6 +189,8 @@ const EditWedding = () => {
           <NavLink active={activeTab === '4'} onClick={() => setActiveTab('4')}>Edit Entourage</NavLink>
         </NavItem>
       </Nav>
+      {showSuccessAlert && <UncontrolledAlert>Success!</UncontrolledAlert>}
+      {showErrorAlert && <UncontrolledAlert color='danger'>Failed! Please try again</UncontrolledAlert>}
       <TabContent activeTab={activeTab}>
         <TabPane tabId="1">
           {
@@ -208,7 +263,7 @@ const EditWedding = () => {
               <Col sm={12}>
                 <Label for="messageForEveryone" sm={2}>Message for guests</Label>
                 <Col sm={10}>
-                  <Input id="messageForEveryone" name="messageForEveryone" placeholder="Message..."
+                  <Input id="messageForEveryone" name="messageForEveryone" placeholder="Message..." rows={15}
                     type="textarea" value={messageForEveryone} onChange={e => setMessageForEveryone(e.target.value)} />
                 </Col>
               </Col>
