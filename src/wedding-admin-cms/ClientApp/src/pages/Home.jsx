@@ -1,14 +1,30 @@
 import React, { useEffect, useState } from 'react';
+import { Button, Col, Input, FormGroup, Row } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
 import WeddingTable from '../components/WeddingTable';
 import { getWedding } from '../apis/weddingApi';
 
 const Home = () => {
-  const [wedding, setWedding] = useState({});
+  const [weddingId, setWeddingId] = useState('');
+  const [weddings, setWeddings] = useState([]);
 
   const msal = useMsal();
   const { accounts, instance } = msal;
+
+  const addWedding = async () => {
+    const silentRequest = {
+      scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
+      account: accounts[0]
+    };
+
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const resp = await fetch(`wedding?weddingId=${weddingId}`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${tokenCache.accessToken}` }
+    });
+    console.log(resp);
+  };
 
   useEffect(() => {
     async function getData() {
@@ -17,9 +33,14 @@ const Home = () => {
         account: accounts[0]
       };
 
-      const tokenCache = await instance.acquireTokenSilent(silentRequest);
-      const respData = await getWedding(tokenCache);
-      setWedding(respData);
+      try {
+        const tokenCache = await instance.acquireTokenSilent(silentRequest);
+        const respData = await getWedding(tokenCache);
+        setWeddings([respData]);
+      }
+      catch (error) {
+        console.error(error);
+      }
     };
 
     getData();
@@ -39,7 +60,19 @@ const Home = () => {
         <li><strong>Manage your entourage!</strong>. For example, click <em>Edit Weddings</em> to continue</li>
         <li><strong>Manage your roles in your entourage!</strong>. For example, click <em>Edit Weddings</em> to continue</li>
       </ul>
-      <WeddingTable wedding={wedding} />
+      <Row>
+        <Col xs={12}>
+          <FormGroup row>
+            <Col xs={12} md={8}>
+              <Input name="weddingid" placeholder="Wedding ID" value={weddingId} onChange={(e) => setWeddingId(e.target.value)} />
+            </Col>
+            <Col xs={12} md={4}>
+              <Button color="primary" style={{ width: '100%' }} onClick={addWedding}>Add Wedding</Button>
+            </Col>
+          </FormGroup>
+        </Col>
+      </Row>
+      <WeddingTable weddings={weddings} />
     </div>
   );
 };

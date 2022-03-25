@@ -2,14 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Col, Dropdown, DropdownItem, DropdownMenu,
   DropdownToggle, Nav, NavItem, NavLink, Row,
-  TabContent, TabPane, FormGroup,
-  Label, Input, Button, Table
+  TabContent, TabPane, FormGroup, UncontrolledAlert,
+  Label, Input, Button, Table, Form
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
 import WeddingTable from '../components/WeddingTable';
 import { addRole, getRoles } from '../apis/roleApi';
-import { addEntourage, createWedding, getWedding } from '../apis/weddingApi';
+import { addEntourage, createWedding, editMessageApi, getWedding, updateWedding } from '../apis/weddingApi';
 
 const EditWedding = () => {
   const [activeTab, setActiveTab] = useState('1');
@@ -20,8 +20,12 @@ const EditWedding = () => {
   const [entourageName, setEntourageName] = useState('');
   const [entourageRole, setEntourageRole] = useState(0);
   const [groom, setGroom] = useState('');
+  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [messageForEveryone, setMessageForEveryone] = useState('');
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [showSuccessAlert, setSuccessShowAlert] = useState(false);
+  const [showErrorAlert, setErrorShowAlert] = useState(false);
   const [reception, setReception] = useState('');
   const [receptionDate, setReceptionDate] = useState(undefined);
   const [roles, setRoles] = useState([]);
@@ -42,42 +46,103 @@ const EditWedding = () => {
   const callCreateWedding = async () => {
     setLoading(true);
 
-    const formData = { bride, groom, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const respData = await createWedding(formData, tokenCache);
+    try {
+      const formData = { bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const respData = await createWedding(formData, tokenCache);
 
-    setWedding(respData);
-    setLoading(false);
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+
+      setWedding(respData);
+      setLoading(false);
+    }
+    catch (error) {
+      console.error(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
   const createEntourage = async (e) => {
     e.preventDefault();
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const newEntourage = await addEntourage(
-      {
-        name: entourageName, roleIdOfEntourage: entourageRole,
-        entourageOfWeddingId: wedding.weddingId, token: tokenCache.accessToken
-      }
-    );
 
-    setEntourage([...entourage, newEntourage]);
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const newEntourage = await addEntourage(
+        {
+          name: entourageName, roleIdOfEntourage: entourageRole,
+          entourageOfWeddingId: wedding.weddingId, token: tokenCache.accessToken
+        }
+      );
+
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+
+      setEntourage([...entourage, newEntourage]);
+    }
+    catch (error) {
+      console.error(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
   const createRole = async (e) => {
     e.preventDefault();
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const newRole = await addRole({ description: roleDescription, name: roleName, token: tokenCache.accessToken });
-    setRoles([...roles, newRole]);
+
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const newRole = await addRole({ description: roleDescription, name: roleName, token: tokenCache.accessToken });
+      setRoles([...roles, newRole]);
+
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+    }
+    catch (error) {
+      console.error(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
-  const callGetWedding = async () => {
+  const callUpdateWedding = async () => {
     setLoading(true);
 
-    const tokenCache = await instance.acquireTokenSilent(silentRequest);
-    const respData = await getWedding(tokenCache);
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const respData = await updateWedding({
+        bride, groom, lastName, ceremonyDate, ceremonyLocation: ceremony,
+        receptionLocation: reception, receptionDate
+      }, tokenCache);
 
-    setWedding(respData);
-    setLoading(false);
+      setWedding(respData);
+      setLoading(false);
+
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+    }
+    catch (error) {
+      console.error(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
+  };
+
+  const editMessage = async (e) => {
+    e.preventDefault();
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const respData = await editMessageApi({ messageForEveryone, weddingId: wedding.weddingId }, tokenCache.accessToken);
+      console.log('message has been updated', respData);
+      setSuccessShowAlert(true);
+      setTimeout(() => setSuccessShowAlert(false), 3000);
+    }
+    catch (error) {
+      console.log(error);
+      setErrorShowAlert(true);
+      setTimeout(() => setErrorShowAlert(false), 3000);
+    }
   };
 
   useEffect(() => {
@@ -90,9 +155,19 @@ const EditWedding = () => {
 
       // wait for the promises to resolve
       const resp = await Promise.all([rolesPromise, weddingPromise]);
+      const wedding = resp[1];
+
+      setWedding(wedding);
+      setBride(wedding.bride);
+      setGroom(wedding.groom);
+      setLastName(wedding.lastName);
+      setCeremonyDate(new Date(wedding.ceremonyDate).toISOString().split('Z')[0]);
+      setCeremony(wedding.ceremonyLocation);
+      setReceptionDate(new Date(wedding.receptionDate).toISOString().split('Z')[0]);
+      setReception(wedding.receptionLocation);
+      setMessageForEveryone(wedding.messageToEveryone);
 
       setRoles(resp[0]);
-      setWedding(resp[1]);
     };
 
     init();
@@ -105,12 +180,17 @@ const EditWedding = () => {
           <NavLink active={activeTab === '1'} onClick={() => setActiveTab('1')}>Edit Wedding</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink active={activeTab === '2'} onClick={() => setActiveTab('2')}>Edit Roles</NavLink>
+          <NavLink active={activeTab === '2'} onClick={() => setActiveTab('2')}>Edit Message</NavLink>
         </NavItem>
         <NavItem>
-          <NavLink active={activeTab === '3'} onClick={() => setActiveTab('3')}>Edit Entourage</NavLink>
+          <NavLink active={activeTab === '3'} onClick={() => setActiveTab('3')}>Edit Roles</NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink active={activeTab === '4'} onClick={() => setActiveTab('4')}>Edit Entourage</NavLink>
         </NavItem>
       </Nav>
+      {showSuccessAlert && <UncontrolledAlert>Success!</UncontrolledAlert>}
+      {showErrorAlert && <UncontrolledAlert color='danger'>Failed! Please try again</UncontrolledAlert>}
       <TabContent activeTab={activeTab}>
         <TabPane tabId="1">
           {
@@ -119,46 +199,85 @@ const EditWedding = () => {
               : (
                 <div>
                   <h1 id="tabelLabel">Wedding</h1>
-                  <p>This component demonstrates fetching data from the server.</p>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Row>
-                      <Col md={2}><label htmlFor="bride">Bride</label></Col>
-                      <Col md={10}><input type="text" id="bride" value={bride} onChange={e => setBride(e.target.value)} /></Col>
-                    </Row>
-                    <Row>
-                      <Col md={2}><label htmlFor="groom">Groom</label></Col>
-                      <Col md={10}><input type="text" id="groom" value={groom} onChange={e => setGroom(e.target.value)} /></Col>
-                    </Row>
-                    <Row>
-                      <Col md={2}><label htmlFor="ceremony-date">Cremony Date</label></Col>
-                      <Col md={10}><input type="datetime-local" id="ceremony-date" value={ceremonyDate} onChange={e => setCeremonyDate(e.target.value)} /></Col>
-                    </Row>
-                    <Row>
-                      <Col md={2}><label htmlFor="ceremony">Cremony Location</label></Col>
-                      <Col md={10}><input id="ceremony" value={ceremony} onChange={e => setCeremony(e.target.value)} /></Col>
-                    </Row>
-                    <Row>
-                      <Col md={2}><label htmlFor="reception-date">Reception Date</label></Col>
-                      <Col md={10}><input type="datetime-local" id="reception-date" value={receptionDate} onChange={e => setReceptionDate(e.target.value)} /></Col>
-                    </Row>
-                  <Row>
-                      <Col md={2}><label htmlFor="reception">Reception Location</label></Col>
-                      <Col md={10}><input id="reception" value={reception} onChange={e => setReception(e.target.value)} /></Col>
-                    </Row>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '15px' }}>
-                    <input type="submit" className="btn btn-primary" value="Create Wedding" onClick={callCreateWedding} />
-                    <input type="button" className="btn btn-secondary" value="Get Wedding" onClick={callGetWedding} />
-                  </div>
-                  <WeddingTable wedding={wedding} />
+                  <p>This tab lists information about your wedding.</p>
+                  <Form>
+                    <FormGroup row>
+                      <Label xs={12} sm={2} for="bride">Bride</Label>
+                      <Col xs={12} sm={10}>
+                        <Input type="text" value={bride} onChange={e => setBride(e.target.value)} />
+                      </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                      <Label xs={12} sm={2} for="groom">Groom</Label>
+                      <Col xs={12} sm={10}>
+                        <Input type="text" value={groom} onChange={e => setGroom(e.target.value)} />
+                      </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                      <Label xs={12} sm={2} for="lastname">Family Name</Label>
+                      <Col xs={12} sm={10}>
+                        <Input type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
+                      </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                      <Label xs={12} sm={2} for="ceremony-date">Ceremony Date</Label>
+                      <Col xs={12} sm={10}>
+                        <Input type="datetime-local" value={ceremonyDate} onChange={e => setCeremonyDate(e.target.value)} />
+                      </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                      <Label xs={12} sm={2} for="ceremony">Ceremony Location</Label>
+                      <Col xs={12} sm={10}>
+                        <Input type="text" value={ceremony} onChange={e => setCeremony(e.target.value)} />
+                      </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                      <Label xs={12} sm={2} for="reception-date">Reception Date</Label>
+                      <Col xs={12} sm={10}>
+                        <Input type="datetime-local" value={receptionDate} onChange={e => setReceptionDate(e.target.value)} />
+                      </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                      <Label xs={12} sm={2} for="reception">Reception Location</Label>
+                      <Col xs={12} sm={10}>
+                        <Input type="text" value={reception} onChange={e => setReception(e.target.value)} />
+                      </Col>
+                    </FormGroup>
+                    <FormGroup row>
+                      <Col xs={12} sm={6}>
+                        <Button block color="primary" onClick={callCreateWedding}>Create Wedding</Button>
+                      </Col>
+                      <Col xs={12} sm={6}>
+                        <Button block color="secondary" onClick={callUpdateWedding}>Update Wedding</Button>
+                      </Col>
+                    </FormGroup>
+                  </Form>
+                  <WeddingTable weddings={[wedding]} />
                 </div>
               )
           }
         </TabPane>
         <TabPane tabId="2">
+          <Form onSubmit={editMessage}>
+            <Row style={{ marginTop: '15px' }}>
+              <Col sm={12}>
+                <Label for="messageForEveryone" sm={2}>Message for guests</Label>
+                <Col sm={10}>
+                  <Input id="messageForEveryone" name="messageForEveryone" placeholder="Message..." rows={15}
+                    type="textarea" value={messageForEveryone} onChange={e => setMessageForEveryone(e.target.value)} />
+                </Col>
+              </Col>
+            </Row>
+            <Row style={{ marginTop: '15px' }}>
+              <Col sm={6}><Button style={{ width: '100%' }} type='submit' color='primary'>Submit</Button></Col>
+              <Col sm={6}><Button style={{ width: '100%' }} color='secondary'>Cancel</Button></Col>
+            </Row>
+          </Form>
+        </TabPane>
+        <TabPane tabId="3">
           <Row style={{ marginTop: '15px' }}>
             <Col sm={12}>
-              <form onSubmit={createRole}>
+              <Form onSubmit={createRole}>
                 <FormGroup row>
                   <Label for="name" sm={2}>Role Name</Label>
                   <Col sm={10}>
@@ -173,15 +292,15 @@ const EditWedding = () => {
                   </Col>
                 </FormGroup>
                 <Row>
-                  <Col sm={6}><Button style={{ width: '100%' }} type='submit' color='primary'>Submit</Button></Col>
-                  <Col sm={6}><Button style={{ width: '100%' }} color='secondary'>Cancel</Button></Col>
+                  <Col sm={6}><Button block type='submit' color='primary'>Submit</Button></Col>
+                  <Col sm={6}><Button block color='secondary'>Cancel</Button></Col>
                 </Row>
-              </form>
+              </Form>
             </Col>
           </Row>
           <Row style={{ marginTop: '15px' }}>
             <Col sm={12}>
-              <Table className='table table-striped'>
+              <Table responsive hover striped>
                 <thead>
                   <tr>
                     <th scope="row">#</th>
@@ -202,10 +321,10 @@ const EditWedding = () => {
             </Col>
           </Row>
         </TabPane>
-        <TabPane tabId="3">
+        <TabPane tabId="4">
           <Row style={{ marginTop: '15px' }}>
             <Col sm={12}>
-              <form onSubmit={createEntourage}>
+              <Form onSubmit={createEntourage}>
                 <FormGroup row>
                   <Label for="name" sm={2}>Entourage Name</Label>
                   <Col sm={10}>
@@ -231,7 +350,7 @@ const EditWedding = () => {
                   <Col sm={6}><Button style={{ width: '100%' }} type='submit' color='primary'>Submit</Button></Col>
                   <Col sm={6}><Button style={{ width: '100%' }} color='secondary'>Cancel</Button></Col>
                 </Row>
-              </form>
+              </Form>
             </Col>
           </Row>
           <Row style={{ marginTop: '15px' }}>
