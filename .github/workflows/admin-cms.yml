@@ -9,7 +9,7 @@ on:
     branches: 
       - main
     paths: 
-      - '**/wedding-admin-cms/*'
+      - '**/wedding-admin-cms/**'
 
 jobs:
   build:
