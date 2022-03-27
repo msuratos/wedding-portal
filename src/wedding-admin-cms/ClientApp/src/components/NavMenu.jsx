@@ -24,7 +24,7 @@ export const NavMenu = () => {
     <header>
       <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
         <Container fluid>
-          <NavbarBrand tag={Link} to="/">Wedding Portal - Test</NavbarBrand>
+          <NavbarBrand tag={Link} to="/">Wedding Portal</NavbarBrand>
           <NavbarToggler onClick={toggleNavbar} className="mr-2" />
           <Collapse className="d-sm-inline-flex" isOpen={!collapsed} navbar>
             <ul className="navbar-nav flex-grow">
