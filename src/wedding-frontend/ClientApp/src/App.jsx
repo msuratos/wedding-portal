@@ -53,7 +53,7 @@ const App = () => {
         <div className="detail-header">
           <Grid container>
             <Grid item xs={12} md={12}>
-              <h3 className="message">Wedding 2.0</h3>
+              <h3 className="message">Wedding 2.0.0</h3>
             </Grid>
             <Grid item xs={12} md={12}>
               <h2 className="persons">{wedding?.groom} & {wedding?.bride}</h2>
