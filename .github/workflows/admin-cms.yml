@@ -7,9 +7,9 @@ env:
 on:
   pull_request:
     branches: 
-    - main
+      - main
     paths: 
-    - '**/wedding-admin-cms/*'
+      - '**/wedding-admin-cms/*'
 
 jobs:
   build:

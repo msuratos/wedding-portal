@@ -7,9 +7,9 @@ env:
 on:
   pull_request:
     branches: 
-    - main
+      - main
     paths: 
-    - '**/wedding-frontend/*'
+      - '**/wedding-frontend/*'
 
 jobs:
   build:
