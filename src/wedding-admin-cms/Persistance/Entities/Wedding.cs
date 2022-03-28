@@ -19,6 +19,10 @@ namespace wedding_admin_cms.Persistance.Entities
     public string ReceptionLocation { get; set; }
     public DateTimeOffset CeremonyDate { get; set; }
     public DateTimeOffset ReceptionDate { get; set; }
+
+    public string PictureUrl { get; set; }
+    public string Pin { get; set; }
+    public string Title { get; set; }
     public string UrlSubDomain { get; set; }
 
     public ICollection<Entourage> Entourage { get; set; }

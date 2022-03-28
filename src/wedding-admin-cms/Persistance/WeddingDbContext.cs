@@ -25,8 +25,12 @@ namespace wedding_admin_cms.Persistance
         build.Property(prop => prop.Groom).IsRequired().HasMaxLength(100);
         build.Property(prop => prop.LastName).HasMaxLength(100);
         build.Property(prop => prop.MessageToEveryone).IsUnicode(true);
-        build.Property(prop => prop.UrlSubDomain).HasMaxLength(100);
         build.Property(prop => prop.CeremonyDate).IsRequired();
+
+        build.Property(prop => prop.PictureUrl).IsRequired().HasDefaultValue("https://c1.staticflickr.com/1/71/226654184_26b52a6116_z.jpg?zz=1").HasMaxLength(300);
+        build.Property(prop => prop.Pin).IsRequired().HasDefaultValue("1234").HasMaxLength(6);
+        build.Property(prop => prop.Title).IsRequired().HasDefaultValue("Wedding").HasMaxLength(50);
+        build.Property(prop => prop.UrlSubDomain).HasMaxLength(100);
 
         build.HasMany<Entourage>().WithOne(nav => nav.Wedding).HasForeignKey(fk => fk.EntourageOfWeddingId);
         build.HasMany<UsersToWedding>().WithOne(nav => nav.Wedding).HasForeignKey(fk => fk.WeddingId);
