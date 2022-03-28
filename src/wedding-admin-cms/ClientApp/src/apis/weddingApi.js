@@ -33,6 +33,15 @@ export const editMessageApi = async (request, token) => {
   return await resp.json();
 };
 
+export const getEntourage = async (weddingId, tokenCache) => {
+  const resp = await fetch(`entourage?weddingId=${weddingId}`, {
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${tokenCache.accessToken}` }
+  });
+
+  return await resp.json();
+};
+
 export const getWedding = async (tokenCache) => {
   const resp = await fetch('wedding', {
     method: 'GET',
