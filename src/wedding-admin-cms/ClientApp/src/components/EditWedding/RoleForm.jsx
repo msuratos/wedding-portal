@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button, Col, Form, FormGroup,
   Input, Label, Row, Table
@@ -50,7 +50,7 @@ const RoleForm = (props) => {
     }
 
     init();
-  }, []);
+  }, [instance, silentRequest]);
 
   return (
     <>

@@ -1,11 +1,11 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button, Col, Dropdown, DropdownItem, DropdownMenu,
   DropdownToggle, Form, FormGroup, Input, Label, Row, Table
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
-import { addEntourage } from '../../apis/weddingApi';
+import { addEntourage, getEntourage } from '../../apis/weddingApi';
 import { getRoles } from '../../apis/roleApi';
 
 const EntourageForm = (props) => {
@@ -53,14 +53,18 @@ const EntourageForm = (props) => {
 
   useEffect(() => {
     const init = async () => {
+      if (wedding.weddingId === undefined) return;
+
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const entourageResp = await getEntourage(wedding.weddingId, tokenCache);
       const rolesResp = await getRoles(tokenCache.accessToken);
 
+      setEntourage(entourageResp);
       setRoles(rolesResp);
     };
 
     init();
-  }, []);
+  }, [instance, silentRequest, wedding]);
 
   return (
     <>
@@ -105,12 +109,16 @@ const EntourageForm = (props) => {
               </tr>
             </thead>
             <tbody>
-              {entourage.map(el => (
-                <tr key={el.entourageId}>
-                  <td>{el.name}</td>
-                  <td>{el.roleIdOfEntourage}</td>
-                </tr>
-              ))}
+              {entourage.map(el => {
+                const role = roles.find(role => role.id === el.roleIdOfEntourage);
+
+                return (
+                  <tr key={el.entourageId}>
+                    <td>{el.name}</td>
+                    <td>{role?.name}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </Col>

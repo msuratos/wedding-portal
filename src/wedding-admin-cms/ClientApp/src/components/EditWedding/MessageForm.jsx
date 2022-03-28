@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Col, Form, Input, Label, Row } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
