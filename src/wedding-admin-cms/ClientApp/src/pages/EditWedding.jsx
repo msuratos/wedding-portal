@@ -8,7 +8,8 @@ import {
 import { useMsal } from '@azure/msal-react';
 
 import { addRole, getRoles } from '../apis/roleApi';
-import { addEntourage, editMessageApi, getWedding } from '../apis/weddingApi';
+import { addEntourage, getWedding } from '../apis/weddingApi';
+import MessageForm from '../components/EditWedding/MessageForm';
 import WeddingForm from '../components/EditWedding/WeddingForm';
 
 const EditWedding = () => {
@@ -16,14 +17,15 @@ const EditWedding = () => {
   const [entourage, setEntourage] = useState([]);
   const [entourageName, setEntourageName] = useState('');
   const [entourageRole, setEntourageRole] = useState(0);
-  const [messageForEveryone, setMessageForEveryone] = useState('');
   const [openDropdown, setOpenDropdown] = useState(false);
   const [showSuccessAlert, setSuccessShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
   const [roles, setRoles] = useState([]);
   const [roleDescription, setRoleDescription] = useState('');
   const [roleName, setRoleName] = useState('');
-  const [wedding, setWedding] = useState({ ceremonyDate: new Date(), receptionDate: new Date() });
+  const [wedding, setWedding] = useState({
+    ceremonyDate: new Date(), messageToEveryone: '', receptionDate: new Date()
+  });
 
   const msal = useMsal();
   const { instance, accounts } = msal;
@@ -77,22 +79,6 @@ const EditWedding = () => {
     }
   };
 
-  const editMessage = async (e) => {
-    e.preventDefault();
-    try {
-      const tokenCache = await instance.acquireTokenSilent(silentRequest);
-      const respData = await editMessageApi({ messageForEveryone, weddingId: wedding.weddingId }, tokenCache.accessToken);
-      console.log('message has been updated', respData);
-      setSuccessShowAlert(true);
-      setTimeout(() => setSuccessShowAlert(false), 3000);
-    }
-    catch (error) {
-      console.log(error);
-      setErrorShowAlert(true);
-      setTimeout(() => setErrorShowAlert(false), 3000);
-    }
-  };
-
   useEffect(() => {
     const init = async () => {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
@@ -137,21 +123,7 @@ const EditWedding = () => {
             setSuccessShowAlert={setSuccessShowAlert} setWedding={setWedding} />
         </TabPane>
         <TabPane tabId="2">
-          <Form onSubmit={editMessage}>
-            <Row style={{ marginTop: '15px' }}>
-              <Col sm={12}>
-                <Label for="messageForEveryone" sm={2}>Message for guests</Label>
-                <Col sm={10}>
-                  <Input id="messageForEveryone" name="messageForEveryone" placeholder="Message..." rows={15}
-                    type="textarea" value={messageForEveryone} onChange={e => setMessageForEveryone(e.target.value)} />
-                </Col>
-              </Col>
-            </Row>
-            <Row style={{ marginTop: '15px' }}>
-              <Col sm={6}><Button style={{ width: '100%' }} type='submit' color='primary'>Submit</Button></Col>
-              <Col sm={6}><Button style={{ width: '100%' }} color='secondary'>Cancel</Button></Col>
-            </Row>
-          </Form>
+          <MessageForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPane>
         <TabPane tabId="3">
           <Row style={{ marginTop: '15px' }}>
