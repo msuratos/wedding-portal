@@ -10,10 +10,17 @@ Another wedding registry portal with an added twist!
 - [ ] Games
 
 ## _TODO_
-- [ ] Admin Page
+- [x] Admin Page
   - [x] Finish entourage logic
   - [x] Connect 'Admin CMS' to Azure deploy with url
 - [ ] Slideshow Queueing
 - [ ] Trivia
 - [ ] Song Requests Queueing
 - [ ] Games
+
+## _Notes_
+
+DbContext Scaffold
+```bash
+dotnet ef dbcontext scaffold Name=WeddingDbContext Microsoft.EntityFrameworkCore.SqlServer -c WeddingDbContext --context-dir ./Persistance -o ./Persistance/Entities -t Weddings -t Entourages --force
+```

@@ -23,6 +23,9 @@ namespace wedding_frontend.Persistance.Entities
         public string LastName { get; set; }
         public string MessageToEveryone { get; set; }
         public string UrlSubDomain { get; set; }
+        public string PictureUrl { get; set; }
+        public string Pin { get; set; }
+        public string Title { get; set; }
 
         public virtual ICollection<Entourage> EntourageEntourageOfWeddings { get; set; }
         public virtual ICollection<Entourage> EntourageWeddings { get; set; }
