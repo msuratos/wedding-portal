@@ -7,31 +7,23 @@ import {
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
-import WeddingTable from '../components/WeddingTable';
 import { addRole, getRoles } from '../apis/roleApi';
-import { addEntourage, createWedding, editMessageApi, getWedding, updateWedding } from '../apis/weddingApi';
+import { addEntourage, editMessageApi, getWedding } from '../apis/weddingApi';
+import WeddingForm from '../components/EditWedding/WeddingForm';
 
 const EditWedding = () => {
   const [activeTab, setActiveTab] = useState('1');
-  const [bride, setBride] = useState('');
-  const [ceremony, setCeremony] = useState('');
-  const [ceremonyDate, setCeremonyDate] = useState(undefined);
   const [entourage, setEntourage] = useState([]);
   const [entourageName, setEntourageName] = useState('');
   const [entourageRole, setEntourageRole] = useState(0);
-  const [groom, setGroom] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [loading, setLoading] = useState(false);
   const [messageForEveryone, setMessageForEveryone] = useState('');
   const [openDropdown, setOpenDropdown] = useState(false);
   const [showSuccessAlert, setSuccessShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
-  const [reception, setReception] = useState('');
-  const [receptionDate, setReceptionDate] = useState(undefined);
   const [roles, setRoles] = useState([]);
   const [roleDescription, setRoleDescription] = useState('');
   const [roleName, setRoleName] = useState('');
-  const [wedding, setWedding] = useState({});
+  const [wedding, setWedding] = useState({ ceremonyDate: new Date(), receptionDate: new Date() });
 
   const msal = useMsal();
   const { instance, accounts } = msal;
@@ -42,27 +34,6 @@ const EditWedding = () => {
       account: accounts[0]
     }
   }, [accounts]);
-
-  const callCreateWedding = async () => {
-    setLoading(true);
-
-    try {
-      const formData = { bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
-      const tokenCache = await instance.acquireTokenSilent(silentRequest);
-      const respData = await createWedding(formData, tokenCache);
-
-      setSuccessShowAlert(true);
-      setTimeout(() => setSuccessShowAlert(false), 3000);
-
-      setWedding(respData);
-      setLoading(false);
-    }
-    catch (error) {
-      console.error(error);
-      setErrorShowAlert(true);
-      setTimeout(() => setErrorShowAlert(false), 3000);
-    }
-  };
 
   const createEntourage = async (e) => {
     e.preventDefault();
@@ -106,29 +77,6 @@ const EditWedding = () => {
     }
   };
 
-  const callUpdateWedding = async () => {
-    setLoading(true);
-
-    try {
-      const tokenCache = await instance.acquireTokenSilent(silentRequest);
-      const respData = await updateWedding({
-        bride, groom, lastName, ceremonyDate, ceremonyLocation: ceremony,
-        receptionLocation: reception, receptionDate
-      }, tokenCache);
-
-      setWedding(respData);
-      setLoading(false);
-
-      setSuccessShowAlert(true);
-      setTimeout(() => setSuccessShowAlert(false), 3000);
-    }
-    catch (error) {
-      console.error(error);
-      setErrorShowAlert(true);
-      setTimeout(() => setErrorShowAlert(false), 3000);
-    }
-  };
-
   const editMessage = async (e) => {
     e.preventDefault();
     try {
@@ -158,15 +106,6 @@ const EditWedding = () => {
       const wedding = resp[1];
 
       setWedding(wedding);
-      setBride(wedding.bride);
-      setGroom(wedding.groom);
-      setLastName(wedding.lastName);
-      setCeremonyDate(new Date(wedding.ceremonyDate).toISOString().split('Z')[0]);
-      setCeremony(wedding.ceremonyLocation);
-      setReceptionDate(new Date(wedding.receptionDate).toISOString().split('Z')[0]);
-      setReception(wedding.receptionLocation);
-      setMessageForEveryone(wedding.messageToEveryone);
-
       setRoles(resp[0]);
     };
 
@@ -193,69 +132,9 @@ const EditWedding = () => {
       {showErrorAlert && <UncontrolledAlert color='danger'>Failed! Please try again</UncontrolledAlert>}
       <TabContent activeTab={activeTab}>
         <TabPane tabId="1">
-          {
-            loading
-              ? <p><em>Loading...</em></p>
-              : (
-                <div>
-                  <h1 id="tabelLabel">Wedding</h1>
-                  <p>This tab lists information about your wedding.</p>
-                  <Form>
-                    <FormGroup row>
-                      <Label xs={12} sm={2} for="bride">Bride</Label>
-                      <Col xs={12} sm={10}>
-                        <Input type="text" value={bride} onChange={e => setBride(e.target.value)} />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label xs={12} sm={2} for="groom">Groom</Label>
-                      <Col xs={12} sm={10}>
-                        <Input type="text" value={groom} onChange={e => setGroom(e.target.value)} />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label xs={12} sm={2} for="lastname">Family Name</Label>
-                      <Col xs={12} sm={10}>
-                        <Input type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label xs={12} sm={2} for="ceremony-date">Ceremony Date</Label>
-                      <Col xs={12} sm={10}>
-                        <Input type="datetime-local" value={ceremonyDate} onChange={e => setCeremonyDate(e.target.value)} />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label xs={12} sm={2} for="ceremony">Ceremony Location</Label>
-                      <Col xs={12} sm={10}>
-                        <Input type="text" value={ceremony} onChange={e => setCeremony(e.target.value)} />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label xs={12} sm={2} for="reception-date">Reception Date</Label>
-                      <Col xs={12} sm={10}>
-                        <Input type="datetime-local" value={receptionDate} onChange={e => setReceptionDate(e.target.value)} />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label xs={12} sm={2} for="reception">Reception Location</Label>
-                      <Col xs={12} sm={10}>
-                        <Input type="text" value={reception} onChange={e => setReception(e.target.value)} />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Col xs={12} sm={6}>
-                        <Button block color="primary" onClick={callCreateWedding}>Create Wedding</Button>
-                      </Col>
-                      <Col xs={12} sm={6}>
-                        <Button block color="secondary" onClick={callUpdateWedding}>Update Wedding</Button>
-                      </Col>
-                    </FormGroup>
-                  </Form>
-                  <WeddingTable weddings={[wedding]} />
-                </div>
-              )
-          }
+          {/* TODO: switch to redux? */}
+          <WeddingForm wedding={wedding} setErrorShowAlert={setErrorShowAlert}
+            setSuccessShowAlert={setSuccessShowAlert} setWedding={setWedding} />
         </TabPane>
         <TabPane tabId="2">
           <Form onSubmit={editMessage}>
