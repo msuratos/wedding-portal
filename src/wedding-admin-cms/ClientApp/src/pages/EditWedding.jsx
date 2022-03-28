@@ -7,9 +7,9 @@ import {
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
-import { addRole, getRoles } from '../apis/roleApi';
 import { addEntourage, getWedding } from '../apis/weddingApi';
 import MessageForm from '../components/EditWedding/MessageForm';
+import RoleForm from '../components/EditWedding/RoleForm';
 import WeddingForm from '../components/EditWedding/WeddingForm';
 
 const EditWedding = () => {
@@ -20,9 +20,8 @@ const EditWedding = () => {
   const [openDropdown, setOpenDropdown] = useState(false);
   const [showSuccessAlert, setSuccessShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
-  const [roles, setRoles] = useState([]);
-  const [roleDescription, setRoleDescription] = useState('');
-  const [roleName, setRoleName] = useState('');
+  const [roles] = useState([]);
+
   const [wedding, setWedding] = useState({
     ceremonyDate: new Date(), messageToEveryone: '', receptionDate: new Date()
   });
@@ -61,38 +60,11 @@ const EditWedding = () => {
     }
   };
 
-  const createRole = async (e) => {
-    e.preventDefault();
-
-    try {
-      const tokenCache = await instance.acquireTokenSilent(silentRequest);
-      const newRole = await addRole({ description: roleDescription, name: roleName, token: tokenCache.accessToken });
-      setRoles([...roles, newRole]);
-
-      setSuccessShowAlert(true);
-      setTimeout(() => setSuccessShowAlert(false), 3000);
-    }
-    catch (error) {
-      console.error(error);
-      setErrorShowAlert(true);
-      setTimeout(() => setErrorShowAlert(false), 3000);
-    }
-  };
-
   useEffect(() => {
     const init = async () => {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
-
-      // call getRoles and getWedding at the same time
-      const rolesPromise = getRoles(tokenCache.accessToken);
-      const weddingPromise = getWedding(tokenCache);
-
-      // wait for the promises to resolve
-      const resp = await Promise.all([rolesPromise, weddingPromise]);
-      const wedding = resp[1];
-
+      const wedding = await getWedding(tokenCache);
       setWedding(wedding);
-      setRoles(resp[0]);
     };
 
     init();
@@ -126,51 +98,7 @@ const EditWedding = () => {
           <MessageForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPane>
         <TabPane tabId="3">
-          <Row style={{ marginTop: '15px' }}>
-            <Col sm={12}>
-              <Form onSubmit={createRole}>
-                <FormGroup row>
-                  <Label for="name" sm={2}>Role Name</Label>
-                  <Col sm={10}>
-                    <Input id="name" name="name" placeholder="Name of role" type="text" value={roleName} onChange={e => setRoleName(e.target.value)} />
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Label for="description" sm={2}>Description</Label>
-                  <Col sm={10}>
-                    <Input id="description" name="description" placeholder="Describe the role" type="textarea" value={roleDescription}
-                      onChange={e => setRoleDescription(e.target.value)} />
-                  </Col>
-                </FormGroup>
-                <Row>
-                  <Col sm={6}><Button block type='submit' color='primary'>Submit</Button></Col>
-                  <Col sm={6}><Button block color='secondary'>Cancel</Button></Col>
-                </Row>
-              </Form>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: '15px' }}>
-            <Col sm={12}>
-              <Table responsive hover striped>
-                <thead>
-                  <tr>
-                    <th scope="row">#</th>
-                    <th scope="row">Name</th>
-                    <th scope="row">Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {roles.map(el => (
-                    <tr key={el.id}>
-                      <td>{el.id}</td>
-                      <td>{el.name}</td>
-                      <td>{el.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Col>
-          </Row>
+          <RoleForm setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPane>
         <TabPane tabId="4">
           <Row style={{ marginTop: '15px' }}>
