@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 
-import weddingPic from './assets/wedding.jpeg';
 import './App.css';
 import Typography from '@mui/material/Typography';
 
@@ -44,16 +43,14 @@ const App = () => {
 
   return (
     <div className="App">
-      <Grid container spacing={2} style={{
-        background: `url(${weddingPic}) no-repeat 50% top transparent`,
-        backgroundSize: 'cover', height: window.innerWidth > 500 ? '50vh' : '40vh'
-      }}>
+      <Grid container spacing={2} style={{ height: 'auto', margin: 0 }}>
+        <img src={wedding?.pictureUrl} width={window.innerWidth} style={{ objectFit: 'cover' }} alt="wedding-pic" title="wedding-pic" />
       </Grid>
       <div className="detail-container">
         <div className="detail-header">
           <Grid container>
             <Grid item xs={12} md={12}>
-              <h3 className="message">Wedding 2.0</h3>
+              <h3 className="message">{wedding?.title}</h3>
             </Grid>
             <Grid item xs={12} md={12}>
               <h2 className="persons">{wedding?.groom} & {wedding?.bride}</h2>
@@ -106,9 +103,11 @@ const App = () => {
           </div>
         </Grid>
       </Grid>
-      <Grid container spacing={2} sx={{pl: 5, pr: 5}}>
+      <Grid container spacing={2} sx={{ mt: '15px' }}>
         <Grid item xs={12} md={12}>
-          <pre>{wedding?.messageToEveryone}</pre>
+          <div style={{ padding: '0 15px', margin: '0 15px', border: '1px solid black' }}>
+            <pre>{wedding?.messageToEveryone}</pre>
+          </div>
         </Grid>
       </Grid>
     </div>
