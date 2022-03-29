@@ -103,9 +103,11 @@ const App = () => {
           </div>
         </Grid>
       </Grid>
-      <Grid container spacing={2} sx={{pl: 5, pr: 5}}>
+      <Grid container spacing={2} sx={{ mt: '15px' }}>
         <Grid item xs={12} md={12}>
-          <pre>{wedding?.messageToEveryone}</pre>
+          <div style={{ padding: '0 15px', margin: '0 15px', border: '1px solid black' }}>
+            <pre>{wedding?.messageToEveryone}</pre>
+          </div>
         </Grid>
       </Grid>
     </div>
