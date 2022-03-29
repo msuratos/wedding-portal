@@ -53,7 +53,7 @@ export const getWedding = async (tokenCache) => {
 
 export const updateWedding = async (request, tokenCache) => {
   const resp = await fetch('wedding', {
-    method: 'PUT',
+    method: 'PATCH',
     body: JSON.stringify(request),
     headers: {
       'Content-Type': 'application/json',

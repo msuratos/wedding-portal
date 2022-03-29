@@ -111,5 +111,28 @@ namespace wedding_admin_cms.Controllers
 
       return Ok(dto);
     }
+
+    [HttpPatch]
+    public async Task<IActionResult> UpdateWedding([FromBody]Wedding request, CancellationToken cancellationToken)
+    {
+      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => s.WeddingId == request.WeddingId, cancellationToken);
+      if (wedding == null) return BadRequest("Wedding not found!");
+
+      wedding.Bride = request.Bride;
+      wedding.CeremonyDate = request.CeremonyDate;
+      wedding.CeremonyLocation = request.CeremonyLocation;
+      wedding.Groom = request.Groom;
+      wedding.LastName = request.LastName;
+      wedding.PictureUrl = request.PictureUrl;
+      wedding.ReceptionDate = request.ReceptionDate;
+      wedding.ReceptionLocation = request.ReceptionLocation;
+      wedding.Title = request.Title;
+      wedding.UrlSubDomain = request.UrlSubDomain;
+      // skip messageToEveryone and Pin. used in another workflow
+
+      await _dbContext.SaveChangesAsync(cancellationToken);
+
+      return Ok(wedding);
+    }
   }
 }

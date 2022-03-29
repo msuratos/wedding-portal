@@ -14,8 +14,12 @@ const WeddingForm = (props) => {
   const [groom, setGroom] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pictureUrl, setPictureUrl] = useState('');
   const [reception, setReception] = useState('');
   const [receptionDate, setReceptionDate] = useState(undefined);
+  const [title, setTitle] = useState('');
+  const [urlSubDomain, setUrlSubDomain] = useState('');
+  const [weddingId, setWeddingId] = useState('');
 
   const msal = useMsal();
   const { instance, accounts } = msal;
@@ -31,7 +35,10 @@ const WeddingForm = (props) => {
     setLoading(true);
 
     try {
-      const formData = { bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate, receptionLocation: reception, receptionDate };
+      const formData = {
+        bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate,
+        receptionLocation: reception, receptionDate, title, urlSubDomain, pictureUrl
+      };
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
       const respData = await createWedding(formData, tokenCache);
 
@@ -54,8 +61,8 @@ const WeddingForm = (props) => {
     try {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
       const respData = await updateWedding({
-        bride, groom, lastName, ceremonyDate, ceremonyLocation: ceremony,
-        receptionLocation: reception, receptionDate
+        bride, groom, lastName, ceremonyDate, ceremonyLocation: ceremony, pictureUrl,
+        receptionLocation: reception, receptionDate, title, weddingId, urlSubDomain
       }, tokenCache);
 
       setWedding(respData);
@@ -79,6 +86,10 @@ const WeddingForm = (props) => {
     setCeremony(wedding.ceremonyLocation);
     setReceptionDate(new Date(wedding.receptionDate).toISOString().split('Z')[0]);
     setReception(wedding.receptionLocation);
+    setPictureUrl(wedding.pictureUrl);
+    setTitle(wedding.title);
+    setUrlSubDomain(wedding.urlSubDomain);
+    setWeddingId(wedding.weddingId);
   }, [wedding]);
 
   return (
@@ -131,6 +142,24 @@ const WeddingForm = (props) => {
                   <Label xs={12} sm={2} for="reception">Reception Location</Label>
                   <Col xs={12} sm={10}>
                     <Input type="text" value={reception} onChange={e => setReception(e.target.value)} />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label xs={12} sm={2} for="title">Title</Label>
+                  <Col xs={12} sm={10}>
+                    <Input type="text" value={title} onChange={e => setTitle(e.target.value)} />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label xs={12} sm={2} for="picture-url">Picture Url</Label>
+                  <Col xs={12} sm={10}>
+                    <Input type="text" value={pictureUrl} onChange={e => setPictureUrl(e.target.value)} />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label xs={12} sm={2} for="wedding-url">Wedding Url</Label>
+                  <Col xs={12} sm={10}>
+                    <Input type="text" value={urlSubDomain} onChange={e => setUrlSubDomain(e.target.value)} />
                   </Col>
                 </FormGroup>
                 <FormGroup row>
