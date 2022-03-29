@@ -45,7 +45,7 @@ const App = () => {
   return (
     <div className="App">
       <Grid container spacing={2} style={{
-        background: `url(${weddingPic}) no-repeat 50% top transparent`,
+        background: `url(${wedding?.pictureUrl}) no-repeat 50% top transparent`,
         backgroundSize: 'cover', height: window.innerWidth > 500 ? '50vh' : '40vh'
       }}>
       </Grid>
@@ -53,7 +53,7 @@ const App = () => {
         <div className="detail-header">
           <Grid container>
             <Grid item xs={12} md={12}>
-              <h3 className="message">Wedding 2.0</h3>
+              <h3 className="message">{wedding?.title}</h3>
             </Grid>
             <Grid item xs={12} md={12}>
               <h2 className="persons">{wedding?.groom} & {wedding?.bride}</h2>
