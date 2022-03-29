@@ -44,7 +44,7 @@ const App = () => {
   return (
     <div className="App">
       <Grid container spacing={2} style={{ height: 'auto', margin: 0 }}>
-        <img src={wedding?.pictureUrl} width={window.innerWidth} style={{ objectFit: 'cover' }} title="wedding-pic" />
+        <img src={wedding?.pictureUrl} width={window.innerWidth} style={{ objectFit: 'cover' }} alt="wedding-pic" title="wedding-pic" />
       </Grid>
       <div className="detail-container">
         <div className="detail-header">
