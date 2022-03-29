@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 
-import weddingPic from './assets/wedding.jpeg';
 import './App.css';
 import Typography from '@mui/material/Typography';
 
@@ -44,10 +43,8 @@ const App = () => {
 
   return (
     <div className="App">
-      <Grid container spacing={2} style={{
-        background: `url(${wedding?.pictureUrl}) no-repeat 50% top transparent`,
-        backgroundSize: 'cover', height: window.innerWidth > 500 ? '50vh' : '40vh'
-      }}>
+      <Grid container spacing={2} style={{ height: 'auto', margin: 0 }}>
+        <img src={wedding?.pictureUrl} width={window.innerWidth} style={{ objectFit: 'cover' }} title="wedding-pic" />
       </Grid>
       <div className="detail-container">
         <div className="detail-header">
