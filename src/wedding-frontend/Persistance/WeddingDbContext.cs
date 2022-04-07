@@ -37,8 +37,7 @@ namespace wedding_frontend.Persistance
             {
                 entity.HasIndex(e => e.EntourageOfWeddingId, "IX_Entourages_EntourageOfWeddingId");
 
-                entity.HasIndex(e => e.RoleIdOfEntourage, "IX_Entourages_RoleIdOfEntourage")
-                    .IsUnique();
+                entity.HasIndex(e => e.RoleIdOfEntourage, "IX_Entourages_RoleIdOfEntourage");
 
                 entity.HasIndex(e => e.WeddingId, "IX_Entourages_WeddingId");
 
@@ -71,15 +70,15 @@ namespace wedding_frontend.Persistance
 
                 entity.Property(e => e.LastName).HasMaxLength(100);
 
+                entity.Property(e => e.Passphrase)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("(N'1234')");
+
                 entity.Property(e => e.PictureUrl)
                     .IsRequired()
                     .HasMaxLength(300)
                     .HasDefaultValueSql("(N'https://c1.staticflickr.com/1/71/226654184_26b52a6116_z.jpg?zz=1')");
-
-                entity.Property(e => e.Pin)
-                    .IsRequired()
-                    .HasMaxLength(6)
-                    .HasDefaultValueSql("(N'1234')");
 
                 entity.Property(e => e.ReceptionDate).HasDefaultValueSql("('0001-01-01T00:00:00.0000000+00:00')");
 
