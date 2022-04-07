@@ -21,7 +21,7 @@ namespace wedding_admin_cms.Persistance.Entities
     public DateTimeOffset ReceptionDate { get; set; }
 
     public string PictureUrl { get; set; }
-    public string Pin { get; set; }
+    public string Passphrase { get; set; }
     public string Title { get; set; }
     public string UrlSubDomain { get; set; }
 

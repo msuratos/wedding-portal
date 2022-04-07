@@ -31,15 +31,13 @@ namespace wedding_admin_cms.Controllers
       _dbContext = dbContext;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetWeddingForLogin(CancellationToken cancellationToken)
+    [HttpPost("entourage")]
+    public async Task<IActionResult> AddEntourage([FromBody]Entourage dto, CancellationToken cancellationToken)
     {
-      // TODO: validate the username and wedding. Make sure only one wedding per user(?)
-      var username = User.Claims.SingleOrDefault(s => s.Type == "emails").Value;
-      var userToWedding = await _dbContext.UsersToWeddings.Include(i => i.Wedding).SingleOrDefaultAsync(s => s.UserName == username, cancellationToken);
-      var wedding = userToWedding?.Wedding;
+      await _dbContext.Entourages.AddAsync(dto, cancellationToken);
+      await _dbContext.SaveChangesAsync(cancellationToken);
 
-      return Ok(wedding);
+      return Ok(dto);
     }
 
     [HttpPut]
@@ -88,8 +86,19 @@ namespace wedding_admin_cms.Controllers
       return Ok(dto);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetWeddingForLogin(CancellationToken cancellationToken)
+    {
+      // TODO: validate the username and wedding. Make sure only one wedding per user(?)
+      var username = User.Claims.SingleOrDefault(s => s.Type == "emails").Value;
+      var userToWedding = await _dbContext.UsersToWeddings.Include(i => i.Wedding).SingleOrDefaultAsync(s => s.UserName == username, cancellationToken);
+      var wedding = userToWedding?.Wedding;
+
+      return Ok(wedding);
+    }
+
     [HttpPost("message")]
-    public async Task<IActionResult> EditMessage([FromBody]MessageDto messageDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateMessage([FromBody]MessageDto messageDto, CancellationToken cancellationToken)
     {
       // TODO: validate current 'user' by getting 'name' claim of token
       //var currentUser = User.Claims.SingleOrDefault(s => s.Type == ClaimsIdentity.DefaultNameClaimType).Value;
@@ -103,15 +112,6 @@ namespace wedding_admin_cms.Controllers
       return Ok(messageDto);
     }
 
-    [HttpPost("entourage")]
-    public async Task<IActionResult> AddEntourage([FromBody]Entourage dto, CancellationToken cancellationToken)
-    {
-      await _dbContext.Entourages.AddAsync(dto, cancellationToken);
-      await _dbContext.SaveChangesAsync(cancellationToken);
-
-      return Ok(dto);
-    }
-
     [HttpPatch]
     public async Task<IActionResult> UpdateWedding([FromBody]Wedding request, CancellationToken cancellationToken)
     {
@@ -123,12 +123,13 @@ namespace wedding_admin_cms.Controllers
       wedding.CeremonyLocation = request.CeremonyLocation;
       wedding.Groom = request.Groom;
       wedding.LastName = request.LastName;
+      wedding.Passphrase = request.Passphrase;
       wedding.PictureUrl = request.PictureUrl;
       wedding.ReceptionDate = request.ReceptionDate;
       wedding.ReceptionLocation = request.ReceptionLocation;
       wedding.Title = request.Title;
       wedding.UrlSubDomain = request.UrlSubDomain;
-      // skip messageToEveryone and Pin. used in another workflow
+      // skip messageToEveryone; used in another workflow
 
       await _dbContext.SaveChangesAsync(cancellationToken);
 
