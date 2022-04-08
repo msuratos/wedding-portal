@@ -40,13 +40,14 @@ namespace wedding_frontend.Controllers
     [HttpPost]
     public async Task<IActionResult> ValidatePassphrase([FromBody] PassphraseValidationDto dto, CancellationToken cancellationToken)
     {
+      var currentDomain = Request.Host.Host;
+      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => currentDomain.Contains(s.UrlSubDomain), cancellationToken);
+
       // validate the request dto
-      if (dto.WeddingId == Guid.Empty) return BadRequest(new Exception("Invalid wedding id"));
+      if (wedding == null) return BadRequest(new Exception("could not find a wedding based on url"));
       if (string.IsNullOrEmpty(dto.Passphrase)) return BadRequest(new Exception("passphrase can not be empty"));
 
-      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => s.WeddingId == dto.WeddingId, cancellationToken);
-      var passphrase = wedding.Passphrase;
-      var isValidPassphrase = dto.Passphrase.Equals(passphrase, StringComparison.OrdinalIgnoreCase);
+      var isValidPassphrase = wedding.Passphrase.Equals(dto.Passphrase, StringComparison.OrdinalIgnoreCase);
 
       return Ok(isValidPassphrase);
     }

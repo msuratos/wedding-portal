@@ -1,8 +1,23 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Button, Grid } from '@mui/material';
+import { Button, Grid, Input } from '@mui/material';
 
 const Links = () => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
+  const [passphrase, setPassphrase] = useState('');
+
+  const validatePassphrase = async () => {
+    console.debug('validating passphrase');
+    const resp = await fetch('api/wedding', {
+      method: 'POST',
+      body: JSON.stringify({ passphrase }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const respData = await resp.text();
+    console.debug('is valid passphrase?', respData);
+
+    setIsValidPassphrase(respData);
+  };
 
   useEffect(() => {
     function isExistingValidPassphrase () {
@@ -20,14 +35,12 @@ const Links = () => {
         !isValidPassphrase
           ? (
             <Grid container sx={{p: '15px'}}>
-              <Grid item xs={12} md={6} sx={{textAlign: 'center'}}>
-                <label htmlFor="passphrase">Passphrase</label>
-              </Grid>
               <Grid item xs={12} md={6}>
-                <input type="text" id="passphrase" title="passphrase" style={{ width: '100%' }} />
+                <Input placeholder="Passphrase" inputProps={{ 'aria-label': 'description' }}
+                  value={passphrase} onChange={(e) => setPassphrase(e.target.value) } autoFocus />
               </Grid>
               <Grid item xs={12} md={12} sx={{textAlign: 'center'}}>
-                <Button variant="contained" color="primary">Submit</Button>
+                <Button variant="contained" color="primary" onClick={validatePassphrase}>Submit</Button>
               </Grid>
             </Grid>
           )
