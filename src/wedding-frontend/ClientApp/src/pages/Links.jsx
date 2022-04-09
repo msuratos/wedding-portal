@@ -1,4 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Grid, Input } from '@mui/material';
 
 const Links = () => {
@@ -17,6 +18,7 @@ const Links = () => {
     console.debug('is valid passphrase?', respData);
 
     setIsValidPassphrase(respData);
+    localStorage.setItem('validPassphrase', respData);
   };
 
   useEffect(() => {
@@ -48,7 +50,7 @@ const Links = () => {
             <div>
               <ul>
                 <li><a href="info">Info</a></li>
-                <li><a href="rsvp">RSVP</a></li>
+                <li><Link to="/rsvp">RSVP</Link></li>
                 <li><a href="faq">FAQs</a></li>
                 <li><a href="contact">Contact Us</a></li>
               </ul>
