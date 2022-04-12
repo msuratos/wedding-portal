@@ -8,6 +8,7 @@ namespace wedding_admin_cms.Persistance.Entities
     public Wedding()
     {
       Entourage = new HashSet<Entourage>();
+      Guests = new HashSet<Guest>();
     }
     
     public Guid WeddingId { get; set; }
@@ -26,5 +27,6 @@ namespace wedding_admin_cms.Persistance.Entities
     public string UrlSubDomain { get; set; }
 
     public ICollection<Entourage> Entourage { get; set; }
+    public ICollection<Guest> Guests { get; set; }
   }
 }

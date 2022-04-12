@@ -32,7 +32,6 @@ namespace wedding_admin_cms.Persistance
         build.Property(prop => prop.Title).IsRequired().HasDefaultValue("Wedding").HasMaxLength(50);
         build.Property(prop => prop.UrlSubDomain).HasMaxLength(100);
 
-        build.HasMany<Entourage>().WithOne(nav => nav.Wedding).HasForeignKey(fk => fk.EntourageOfWeddingId);
         build.HasMany<UsersToWedding>().WithOne(nav => nav.Wedding).HasForeignKey(fk => fk.WeddingId);
       });
 
@@ -41,7 +40,19 @@ namespace wedding_admin_cms.Persistance
         build.HasKey(key => key.EntourageId);
         build.Property(prop => prop.EntourageId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
         build.Property(prop => prop.Name).HasMaxLength(50).IsRequired();
+
+        build.HasOne<Wedding>(nav => nav.Wedding).WithMany(nav => nav.Entourage).HasForeignKey(fk => fk.EntourageOfWeddingId);
         build.HasOne<Role>(nav => nav.Role).WithOne(nav => nav.Entourage).HasForeignKey<Entourage>(fk => fk.RoleIdOfEntourage);
+      });
+
+      modelBuilder.Entity<Guest>(build =>
+      {
+        build.HasKey(key => key.GuestId);
+        build.Property(prop => prop.GuestId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
+        build.Property(prop => prop.HasRsvpd).IsRequired().HasDefaultValue(false);
+        build.Property(prop => prop.Name).IsRequired();
+
+        build.HasOne<Wedding>(nav => nav.Wedding).WithMany(nav => nav.Guests).HasForeignKey(fk => fk.WeddingId);
       });
 
       modelBuilder.Entity<Role>(build => 
