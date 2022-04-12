@@ -14,6 +14,7 @@ const WeddingForm = (props) => {
   const [groom, setGroom] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [passphrase, setPassphrase] = useState('');
   const [pictureUrl, setPictureUrl] = useState('');
   const [reception, setReception] = useState('');
   const [receptionDate, setReceptionDate] = useState(undefined);
@@ -36,7 +37,7 @@ const WeddingForm = (props) => {
 
     try {
       const formData = {
-        bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate,
+        bride, groom, lastName, ceremonyLocation: ceremony, ceremonyDate, passphrase,
         receptionLocation: reception, receptionDate, title, urlSubDomain, pictureUrl
       };
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
@@ -62,10 +63,10 @@ const WeddingForm = (props) => {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
       const respData = await updateWedding({
         bride, groom, lastName, ceremonyDate, ceremonyLocation: ceremony, pictureUrl,
-        receptionLocation: reception, receptionDate, title, weddingId, urlSubDomain
+        receptionLocation: reception, receptionDate, title, weddingId, urlSubDomain, passphrase
       }, tokenCache);
 
-      setWedding(respData);
+      setWedding(respData); 
       setLoading(false);
 
       setSuccessShowAlert(true);
@@ -86,6 +87,7 @@ const WeddingForm = (props) => {
     setCeremony(wedding.ceremonyLocation);
     setReceptionDate(new Date(wedding.receptionDate).toISOString().split('Z')[0]);
     setReception(wedding.receptionLocation);
+    setPassphrase(wedding.passphrase);
     setPictureUrl(wedding.pictureUrl);
     setTitle(wedding.title);
     setUrlSubDomain(wedding.urlSubDomain);
@@ -160,6 +162,12 @@ const WeddingForm = (props) => {
                   <Label xs={12} sm={2} for="wedding-url">Wedding Url</Label>
                   <Col xs={12} sm={10}>
                     <Input type="text" value={urlSubDomain} onChange={e => setUrlSubDomain(e.target.value)} />
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label xs={12} sm={2} for="passphrase">Passphrase</Label>
+                  <Col xs={12} sm={10}>
+                    <Input type="password" value={passphrase} onChange={e => setPassphrase(e.target.value)} />
                   </Col>
                 </FormGroup>
                 <FormGroup row>
