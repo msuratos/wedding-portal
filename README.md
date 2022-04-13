@@ -12,6 +12,11 @@ Another wedding registry portal with an added twist!
 
 ## _TODO_
 - [ ] RSVP
+  - [ ] Admin CMS: implement uploading excel file of guest list to upload
+  - [ ] Frontend: implement RSVP logic
+    - [ ] search their name
+    - [ ] populate their 'plus ones' to also rsvp for them
+    - [ ] song requests
 - [ ] Slideshow Queueing
 - [ ] Trivia
 - [ ] Song Requests Queueing

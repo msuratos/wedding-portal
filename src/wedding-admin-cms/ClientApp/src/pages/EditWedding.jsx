@@ -43,6 +43,7 @@ const EditWedding = () => {
 
   return (
     <div>
+      {/* TODO: possibly only make the first tab active until a valid wedding exists */}
       <Nav tabs>
         <NavItem>
           <NavLink active={activeTab === '1'} onClick={() => setActiveTab('1')}>Edit Wedding</NavLink>
@@ -56,6 +57,7 @@ const EditWedding = () => {
         <NavItem>
           <NavLink active={activeTab === '4'} onClick={() => setActiveTab('4')}>Edit Entourage</NavLink>
         </NavItem>
+        {/* TODO: create a tab for editing guest list */}
       </Nav>
       {showSuccessAlert && <UncontrolledAlert>Success!</UncontrolledAlert>}
       {showErrorAlert && <UncontrolledAlert color='danger'>Failed! Please try again</UncontrolledAlert>}
