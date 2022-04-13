@@ -11,6 +11,8 @@ namespace wedding_admin_cms.Persistance
     public WeddingDbContext(DbContextOptions<WeddingDbContext> options) : base(options) { }
 
     public virtual DbSet<Entourage> Entourages { get; set; }
+    public virtual DbSet<Guest> Guests { get; set; }
+    public virtual DbSet<GuestGroup> GuestGroups { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<UsersToWedding> UsersToWeddings { get; set; }
     public virtual DbSet<Wedding> Weddings { get; set; }
@@ -53,6 +55,16 @@ namespace wedding_admin_cms.Persistance
         build.Property(prop => prop.Name).IsRequired();
 
         build.HasOne<Wedding>(nav => nav.Wedding).WithMany(nav => nav.Guests).HasForeignKey(fk => fk.WeddingId);
+      });
+
+      modelBuilder.Entity<GuestGroup>(build =>
+      {
+        build.HasKey(key => key.GuestGroupId);
+        build.Property(prop => prop.GuestGroupId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
+        build.Property(prop => prop.Type).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.Value).IsRequired().HasMaxLength(1000);
+
+        build.HasMany<Guest>(nav => nav.Guests).WithOne(nav => nav.GuestGroup).HasForeignKey(fk => fk.GuestGroupId).IsRequired(false);
       });
 
       modelBuilder.Entity<Role>(build => 
