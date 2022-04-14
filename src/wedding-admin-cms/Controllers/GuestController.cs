@@ -32,9 +32,10 @@ namespace wedding_admin_cms.Controllers
     }
 
     [HttpPost]
-    [AllowAnonymous] // TODO: change to use Authorize
     public async Task<IActionResult> CreateGuestList(IFormFile file, CancellationToken cancellationToken)
     {
+      if (file == null) return BadRequest("file is empty, need a file");
+
       if (file.Length > 0)
       {
         // verify incoming file is in .xlsx or .xls

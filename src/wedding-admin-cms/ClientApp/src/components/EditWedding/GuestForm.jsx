@@ -1,8 +1,23 @@
-﻿import React, { useState } from 'react';
-import { Button, Col, Form, FormGroup, FormText, Input, Label } from 'reactstrap';
+﻿import React, { useMemo, useState } from 'react';
+import {
+  Button, Col, Form, FormGroup, FormText,
+  Input, Label, Spinner
+} from 'reactstrap';
+import { useMsal } from '@azure/msal-react';
 
 const GuestForm = () => {
   const [inputs, setInputs] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const msal = useMsal();
+  const { instance, accounts } = msal;
+
+  const silentRequest = useMemo(() => {
+    return {
+      scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
+      account: accounts[0]
+    }
+  }, [accounts]);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -10,17 +25,36 @@ const GuestForm = () => {
     setInputs({ name, value });
   };
 
-  const formSubmit = (e) => {
-    const data = new FormData();
-    data.append(inputs.name, inputs.value);
+  const formSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-    console.log(inputs, data);
-    //e.preventDefault();
+    try {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const formData = new FormData();
+      formData.append('file', inputs.value);
+
+      const resp = await fetch('/api/Guest', {
+        method: "POST",
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${tokenCache.accessToken}`
+        }
+      });
+
+      console.log(resp);
+    }
+    catch (error) {
+      console.error('failed to upload excel', error);
+    }
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      <Form encType="multipart/form-data" action="/api/Guest" method="post" style={{ padding: '15px' }}>
+      <Form encType="multipart/form-data" onSubmit={formSubmit} style={{ padding: '15px' }}>
         <FormGroup row>
           <Label for="file" sm={2}>File</Label>
           <Col sm={10}>
@@ -32,6 +66,15 @@ const GuestForm = () => {
           <Button color="primary" type="submit" style={{ width: '100%' }}>Upload</Button>
         </FormGroup>
       </Form>
+      {
+        !loading
+          ? <>{/* TODO: show a table of the guests */}</>
+          : (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Spinner />
+            </div>
+          )
+      }
     </>
   );
 };
