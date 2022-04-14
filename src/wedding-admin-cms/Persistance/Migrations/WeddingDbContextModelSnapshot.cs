@@ -78,7 +78,7 @@ namespace wedding_admin_cms.Persistance.Migrations
 
                     b.HasIndex("WeddingId");
 
-                    b.ToTable("Guest");
+                    b.ToTable("Guests");
                 });
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.GuestGroup", b =>
@@ -100,7 +100,7 @@ namespace wedding_admin_cms.Persistance.Migrations
 
                     b.HasKey("GuestGroupId");
 
-                    b.ToTable("GuestGroup");
+                    b.ToTable("GuestGroups");
                 });
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.Role", b =>

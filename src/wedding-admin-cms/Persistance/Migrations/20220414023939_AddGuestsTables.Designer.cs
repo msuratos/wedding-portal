@@ -10,8 +10,8 @@ using wedding_admin_cms.Persistance;
 namespace wedding_admin_cms.Persistance.Migrations
 {
     [DbContext(typeof(WeddingDbContext))]
-    [Migration("20220412051123_AddGuestTable")]
-    partial class AddGuestTable
+    [Migration("20220414023939_AddGuestsTables")]
+    partial class AddGuestsTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,6 +56,9 @@ namespace wedding_admin_cms.Persistance.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
 
+                    b.Property<Guid?>("GuestGroupId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("HasRsvpd")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -73,9 +76,33 @@ namespace wedding_admin_cms.Persistance.Migrations
 
                     b.HasKey("GuestId");
 
+                    b.HasIndex("GuestGroupId");
+
                     b.HasIndex("WeddingId");
 
-                    b.ToTable("Guest");
+                    b.ToTable("Guests");
+                });
+
+            modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.GuestGroup", b =>
+                {
+                    b.Property<Guid>("GuestGroupId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("GuestGroupId");
+
+                    b.ToTable("GuestGroups");
                 });
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.Role", b =>
@@ -216,11 +243,17 @@ namespace wedding_admin_cms.Persistance.Migrations
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.Guest", b =>
                 {
+                    b.HasOne("wedding_admin_cms.Persistance.Entities.GuestGroup", "GuestGroup")
+                        .WithMany("Guests")
+                        .HasForeignKey("GuestGroupId");
+
                     b.HasOne("wedding_admin_cms.Persistance.Entities.Wedding", "Wedding")
                         .WithMany("Guests")
                         .HasForeignKey("WeddingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("GuestGroup");
 
                     b.Navigation("Wedding");
                 });
@@ -234,6 +267,11 @@ namespace wedding_admin_cms.Persistance.Migrations
                         .IsRequired();
 
                     b.Navigation("Wedding");
+                });
+
+            modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.GuestGroup", b =>
+                {
+                    b.Navigation("Guests");
                 });
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.Role", b =>
