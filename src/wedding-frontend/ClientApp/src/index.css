@@ -3,15 +3,10 @@
 
 body {
   background-color: rgb(118, 145, 170);
-  font-family: 'Abril Fatface', cursive;
+  font-family: 'Roboto', cursive;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
 
 pre {
