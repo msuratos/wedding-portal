@@ -125,11 +125,20 @@ namespace wedding_admin_cms.Controllers
     {
       var subDomain = Request.Host.Value;
       var wedding = await _dbContext.Weddings
-        .SingleOrDefaultAsync(s => s.UrlSubDomain.Contains(subDomain, StringComparison.InvariantCultureIgnoreCase), cancellationToken);
+        .SingleOrDefaultAsync(s => subDomain.ToLower().Contains(s.UrlSubDomain.ToLower()), cancellationToken);
 
       var guestList = await _dbContext.Guests
-        .Include(nav => nav.GuestGroup)
+        .Include(i => i.GuestGroup)
         .Where(w => w.WeddingId == wedding.WeddingId)
+        .Select(s => new {
+          s.GuestGroupId,
+          s.WeddingId,
+          s.Name,
+          s.HasRsvpd,
+          s.RsvpDate,
+          GroupType = s.GuestGroup.Type,
+          GroupValue = s.GuestGroup.Value
+        })
         .ToListAsync(cancellationToken);
 
       return Ok(guestList);

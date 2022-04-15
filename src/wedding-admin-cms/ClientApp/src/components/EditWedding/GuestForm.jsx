@@ -1,11 +1,13 @@
-﻿import React, { useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button, Col, Form, FormGroup, FormText,
-  Input, Label, Spinner
+  Input, Label, Spinner, Table
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
+import { createGuestsWithFile, getGuests } from '../../apis/guestApi';
 
 const GuestForm = () => {
+  const [guests, setGuests] = useState([]);
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -32,17 +34,14 @@ const GuestForm = () => {
     try {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
       const formData = new FormData();
+
+      // create formdata, which the controller api expect, and call api to create guests by excel file
       formData.append('file', inputs.value);
+      await createGuestsWithFile(formData, tokenCache.accessToken);
 
-      const resp = await fetch('/api/Guest', {
-        method: "POST",
-        body: formData,
-        headers: {
-          'Authorization': `Bearer ${tokenCache.accessToken}`
-        }
-      });
-
-      console.log(resp);
+      // if create guest request succeeds, then get the newly created guests list
+      const respData = await getGuests(tokenCache.accessToken);
+      setGuests(respData);
     }
     catch (error) {
       console.error('failed to upload excel', error);
@@ -51,6 +50,16 @@ const GuestForm = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    async function init() {
+      const tokenCache = await instance.acquireTokenSilent(silentRequest);
+      const respData = await getGuests(tokenCache.accessToken);
+      setGuests(respData);
+    }
+
+    init();
+  }, []);
 
   return (
     <>
@@ -66,14 +75,40 @@ const GuestForm = () => {
           <Button color="primary" type="submit" style={{ width: '100%' }}>Upload</Button>
         </FormGroup>
       </Form>
-      {
-        !loading
-          ? <>{/* TODO: show a table of the guests */}</>
-          : (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Spinner />
-            </div>
-          )
+      { loading
+        ? (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Spinner />
+          </div>
+        )
+        : (
+          <>
+            <Table responsive striped hover>
+              <thead>
+                <tr>
+                  <th>Guest #</th>
+                  <th>Guest Name</th>
+                  <th>RSVP'd?</th>
+                  <th>RSVP'd Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  guests.map((guest, index) => {
+                    return (
+                      <tr key={guest.guestId}>
+                        <td>{index + 1}</td>
+                        <td>{guest.name}</td>
+                        <td>{guest.hasRsvpd ? 'Yes' : 'No'}</td>
+                        <td>{guest?.rsvpDate ? new Date(guest.rsvpDate).toLocaleString('en-US') : null}</td>
+                      </tr>
+                    );
+                  })
+                }
+              </tbody>
+            </Table>
+          </>
+        )
       }
     </>
   );
