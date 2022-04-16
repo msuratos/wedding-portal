@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using wedding_frontend.Dtos;
 using wedding_frontend.Persistance;
 
 namespace wedding_frontend.Controllers
@@ -33,14 +36,42 @@ namespace wedding_frontend.Controllers
       if (wedding == null) return NotFound();
       var weddingId = wedding.WeddingId;
 
-      // TODO: switch to using full text search
-      // refrence - https://docs.microsoft.com/en-us/sql/relational-databases/search/get-started-with-full-text-search?view=sql-server-ver15
-      // refernce - https://www.bricelam.net/2020/08/08/mssql-freetext-and-efcore.html
-      var similarGuests = await _dbContext.Guests.Where(w => w.WeddingId == weddingId && EF.Functions.Like(w.Name, $"%{nameSearchValue}%"))
-        .Select(s => s.Name)
+      // TODO: switch to using full text search, currently using EF.Functions
+      // reference - https://stackoverflow.com/questions/43277868/entity-framework-core-contains-is-case-sensitive-or-case-insensitive
+      // reference - https://docs.microsoft.com/en-us/sql/relational-databases/search/get-started-with-full-text-search?view=sql-server-ver15
+      // reference - https://www.bricelam.net/2020/08/08/mssql-freetext-and-efcore.html
+      var similarGuests = await _dbContext.Guests
+        .Where(w => w.WeddingId == weddingId && EF.Functions.Like(w.Name, $"%{nameSearchValue}%"))
+        .Select(s => new GuestListDto
+        {
+          WeddingId = s.WeddingId,
+          Name = s.Name,
+          GuestGroupId = s.GuestGroup.GuestGroupId,
+          GroupType = s.GuestGroup.Type,
+          GroupValue = s.GuestGroup.Value
+        })
         .ToListAsync(cancellationToken);
 
+      foreach (var guest in similarGuests)
+      {
+        guest.RelatedGuests = await BuildRelatedGuests(guest.GuestGroupId, guest.GroupType, guest.GroupValue, cancellationToken);
+      }
+
       return Ok(similarGuests);
+    }
+
+    private async Task<ICollection<GuestListDto>> BuildRelatedGuests(Guid? guestGroupId, string groupType, 
+      string groupValue, CancellationToken cancellationToken)
+    {
+      return await _dbContext.GuestGroups
+        .Where(w => w.GuestGroupId != guestGroupId && w.Type.Equals(groupType) && w.Value.Equals(groupValue))
+        .Select(s => new GuestListDto
+        {
+          WeddingId = s.Guests.SingleOrDefault().WeddingId,
+          Name = s.Guests.SingleOrDefault().Name,
+          GuestGroupId = s.GuestGroupId
+        })
+        .ToListAsync(cancellationToken);
     }
   }
 }
