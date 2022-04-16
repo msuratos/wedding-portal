@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Grid, Input } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import {
+  AppBar, Button, Container, Grid, Input, Paper,
+  Toolbar, Typography
+} from '@mui/material';
 
 const Links = () => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
   const [passphrase, setPassphrase] = useState('');
+
+  const navigate = useNavigate();
 
   const validatePassphrase = async () => {
     console.debug('validating passphrase');
@@ -22,7 +27,7 @@ const Links = () => {
   };
 
   useEffect(() => {
-    function isExistingValidPassphrase () {
+    function isExistingValidPassphrase() {
       // check local storage
       if (localStorage.getItem('validPassphrase'))
         setIsValidPassphrase(true);
@@ -36,25 +41,48 @@ const Links = () => {
       {
         !isValidPassphrase
           ? (
-            <Grid container sx={{p: '15px'}}>
-              <Grid item xs={12} md={6}>
-                <Input placeholder="Passphrase" inputProps={{ 'aria-label': 'description' }}
-                  value={passphrase} onChange={(e) => setPassphrase(e.target.value) } autoFocus />
+            <Paper sx={{ m: '15px' }}>
+              <Grid container spacing={2} sx={{ p: '5px' }}>
+                <Grid item xs={12} md={6}>
+                  <Input placeholder="Enter password" inputProps={{ 'aria-label': 'description' }}
+                    value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <Button variant="contained" onClick={validatePassphrase} fullWidth>Submit</Button>
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={12} sx={{textAlign: 'center'}}>
-                <Button variant="contained" color="primary" onClick={validatePassphrase}>Submit</Button>
-              </Grid>
-            </Grid>
+            </Paper>
           )
           : (
-            <div>
-              <ul>
-                <li><a href="info">Info</a></li>
-                <li><Link to="/rsvp">RSVP</Link></li>
-                <li><a href="faq">FAQs</a></li>
-                <li><a href="contact">Contact Us</a></li>
-              </ul>
-            </div>
+            <>
+              <AppBar position="static">
+                <Container maxWidth="xl">
+                  <Toolbar disableGutters>
+                    <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
+                      Melvin & Erlynn's Wedding 2.0!
+                    </Typography>
+                  </Toolbar>
+                </Container>
+              </AppBar>
+              <Grid container sx={{ p: '15px' }} alignItems="center" justifyContent="center" style={{ minHeight: '80vh' }}>
+                <Grid item xs={12}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                      <Button fullWidth variant='outlined' onClick={() => navigate('/info')}>Info</Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button fullWidth variant='outlined' onClick={() => navigate('/rsvp')}>RSVP</Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button fullWidth variant='outlined' onClick={() => navigate('/faq')}>FAQs</Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button fullWidth variant='outlined' onClick={() => navigate('/contact')}>Contact Us</Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </>
           )
       }
     </>
