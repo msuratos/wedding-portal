@@ -1,4 +1,4 @@
-﻿export const createGuestsWithFile = async (formData, accessToken) => {
+export const createGuestsWithFile = async (formData, accessToken) => {
   const resp = await fetch('/api/guest', {
     method: "POST",
     body: formData,

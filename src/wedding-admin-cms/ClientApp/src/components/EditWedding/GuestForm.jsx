@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button, Col, Form, FormGroup, FormText,
   Input, Label, Spinner, Table
@@ -59,7 +59,7 @@ const GuestForm = () => {
     }
 
     init();
-  }, []);
+  }, [instance, silentRequest]);
 
   return (
     <>
