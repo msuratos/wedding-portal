@@ -41,17 +41,28 @@ const Links = () => {
       {
         !isValidPassphrase
           ? (
-            <Paper sx={{ m: '15px' }}>
-              <Grid container spacing={2} sx={{ p: '5px' }}>
-                <Grid item xs={12} md={6}>
-                  <Input placeholder="Enter password" inputProps={{ 'aria-label': 'description' }}
-                    value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
+            <>
+              <AppBar position="static">
+                <Container maxWidth="xl">
+                  <Toolbar disableGutters>
+                    <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
+                      Melvin & Erlynn's Wedding 2.0!
+                    </Typography>
+                  </Toolbar>
+                </Container>
+              </AppBar>
+              <Paper sx={{ m: '15px', mt: '45px' }}>
+                <Grid container spacing={1} sx={{ p: '5px' }}>
+                  <Grid item xs={12} md={6}>
+                    <Input placeholder="Enter password" inputProps={{ 'aria-label': 'description' }}
+                      value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Button variant="contained" onClick={validatePassphrase} fullWidth>Submit</Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={12}>
-                  <Button variant="contained" onClick={validatePassphrase} fullWidth>Submit</Button>
-                </Grid>
-              </Grid>
-            </Paper>
+              </Paper>
+            </>
           )
           : (
             <>

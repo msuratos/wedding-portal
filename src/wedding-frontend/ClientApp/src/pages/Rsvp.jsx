@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Alert, Button, Box, Checkbox, Collapse, Grid, List, ListItemButton, ListItemIcon,
   ListItemText, ListSubheader, Paper, Skeleton, Snackbar, TextField, Typography
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -16,6 +18,8 @@ const Rsvp = () => {
   const [nameSearchValue, setNameSearchValue] = useState('');
   const [openNested, setOpenNested] = useState([]);
   const [relatedChecked, setRelatedChecked] = useState([]);
+
+  const navigate = useNavigate();
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -89,9 +93,10 @@ const Rsvp = () => {
   return (
     <>
       <Paper elevation={3} sx={{ m: '15px' }}>
-        <Grid container spacing={2} sx={{ p: '5px' }}>
+        <Grid container spacing={1} sx={{ p: '5px' }}>
           <Grid item xs={12}>
-            <Typography variant="h4" gutterBottom component="div" sx={{ textAlign: 'center' }}>
+            <Button onClick={() => navigate(-1)}><ArrowBackIcon />back</Button>
+            <Typography variant="h4" sx={{ textAlign: 'center' }}>
               RSVP
             </Typography>
           </Grid>
