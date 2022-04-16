@@ -25,7 +25,6 @@ const Rsvp = () => {
   };
 
   const searchClick = async (e) => {
-    // TODO: make sure at least 4 characters are inputted before actually searching
     const resp = await fetch(`api/guest?nameSearchValue=${nameSearchValue}`);
     const respData = await resp.json();
     setMainGuests(respData);
@@ -43,11 +42,13 @@ const Rsvp = () => {
           <Grid item xs={12}>
             <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
               <GroupAddIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-              <TextField label="Enter Your Name" variant="standard" value={nameSearchValue} onChange={e => setNameSearchValue(e.target.value)} fullWidth />
+              <TextField label="Enter Your Name" variant="standard" error={nameSearchValue.length < 4}
+                helperText={nameSearchValue.length < 4 ? 'enter at least 4 characters' : null}
+                value={nameSearchValue} onChange={e => setNameSearchValue(e.target.value)} fullWidth />
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <Button variant="contained" onClick={searchClick} fullWidth>Search</Button>
+            <Button variant="contained" onClick={searchClick} disabled={nameSearchValue.length < 4} fullWidth>Search</Button>
           </Grid>
         </Grid>
       </Paper>
