@@ -19,6 +19,8 @@ namespace wedding_frontend.Persistance
         }
 
         public virtual DbSet<Entourage> Entourages { get; set; }
+        public virtual DbSet<Guest> Guests { get; set; }
+        public virtual DbSet<GuestGroup> GuestGroups { get; set; }
         public virtual DbSet<Wedding> Weddings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -39,8 +41,6 @@ namespace wedding_frontend.Persistance
 
                 entity.HasIndex(e => e.RoleIdOfEntourage, "IX_Entourages_RoleIdOfEntourage");
 
-                entity.HasIndex(e => e.WeddingId, "IX_Entourages_WeddingId");
-
                 entity.Property(e => e.EntourageId).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Name)
@@ -48,12 +48,44 @@ namespace wedding_frontend.Persistance
                     .HasMaxLength(50);
 
                 entity.HasOne(d => d.EntourageOfWedding)
-                    .WithMany(p => p.EntourageEntourageOfWeddings)
+                    .WithMany(p => p.Entourages)
                     .HasForeignKey(d => d.EntourageOfWeddingId);
+            });
+
+            modelBuilder.Entity<Guest>(entity =>
+            {
+                entity.HasIndex(e => e.GuestGroupId, "IX_Guests_GuestGroupId");
+
+                entity.HasIndex(e => e.WeddingId, "IX_Guests_WeddingId");
+
+                entity.Property(e => e.GuestId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.HasRsvpd)
+                    .IsRequired()
+                    .HasDefaultValueSql("(CONVERT([bit],(0)))");
+
+                entity.Property(e => e.Name).IsRequired();
+
+                entity.HasOne(d => d.GuestGroup)
+                    .WithMany(p => p.Guests)
+                    .HasForeignKey(d => d.GuestGroupId);
 
                 entity.HasOne(d => d.Wedding)
-                    .WithMany(p => p.EntourageWeddings)
+                    .WithMany(p => p.Guests)
                     .HasForeignKey(d => d.WeddingId);
+            });
+
+            modelBuilder.Entity<GuestGroup>(entity =>
+            {
+                entity.Property(e => e.GuestGroupId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasMaxLength(1000);
             });
 
             modelBuilder.Entity<Wedding>(entity =>

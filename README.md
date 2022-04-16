@@ -12,6 +12,11 @@ Another wedding registry portal with an added twist!
 
 ## _TODO_
 - [ ] RSVP
+  - [ ] Admin CMS: implement uploading excel file of guest list to upload
+  - [ ] Frontend: implement RSVP logic
+    - [ ] search their name
+    - [ ] populate their 'plus ones' to also rsvp for them
+    - [ ] song requests
 - [ ] Slideshow Queueing
 - [ ] Trivia
 - [ ] Song Requests Queueing
@@ -21,5 +26,5 @@ Another wedding registry portal with an added twist!
 
 DbContext Scaffold
 ```bash
-dotnet ef dbcontext scaffold Name=WeddingDbContext Microsoft.EntityFrameworkCore.SqlServer -c WeddingDbContext --context-dir ./Persistance -o ./Persistance/Entities -t Weddings -t Entourages --force
+dotnet ef dbcontext scaffold Name=WeddingDbContext Microsoft.EntityFrameworkCore.SqlServer -c WeddingDbContext --context-dir ./Persistance -o ./Persistance/Entities -t Weddings -t Entourages -t Guests -t GuestGroups --force
 ```

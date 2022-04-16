@@ -9,8 +9,8 @@ namespace wedding_frontend.Persistance.Entities
     {
         public Wedding()
         {
-            EntourageEntourageOfWeddings = new HashSet<Entourage>();
-            EntourageWeddings = new HashSet<Entourage>();
+            Entourages = new HashSet<Entourage>();
+            Guests = new HashSet<Guest>();
         }
 
         public Guid WeddingId { get; set; }
@@ -27,7 +27,7 @@ namespace wedding_frontend.Persistance.Entities
         public string Title { get; set; }
         public string Passphrase { get; set; }
 
-        public virtual ICollection<Entourage> EntourageEntourageOfWeddings { get; set; }
-        public virtual ICollection<Entourage> EntourageWeddings { get; set; }
+        public virtual ICollection<Entourage> Entourages { get; set; }
+        public virtual ICollection<Guest> Guests { get; set; }
     }
 }
