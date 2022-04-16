@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Button, Box, Checkbox, Collapse, Grid, List, ListItemButton,
-  ListItemIcon, ListItemText, ListSubheader, Paper, TextField, Typography
+  Alert, Button, Box, Checkbox, Collapse, Grid, List, ListItemButton, ListItemIcon,
+  ListItemText, ListSubheader, Paper, Skeleton, Snackbar, TextField, Typography
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -10,10 +10,12 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 const Rsvp = () => {
   const [checked, setChecked] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [mainGuests, setMainGuests] = useState(null);
+  const [muiAlert, setMuiAlert] = useState({ type: 'success', message: '', open: false })
+  const [nameSearchValue, setNameSearchValue] = useState('');
   const [openNested, setOpenNested] = useState([]);
   const [relatedChecked, setRelatedChecked] = useState([]);
-  const [mainGuests, setMainGuests] = useState(null);
-  const [nameSearchValue, setNameSearchValue] = useState('');
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -45,9 +47,42 @@ const Rsvp = () => {
     setRelatedChecked(newChecked);
   };
 
-  const searchClick = async (e) => {
+  const onAlertClose = () => {
+    setMuiAlert({ open: false });
+  };
+
+  const rsvpClick = async () => {
+    const rsvpList = [...checked, ...relatedChecked];
+
+    const resp = await fetch('api/guest', {
+      method: 'POST',
+      body: JSON.stringify(rsvpList),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (resp.ok) {
+      setMuiAlert({ type: 'success', message: 'Successfully RSVP\'d!', open: true });
+
+      setChecked([]);
+      setOpenNested([]);
+      setRelatedChecked([]);
+      setMainGuests(null);
+      setNameSearchValue('');
+    }
+    else {
+      setMuiAlert({ type: 'success', message: 'something went wrong reserving you & your group. please try again', open: true });
+    }
+  };
+
+  const searchClick = async () => {
+    setLoading(true);
+
     const resp = await fetch(`api/guest?nameSearchValue=${nameSearchValue}`);
     const respData = await resp.json();
+
+    setLoading(false);
     setMainGuests(respData);
   };
 
@@ -74,7 +109,23 @@ const Rsvp = () => {
         </Grid>
       </Paper>
       {mainGuests === null
-        ? <></>
+        ? (
+          <>
+            {!loading ? <></>
+              : (
+                <Paper elevation={3} sx={{ m: '15px' }}>
+                  <Grid container sx={{ p: '5px' }}>
+                    <Grid item xs={12}>
+                      <Skeleton variant="text" />
+                      <Skeleton variant="text" />
+                      <Skeleton variant="text" />
+                    </Grid>
+                  </Grid>
+                </Paper>
+              )
+            }
+          </>
+        )
         : (
           <Paper elevation={3} sx={{ m: '15px' }}>
             <Grid container sx={{ p: '5px' }}>
@@ -82,7 +133,7 @@ const Rsvp = () => {
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                   {mainGuests.map(guest => (
                     <>
-                      <ListItemButton key={guest.guestGroupId} role={undefined} onClick={handleToggle(guest)} dense>
+                      <ListItemButton key={guest.guestId} role={undefined} onClick={handleToggle(guest)} dense>
                         <ListItemIcon>
                           <AccountCircleIcon edge="start" />
                         </ListItemIcon>
@@ -113,7 +164,7 @@ const Rsvp = () => {
                             >
                               {
                                 guest.relatedGuests.map(relatedGuest => (
-                                  <ListItemButton key={relatedGuest.guestGroupId} sx={{ pl: 4 }} onClick={handleRelatedToggle(relatedGuest)}>
+                                  <ListItemButton key={relatedGuest.guestId} sx={{ pl: 4 }} onClick={handleRelatedToggle(relatedGuest)}>
                                     <ListItemIcon>
                                       <AccountCircleIcon edge="start" />
                                     </ListItemIcon>
@@ -135,12 +186,19 @@ const Rsvp = () => {
                 </List>
               </Grid>
               <Grid item xs={12}>
-                <Button variant="contained" fullWidth>RSVP</Button>
+                <Button variant="contained" onClick={rsvpClick} fullWidth>RSVP</Button>
               </Grid>
             </Grid>
           </Paper>
         )
       }
+      <Snackbar key='bottom-center' anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={onAlertClose}
+        open={muiAlert.open}
+        autoHideDuration={3000}
+      >
+        <Alert severity={muiAlert.type} onClose={onAlertClose}>{muiAlert.message}</Alert>
+      </Snackbar>
     </>
   );
 };

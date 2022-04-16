@@ -46,6 +46,7 @@ namespace wedding_frontend.Controllers
         {
           WeddingId = s.WeddingId,
           Name = s.Name,
+          GuestId = s.GuestId,
           GuestGroupId = s.GuestGroup.GuestGroupId,
           GroupType = s.GuestGroup.Type,
           GroupValue = s.GuestGroup.Value
@@ -60,6 +61,31 @@ namespace wedding_frontend.Controllers
       return Ok(similarGuests);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> RsvpGuests([FromBody] ICollection<GuestListDto> rsvpGuests, CancellationToken cancellationToken)
+    {
+      // get the wedding id based on request url
+      var subDomain = Request.Host.Value;
+      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => subDomain.ToLower().Contains(s.UrlSubDomain.ToLower()), cancellationToken);
+
+      // make sure a valid wedding exists
+      if (wedding == null) return NotFound();
+      var weddingId = wedding.WeddingId;
+
+      foreach (var guest in rsvpGuests)
+      {
+        var dbGuest = await _dbContext.Guests
+          .SingleOrDefaultAsync(s => s.WeddingId == weddingId && s.GuestId == guest.GuestId, cancellationToken);
+
+        dbGuest.RsvpDate = DateTime.Now;
+        dbGuest.HasRsvpd = true;
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+      }
+
+      return Ok();
+    }
+
     private async Task<ICollection<GuestListDto>> BuildRelatedGuests(Guid? guestGroupId, string groupType, 
       string groupValue, CancellationToken cancellationToken)
     {
@@ -67,6 +93,7 @@ namespace wedding_frontend.Controllers
         .Where(w => w.GuestGroupId != guestGroupId && w.Type.Equals(groupType) && w.Value.Equals(groupValue))
         .Select(s => new GuestListDto
         {
+          GuestId = s.Guests.SingleOrDefault().GuestId,
           WeddingId = s.Guests.SingleOrDefault().WeddingId,
           Name = s.Guests.SingleOrDefault().Name,
           GuestGroupId = s.GuestGroupId
