@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Home from './pages/Home';
+import Info from './pages/Info';
 import Links from './pages/Links';
 import NotFound from './pages/NotFound';
 import Rsvp from './pages/Rsvp';
@@ -30,6 +31,7 @@ const App = () => {
               (
                 <>
                   <Route path="rsvp" element={<Rsvp />} />
+                  <Route path="info" element={<Info />} />
                 </>
               )
           }
