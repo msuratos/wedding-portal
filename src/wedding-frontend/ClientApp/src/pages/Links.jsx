@@ -4,6 +4,7 @@ import {
   AppBar, Button, Container, Grid, Input, Paper,
   Toolbar, Typography
 } from '@mui/material';
+import WhiteButton from '../components/WhiteButton';
 
 const Links = () => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
@@ -79,16 +80,16 @@ const Links = () => {
                 <Grid item xs={12}>
                   <Grid container spacing={1}>
                     <Grid item xs={12}>
-                      <Button fullWidth variant='outlined' onClick={() => navigate('/info')}>Info</Button>
+                      <WhiteButton fullWidth onClick={() => navigate('/info')}>Info</WhiteButton>
                     </Grid>
                     <Grid item xs={12}>
-                      <Button fullWidth variant='outlined' onClick={() => navigate('/rsvp')}>RSVP</Button>
+                      <WhiteButton fullWidth onClick={() => navigate('/rsvp')}>RSVP</WhiteButton>
                     </Grid>
                     <Grid item xs={12}>
-                      <Button fullWidth variant='outlined' onClick={() => navigate('/faq')}>FAQs</Button>
+                      <WhiteButton fullWidth onClick={() => navigate('/faq')}>FAQs</WhiteButton>
                     </Grid>
                     <Grid item xs={12}>
-                      <Button fullWidth variant='outlined' onClick={() => navigate('/contact')}>Contact Us</Button>
+                      <WhiteButton fullWidth onClick={() => navigate('/contact')}>Contact Us</WhiteButton>
                     </Grid>
                   </Grid>
                 </Grid>
