@@ -80,7 +80,7 @@ const Links = () => {
                 <Grid item xs={12}>
                   <Grid container spacing={1}>
                     <Grid item xs={12}>
-                      <WhiteButton fullWidth onClick={() => navigate('/info')}>Info</WhiteButton>
+                      <WhiteButton fullWidth onClick={() => navigate('/info')}>Wedding Details</WhiteButton>
                     </Grid>
                     <Grid item xs={12}>
                       <WhiteButton fullWidth onClick={() => navigate('/rsvp')}>RSVP</WhiteButton>
