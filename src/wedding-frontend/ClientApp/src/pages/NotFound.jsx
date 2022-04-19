@@ -5,7 +5,7 @@ import { AppBar, Container, Grid, Paper, Toolbar, Typography } from '@mui/materi
 const NotFound = () => {
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: '#0277bd' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
