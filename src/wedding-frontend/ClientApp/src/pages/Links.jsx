@@ -43,7 +43,7 @@ const Links = () => {
         !isValidPassphrase
           ? (
             <>
-              <AppBar position="static">
+              <AppBar position="static" sx={{ backgroundColor: '#0277bd' }}>
                 <Container maxWidth="xl">
                   <Toolbar disableGutters>
                     <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
@@ -67,7 +67,7 @@ const Links = () => {
           )
           : (
             <>
-              <AppBar position="static">
+              <AppBar position="static" sx={{ backgroundColor: '#0277bd' }}>
                 <Container maxWidth="xl">
                   <Toolbar disableGutters>
                     <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
@@ -80,10 +80,13 @@ const Links = () => {
                 <Grid item xs={12}>
                   <Grid container spacing={1}>
                     <Grid item xs={12}>
-                      <WhiteButton fullWidth onClick={() => navigate('/info')}>Info</WhiteButton>
+                      <WhiteButton fullWidth onClick={() => navigate('/info')}>Wedding Details</WhiteButton>
                     </Grid>
                     <Grid item xs={12}>
                       <WhiteButton fullWidth onClick={() => navigate('/rsvp')}>RSVP</WhiteButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <WhiteButton fullWidth onClick={() => navigate('/registry')}>Registry</WhiteButton>
                     </Grid>
                     <Grid item xs={12}>
                       <WhiteButton fullWidth onClick={() => navigate('/faq')}>FAQs</WhiteButton>
