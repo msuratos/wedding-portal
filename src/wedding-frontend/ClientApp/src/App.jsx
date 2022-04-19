@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import Background from './components/Background';
 import Home from './pages/Home';
 import Info from './pages/Info';
 import Links from './pages/Links';
@@ -22,6 +23,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <Background />
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />
