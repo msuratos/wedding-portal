@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  AppBar, Button, Container, Grid, Input, Paper,
-  Toolbar, Typography
+  AppBar, Button, Container, Grid,
+  Input, Paper, Toolbar, Typography
 } from '@mui/material';
 import WhiteButton from '../components/WhiteButton';
+import { blueGrey } from '@mui/material/colors';
 
 const Links = () => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
@@ -43,7 +44,7 @@ const Links = () => {
         !isValidPassphrase
           ? (
             <>
-              <AppBar position="static" sx={{ backgroundColor: '#0277bd' }}>
+              <AppBar position="static" sx={{ backgroundColor: blueGrey[500] }}>
                 <Container maxWidth="xl">
                   <Toolbar disableGutters>
                     <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
@@ -59,7 +60,7 @@ const Links = () => {
                       value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
                   </Grid>
                   <Grid item xs={12} md={12}>
-                    <Button variant="contained" onClick={validatePassphrase} fullWidth>Submit</Button>
+                    <Button onClick={validatePassphrase} fullWidth>Submit</Button>
                   </Grid>
                 </Grid>
               </Paper>
@@ -67,7 +68,7 @@ const Links = () => {
           )
           : (
             <>
-              <AppBar position="static" sx={{ backgroundColor: '#0277bd' }}>
+              <AppBar position="static" sx={{ backgroundColor: blueGrey[500] }}>
                 <Container maxWidth="xl">
                   <Toolbar disableGutters>
                     <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
@@ -76,27 +77,27 @@ const Links = () => {
                   </Toolbar>
                 </Container>
               </AppBar>
-              <Grid container sx={{ p: '15px' }} alignItems="center" justifyContent="center" style={{ minHeight: '80vh' }}>
-                <Grid item xs={12}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                      <WhiteButton fullWidth onClick={() => navigate('/info')}>Wedding Details</WhiteButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <WhiteButton fullWidth onClick={() => navigate('/rsvp')}>RSVP</WhiteButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <WhiteButton fullWidth onClick={() => navigate('/registry')}>Registry</WhiteButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <WhiteButton fullWidth onClick={() => navigate('/faq')}>FAQs</WhiteButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <WhiteButton fullWidth onClick={() => navigate('/contact')}>Contact Us</WhiteButton>
+                <Grid container sx={{ p: '10px' }} alignItems="center" justifyContent="center">
+                  <Grid item xs={12}>
+                    <Grid container spacing={1}>
+                      <Grid item xs={12}>
+                        <WhiteButton fullWidth onClick={() => navigate('/info')}>Wedding Details</WhiteButton>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <WhiteButton fullWidth onClick={() => navigate('/rsvp')}>RSVP</WhiteButton>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <WhiteButton fullWidth onClick={() => navigate('/registry')}>Registry</WhiteButton>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <WhiteButton fullWidth onClick={() => navigate('/faq')}>FAQs</WhiteButton>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <WhiteButton fullWidth onClick={() => navigate('/contact')}>Contact Us</WhiteButton>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
             </>
           )
       }
