@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import './Background.css';
 
 // this component is copied from https://codepen.io/spite/pen/DgQzLv?editors=1000
@@ -8,8 +8,7 @@ const Background = () => {
 	const world = useRef();
 	const star = useRef();
 
-	let layers = [];
-	let objects = [];	
+	const layers = useMemo(() => [],[]);
 
 	const init = () => {
 		let lastTime = 0;
@@ -39,31 +38,13 @@ const Background = () => {
 				clearTimeout(id);
 			};
 		}
-	}
-
-	const generate = () => {
-		objects = [];
-
-		if (world.current.hasChildNodes()) {
-			while (world.current.childNodes.length >= 1) {
-				world.current.removeChild(world.current.firstChild);
-			}
-		}
-
-		for (var j = 0; j < 5; j++) {
-			objects.push(createCloud());
-		}
-
-		for (var j = 0; j < Math.round(Math.random() * 20); j++) {
-			createStar();
-    }
-	}
+	};
 
 	const createStar = () => {
 		const div = document.createElement('div');
 		div.className = 'star';
 
-		const t = `${Math.round(Math.random() * 2) == 1 ? 'pulse1' : 'pulse2'} ${Math.random() * 3}s linear infinite`;
+		const t = `${Math.round(Math.random() * 2) === 1 ? 'pulse1' : 'pulse2'} ${Math.random() * 3}s linear infinite`;
 		div.style.webkitAnimation =
 			div.style.MozAnimation =
 			div.style.msAnimation =
@@ -77,7 +58,7 @@ const Background = () => {
 		star.current.appendChild(div);
 	};
 
-	const createCloud = () => {
+	const createCloud = useCallback(() => {
 		const div = document.createElement('div');
 		div.className = 'cloudBase';
 
@@ -129,9 +110,28 @@ const Background = () => {
 		}
 
 		return div;
-	}
+	}, [layers]);
 
-	const update = () => {
+	const generate = useCallback(() => {
+		let objects = [];
+		objects = [];
+
+		if (world.current.hasChildNodes()) {
+			while (world.current.childNodes.length >= 1) {
+				world.current.removeChild(world.current.firstChild);
+			}
+		}
+
+		for (let j = 0; j < 5; j++) {
+			objects.push(createCloud());
+		}
+
+		for (let k = 0; k < Math.round(Math.random() * 20); k++) {
+			createStar();
+    }
+	}, [createCloud]);
+
+	const update = useCallback(() => {
 		let worldXAngle = 0;
 		let worldYAngle = 0;
 
@@ -148,7 +148,7 @@ const Background = () => {
 		}
 
 		requestAnimationFrame(update);
-	}
+	}, [layers]);
 
 	useEffect(() => {
 		let p = 400;
@@ -160,7 +160,7 @@ const Background = () => {
 		init();
 		generate();
 		update();
-  }, [viewport, world, star]);
+  }, [viewport, world, star, generate, update]);
 
 	return (
 		<div ref={viewport} className="viewport">

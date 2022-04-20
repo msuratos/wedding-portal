@@ -23,7 +23,8 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Background />
+      {new URL(window.location.href).pathname === '/' ? <></> : <Background />}
+
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />
