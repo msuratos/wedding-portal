@@ -2,9 +2,11 @@
 import './Background.css';
 
 // this component is copied from https://codepen.io/spite/pen/DgQzLv?editors=1000
+// and from https://codepen.io/Srcko85/pen/MVKpey?editors=1100
 const Background = () => {
 	const viewport = useRef();
 	const world = useRef();
+	const star = useRef();
 
 	let layers = [];
 	let objects = [];	
@@ -51,7 +53,29 @@ const Background = () => {
 		for (var j = 0; j < 5; j++) {
 			objects.push(createCloud());
 		}
+
+		for (var j = 0; j < Math.round(Math.random() * 20); j++) {
+			createStar();
+    }
 	}
+
+	const createStar = () => {
+		const div = document.createElement('div');
+		div.className = 'star';
+
+		const t = `${Math.round(Math.random() * 2) == 1 ? 'pulse1' : 'pulse2'} ${Math.random() * 3}s linear infinite`;
+		div.style.webkitAnimation =
+			div.style.MozAnimation =
+			div.style.msAnimation =
+			div.style.oAnimation =
+			div.style.animation = t;
+
+		div.style.top = `${Math.round(Math.random() * 100)}%`;
+		div.style.left = `${Math.round(Math.random() * 100)}%`;
+		div.style.width = div.style.height = `${Math.random() * 5}px`;
+
+		star.current.appendChild(div);
+	};
 
 	const createCloud = () => {
 		const div = document.createElement('div');
@@ -136,11 +160,12 @@ const Background = () => {
 		init();
 		generate();
 		update();
-  }, [viewport, world]);
+  }, [viewport, world, star]);
 
 	return (
 		<div ref={viewport} className="viewport">
 			<div ref={world} className="world"></div>
+			<div ref={star} className="star-container"></div>
     </div>
   );
 };

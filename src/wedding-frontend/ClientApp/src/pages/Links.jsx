@@ -90,6 +90,9 @@ const Links = () => {
                         <WhiteButton fullWidth onClick={() => navigate('/registry')}>Registry</WhiteButton>
                       </Grid>
                       <Grid item xs={12}>
+                        <WhiteButton fullWidth onClick={() => navigate('/aboutus')}>About Us</WhiteButton>
+                      </Grid>
+                      <Grid item xs={12}>
                         <WhiteButton fullWidth onClick={() => navigate('/faq')}>FAQs</WhiteButton>
                       </Grid>
                       <Grid item xs={12}>
