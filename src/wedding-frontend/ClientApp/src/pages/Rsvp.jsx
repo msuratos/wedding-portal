@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Alert, Button, Box, Checkbox, Collapse, Grid, List, ListItemButton, ListItemIcon,
@@ -110,6 +110,11 @@ const Rsvp = () => {
           </Grid>
           <Grid item xs={12}>
             <Button variant="contained" onClick={searchClick} disabled={nameSearchValue.length < 4} fullWidth>Search</Button>
+          </Grid>
+          <Grid item xs={12} sx={{ p: '5px' }}>
+            <Typography variant="caption" display="block" align="center" gutterBottom>
+              Just a reminder that, although we love your children, unfortunately we aren’t able to accommodate them at this time because of budget & space constraints 😢
+            </Typography>
           </Grid>
         </Grid>
       </Paper>

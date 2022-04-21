@@ -166,11 +166,6 @@ const Info = () => {
             />
           </Box>
         </Grid>
-        <Grid item xs={12} sx={{ p: '15px' }}>
-          <Typography variant="caption" display="block" gutterBottom>
-            Just a reminder that, although we love your children, unfortunately we aren’t able to accommodate them at this time because of budget & space constraints 😢
-          </Typography>
-        </Grid>
       </Grid>
     </Paper>
   );
