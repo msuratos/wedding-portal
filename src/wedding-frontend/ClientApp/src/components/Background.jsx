@@ -56,7 +56,7 @@ const Background = () => {
 		div.style.left = `${Math.round(Math.random() * 100)}%`;
 		div.style.width = div.style.height = `${Math.random() * 5 + 12}px`;
 		div.style.color = Math.round(Math.random() * 2) === 1 ? 'white' : blue[200];
-		div.innerHTML = '&#128964;';
+		div.innerHTML = '&#x1F7C4;';
 
 		star.current.appendChild(div);
 	};
