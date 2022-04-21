@@ -77,8 +77,8 @@ const Info = () => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary="Dusty Blue" secondary="Grey/Silver" />
-        <Avatar sx={{ bgcolor: blueGrey[300] }}>DB</Avatar>
-        <Avatar sx={{ bgcolor: grey['A400'] }}>G/S</Avatar>
+        <Avatar sx={{ bgcolor: blueGrey[300] }}> </Avatar>
+        <Avatar sx={{ bgcolor: grey['A400'] }}> </Avatar>
       </ListItem>
       <Divider variant="inset" component="li" />
       <li>
