@@ -77,8 +77,8 @@ const Info = () => {
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary="Dusty Blue" secondary="Grey/Silver" />
-        <Avatar sx={{ bgcolor: blueGrey[300] }}>DB</Avatar>
-        <Avatar sx={{ bgcolor: grey['A400'] }}>G/S</Avatar>
+        <Avatar sx={{ bgcolor: blueGrey[300] }}> </Avatar>
+        <Avatar sx={{ bgcolor: grey['A400'] }}> </Avatar>
       </ListItem>
       <Divider variant="inset" component="li" />
       <li>
@@ -165,11 +165,6 @@ const Info = () => {
               }
             />
           </Box>
-        </Grid>
-        <Grid item xs={12} sx={{ p: '15px' }}>
-          <Typography variant="caption" display="block" gutterBottom>
-            Just a reminder that, although we love your children, unfortunately we aren’t able to accommodate them at this time because of budget & space constraints 😢
-          </Typography>
         </Grid>
       </Grid>
     </Paper>

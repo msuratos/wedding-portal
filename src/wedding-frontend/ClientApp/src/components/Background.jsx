@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { blue } from '@mui/material/colors';
 import './Background.css';
 
 // this component is copied from https://codepen.io/spite/pen/DgQzLv?editors=1000
@@ -44,7 +45,7 @@ const Background = () => {
 		const div = document.createElement('div');
 		div.className = 'star';
 
-		const t = `${Math.round(Math.random() * 2) === 1 ? 'pulse1' : 'pulse2'} ${Math.random() * 3}s linear infinite`;
+		const t = `${Math.round(Math.random() * 2) === 1 ? 'pulse1' : 'pulse2'} ${Math.random() * 3 + .5}s linear infinite`;
 		div.style.webkitAnimation =
 			div.style.MozAnimation =
 			div.style.msAnimation =
@@ -53,7 +54,9 @@ const Background = () => {
 
 		div.style.top = `${Math.round(Math.random() * 100)}%`;
 		div.style.left = `${Math.round(Math.random() * 100)}%`;
-		div.style.width = div.style.height = `${Math.random() * 5}px`;
+		div.style.width = div.style.height = `${Math.random() * 5 + 12}px`;
+		div.style.color = Math.round(Math.random() * 2) === 1 ? 'white' : blue[200];
+		div.innerHTML = '✦';
 
 		star.current.appendChild(div);
 	};
@@ -126,7 +129,7 @@ const Background = () => {
 			objects.push(createCloud());
 		}
 
-		for (let k = 0; k < Math.round(Math.random() * 20); k++) {
+		for (let k = 0; k < Math.round(Math.random() * 10 + 10); k++) {
 			createStar();
     }
 	}, [createCloud]);
