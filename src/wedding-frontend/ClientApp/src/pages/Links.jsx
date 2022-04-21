@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Grid, Input, Paper } from '@mui/material';
+import {
+  Button, Grid, Input, Card,
+  CardActions, CardContent, CardMedia
+} from '@mui/material';
+
 import WhiteButton from '../components/WhiteButton';
+import PasswordPic from '../assets/password-pic.JPG';
 
 const Links = () => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
@@ -39,17 +44,16 @@ const Links = () => {
       {
         !isValidPassphrase
           ? (
-            <Paper sx={{ m: '15px', mt: '45px' }}>
-              <Grid container spacing={1} sx={{ p: '5px' }}>
-                <Grid item xs={12} md={6}>
-                  <Input placeholder="Enter password" inputProps={{ 'aria-label': 'description' }}
-                    value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <Button onClick={validatePassphrase} fullWidth>Submit</Button>
-                </Grid>
-              </Grid>
-            </Paper>
+            <Card sx={{ m: '15px', mt: '45px' }}>
+              <CardMedia component="img" height="200" image={PasswordPic} alt="password-pic" />
+              <CardContent>
+                <Input placeholder="Enter password" inputProps={{ 'aria-label': 'description' }}
+                  value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
+              </CardContent>
+              <CardActions>
+                <Button variant="contained" onClick={validatePassphrase} fullWidth>Submit</Button>
+              </CardActions>
+            </Card>
           )
           : (
             <Grid container sx={{ p: '10px', minHeight: '80vh' }} alignItems="center" justifyContent="center">
