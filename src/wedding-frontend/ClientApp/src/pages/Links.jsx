@@ -77,30 +77,27 @@ const Links = () => {
                   </Toolbar>
                 </Container>
               </AppBar>
-                <Grid container sx={{ p: '10px' }} alignItems="center" justifyContent="center">
-                  <Grid item xs={12}>
-                    <Grid container spacing={1}>
-                      <Grid item xs={12}>
-                        <WhiteButton fullWidth onClick={() => navigate('/info')}>Wedding Details</WhiteButton>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <WhiteButton fullWidth onClick={() => navigate('/rsvp')}>RSVP</WhiteButton>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <WhiteButton fullWidth onClick={() => navigate('/registry')}>Registry</WhiteButton>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <WhiteButton fullWidth onClick={() => navigate('/aboutus')}>About Us</WhiteButton>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <WhiteButton fullWidth onClick={() => navigate('/faq')}>FAQs</WhiteButton>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <WhiteButton fullWidth onClick={() => navigate('/contact')}>Contact Us</WhiteButton>
-                      </Grid>
+              <Grid container sx={{ p: '10px', minHeight: '80vh' }} alignItems="center" justifyContent="center">
+                <Grid item xs={12}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                      <WhiteButton fullWidth onClick={() => navigate('/info')}>Wedding Details</WhiteButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <WhiteButton fullWidth onClick={() => navigate('/rsvp')}>RSVP</WhiteButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <WhiteButton fullWidth onClick={() => navigate('/registry')}>Registry</WhiteButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <WhiteButton fullWidth onClick={() => navigate('/aboutus')}>About Us</WhiteButton>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <WhiteButton fullWidth onClick={() => navigate('/faq')}>FAQs</WhiteButton>
                     </Grid>
                   </Grid>
                 </Grid>
+              </Grid>
             </>
           )
       }
