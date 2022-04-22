@@ -99,7 +99,8 @@ const Info = () => {
 
   const parking = (
     <div>
-      <img src={ParkingPicture} alt="parking-pic" title="parking-pic" width='100%' style={{ objectFit: 'cover' }} />
+      <img src={ParkingPicture} alt="parking-pic" title="parking-pic" width='100%' style={{ objectFit: 'cover' }}
+        onClick={() => window.open(ParkingPicture)} />
     </div>
   );
 
