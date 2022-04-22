@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 
 import WhiteButton from '../components/WhiteButton';
-import PasswordPic from '../assets/password-pic.JPG';
+import PasswordPic from '../assets/link-password-pic.jpg';
 
 const Links = () => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
@@ -45,7 +45,7 @@ const Links = () => {
         !isValidPassphrase
           ? (
             <Card sx={{ m: '15px', mt: '45px' }}>
-              <CardMedia component="img" height="200" image={PasswordPic} alt="password-pic" />
+              <CardMedia component="img" height="250" image={PasswordPic} alt="password-pic" />
               <CardContent>
                 <Input placeholder="Enter password" inputProps={{ 'aria-label': 'description' }}
                   value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
@@ -60,6 +60,9 @@ const Links = () => {
               <Grid item xs={12}>
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
+                    <WhiteButton fullWidth onClick={() => navigate('/aboutus')}>About Us</WhiteButton>
+                  </Grid>
+                  <Grid item xs={12}>
                     <WhiteButton fullWidth onClick={() => navigate('/info')}>Wedding Details</WhiteButton>
                   </Grid>
                   <Grid item xs={12}>
@@ -67,9 +70,6 @@ const Links = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <WhiteButton fullWidth onClick={() => navigate('/registry')}>Registry</WhiteButton>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <WhiteButton fullWidth onClick={() => navigate('/aboutus')}>About Us</WhiteButton>
                   </Grid>
                   <Grid item xs={12}>
                     <WhiteButton fullWidth onClick={() => navigate('/faq')}>FAQs</WhiteButton>
