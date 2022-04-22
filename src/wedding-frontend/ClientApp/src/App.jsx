@@ -50,7 +50,7 @@ const App = () => {
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />
-          <Route path="links" element={<Links />} />
+          <Route path="links" element={<Links setIsValidPassphrase={setIsValidPassphrase} />} />
           {
             !isValidPassphrase ? <></> :
               (
