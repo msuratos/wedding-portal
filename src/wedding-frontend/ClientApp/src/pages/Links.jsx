@@ -45,7 +45,7 @@ const Links = () => {
         !isValidPassphrase
           ? (
             <Card sx={{ m: '15px', mt: '45px' }}>
-              <CardMedia component="img" height="225" image={PasswordPic} alt="password-pic" />
+              <CardMedia component="img" height="250" image={PasswordPic} alt="password-pic" />
               <CardContent>
                 <Input placeholder="Enter password" inputProps={{ 'aria-label': 'description' }}
                   value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
