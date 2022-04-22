@@ -1,10 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box, Button, Grid, Paper, Step, StepContent,
-  StepLabel, Stepper, Typography
+  Button, Box, Grid, MobileStepper, Paper, Step,
+  StepContent, StepLabel, Stepper, Typography
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+
+import SwipeableViews from 'react-swipeable-views';
+import { autoPlay } from 'react-swipeable-views-utils';
+
+import WeddingPic from '../assets/link-password-pic.jpg';
+import ParkingPic from '../assets/parking.png';
+
+const images = [
+  {
+    label: 'Wedding Pic 1',
+    imgPath: WeddingPic
+  },
+  {
+    label: 'Parking',
+    imgPath: ParkingPic
+  }
+];
 
 const steps = [
   {
@@ -71,9 +90,12 @@ const steps = [
   }
 ];
 
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+
 const AboutUs = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
+  const [activeImageStep, setActiveImageStep] = useState(0);
 
   const handleStep = (step) => () => {
     setActiveStep(step);
@@ -83,27 +105,90 @@ const AboutUs = () => {
     setActiveStep(0);
   };
 
+  const handleNext = () => {
+    setActiveImageStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveImageStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleStepChange = (step) => {
+    setActiveImageStep(step);
+  };
+
   return (
-    <Paper sx={{ m: '15px' }}>
-      <Grid container sx={{ p: '5px' }}>
-        <Grid item xs={12}>
-          <Button onClick={() => navigate(-1)}><ArrowBackIcon />back to links</Button>
+    <>
+      <Paper elevation={3} sx={{ m: '15px' }}>
+        <Grid container sx={{ p: '5px' }}>
+          <Grid item xs={12}>
+            <Button onClick={() => navigate(-1)}><ArrowBackIcon />back to links</Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Stepper nonLinear activeStep={activeStep} orientation="vertical">
+              {steps.map((step, index) => (
+                <Step key={step.label}>
+                  <StepLabel optional={step.optional} onClick={handleStep(index)}>{step.label}</StepLabel>
+                  <StepContent>
+                    <Typography variant="caption" display="block" gutterBottom>{step.description}</Typography>
+                  </StepContent>
+                </Step>
+              ))}
+            </Stepper>
+            {activeStep === steps.length - 1 && (<Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>back to start</Button>)}
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Stepper nonLinear activeStep={activeStep} orientation="vertical">
-            {steps.map((step, index) => (
-              <Step key={step.label}>
-                <StepLabel optional={step.optional} onClick={handleStep(index)}>{step.label}</StepLabel>
-                <StepContent>
-                  <Typography variant="caption" display="block" gutterBottom>{step.description}</Typography>
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
-          {activeStep === steps.length - 1 && (<Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>back to start</Button>)}
-        </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+      <Paper square elevation={3} sx={{ m: '15px' }}>
+        <AutoPlaySwipeableViews
+          axis='x'
+          index={activeImageStep}
+          onChangeIndex={handleStepChange}
+          enableMouseEvents
+        >
+          {images.map((step, index) => (
+            <div key={step.label}>
+              {Math.abs(activeStep - index) <= 2 ? (
+                <Box
+                  component="img"
+                  sx={{
+                    height: 255,
+                    display: 'block',
+                    maxWidth: 400,
+                    overflow: 'hidden',
+                    width: '100%',
+                  }}
+                  src={step.imgPath}
+                  alt={step.label}
+                />
+              ) : null}
+            </div>
+          ))}
+        </AutoPlaySwipeableViews>
+        <MobileStepper
+          variant="progress"
+          steps={images.length}
+          position="static"
+          activeStep={activeImageStep}
+          nextButton={
+            <Button
+              size="small"
+              onClick={handleNext}
+              disabled={activeImageStep === images.length - 1}
+            >
+              Next
+              <KeyboardArrowRight />
+            </Button>
+          }
+          backButton={
+            <Button size="small" onClick={handleBack} disabled={activeImageStep === 0}>
+              <KeyboardArrowLeft />
+              Back
+            </Button>
+          }
+        />
+      </Paper>
+    </>
   );
 };
 
