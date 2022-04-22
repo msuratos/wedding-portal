@@ -29,29 +29,21 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {/* TODO: remove this conditional once deployed using links as default page */}
-      {new URL(window.location.href).pathname === '/' ? <></>
-        : (
-          <>
-            <Background />
-            <AppBar position="static" sx={{ backgroundColor: blueGrey[500] }}>
-              <Container maxWidth="xl">
-                {/* TODO: find a way to rerender the dense on different page */}
-                <Toolbar variant={new URL(window.location.href).pathname === '/links' ? 'regular' : 'dense'} disableGutters>
-                  <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
-                    Melvin & Erlynn's Wedding 2.0!
-                  </Typography>
-                </Toolbar>
-              </Container>
-            </AppBar>
-          </>
-        )
-      }
-
+      <Background />
+      <AppBar position="static" sx={{ backgroundColor: blueGrey[500] }}>
+        <Container maxWidth="xl">
+          {/* TODO: find a way to rerender the dense on different page */}
+          <Toolbar variant={new URL(window.location.href).pathname === '/links' ? 'regular' : 'dense'} disableGutters>
+            <Typography variant="h6" noWrap component="div" sx={{ mr: 'auto', ml: 'auto', display: { xs: 'flex', md: 'flex' } }}>
+              Melvin & Erlynn's Wedding 2.0!
+            </Typography>
+          </Toolbar>
+        </Container>
+      </AppBar>
       <Routes>
         <Route path="/">
-          <Route index element={<Home />} />
-          <Route path="links" element={<Links setIsValidPassphrase={setIsValidPassphrase} />} />
+          <Route index element={<Links setIsValidPassphrase={setIsValidPassphrase} />} />
+          <Route path="home" element={<Home />} />
           {
             !isValidPassphrase ? <></> :
               (
