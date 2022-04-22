@@ -1,0 +1,211 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Button, Box, Grid, MobileStepper, Paper, Step,
+  StepContent, StepLabel, Stepper, Typography
+} from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+
+import SwipeableViews from 'react-swipeable-views';
+import { autoPlay } from 'react-swipeable-views-utils';
+
+import Photo1 from '../assets/photoshoot/photo-1.JPG';
+import Photo3 from '../assets/photoshoot/photo-3.JPG';
+import Photo5 from '../assets/photoshoot/photo-5.JPG';
+import Photo6 from '../assets/photoshoot/photo-6.JPG';
+import Photo8 from '../assets/photoshoot/photo-8.JPG';
+
+const images = [
+  {
+    label: 'Pic 1',
+    imgPath: Photo1
+  },
+  {
+    label: 'Pic 3',
+    imgPath: Photo3
+  },
+  {
+    label: 'Pic 5',
+    imgPath: Photo5
+  },
+  {
+    label: 'Pic 6',
+    imgPath: Photo6
+  },
+  {
+    label: 'Pic 8',
+    imgPath: Photo8
+  }
+];
+
+const steps = [
+  {
+    label: 'The Meeting',
+    optional: '~August 2008 (Freshman HS)',
+    picUrl: '',
+    description: `Tbh, we don't remember of our very first encouter. All we know is
+              is that we met sometime in freshman year of high school, most likely
+              french class. Fun fact, Erlynn met Calvin first!`
+  },
+  {
+    label: 'Something\'s Brewing.. 😉',
+    optional: '~2009-2011',
+    picUrl: '',
+    description: `Throughout high school, we've had classes together and were 
+              mutual friends. Then, junior year, we had physics class together
+              and were partners for a group project. One of the days, while working
+              on the project, Melvin decided to show off a little and perform a little
+              break dance routine. Maybe this was the start of our romance.`,
+  },
+  {
+    label: 'Where It Began',
+    optional: '2011-2012',
+    picUrl: '',
+    description: `During our senior year, homecoming was around the corner and Melvin
+              was wondering who take. One of friends, Kevin, had a conversation with him
+              suggesting to take Erlynn. Long behold, Melvin asked Erlynn to become his
+              date to homecoming by asking her at the Nevada Trails park with some roses.
+              The rest of the school year, we were in the 'talking' phase and were each
+              other's date for the rest of the school dances: sadies & prom. Both had
+              their own significant way of being asked: treasure hunt & flash mob.`,
+  },
+  {
+    label: 'Official!',
+    optional: 'July 6, 2012',
+    picUrl: '',
+    description: `After high school graduation in the middle of the summer, Melvin asked
+              Erlynn to officially become his girlfriend! It started out by asking Erlynn's
+              parents for permission, then had a long date that that ended up in Bellagio
+              water fountains. During the water show, that's when Melvin asked Erlynn
+              to become his girlfriend`,
+  },
+  // insert various trips and random occasions with pictures
+  {
+    label: 'Making It Permanent',
+    optional: 'November 9, 2019',
+    picUrl: '',
+    description: `After 7 years, it was time to make it permanent. Our love for each other
+              has grown so much that we wanted to make it last forever. Melvin's way of
+              the proposal was taking her out for dinner before she 'hangs' out with her
+              cousins. They were suppose to test of their friend's app which is a treasure
+              hunt. They had to go to several significant places to get the next clue. While
+              this was happening, friends and families were meeting at Nevada Trails Park, back
+              to where it all began, as this was the last place for the treasure hunt. The treasure
+              was Melvin asking Erlynn to become his wife!`,
+  },
+  {
+    label: 'Wedding 1.0!',
+    optional: 'July 6, 2020',
+    picUrl: '',
+    description: `We wanted to have the wedding at this date, however, due to COVID, it was
+              difficult to plan a big wedding. So, we had a small civil wedding with close
+              family.`
+  }
+];
+
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+
+const AboutUs = () => {
+  const navigate = useNavigate();
+  const [activeStep, setActiveStep] = useState(0);
+  const [activeImageStep, setActiveImageStep] = useState(0);
+
+  const handleStep = (step) => () => {
+    setActiveStep(step);
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
+  const handleNext = () => {
+    setActiveImageStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveImageStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleStepChange = (step) => {
+    setActiveImageStep(step);
+  };
+
+  return (
+    <>
+      <Paper elevation={3} sx={{ m: '15px' }}>
+        <Grid container sx={{ p: '5px' }}>
+          <Grid item xs={12}>
+            <Button onClick={() => navigate(-1)}><ArrowBackIcon />back to links</Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Stepper nonLinear activeStep={activeStep} orientation="vertical">
+              {steps.map((step, index) => (
+                <Step key={step.label}>
+                  <StepLabel optional={step.optional} onClick={handleStep(index)}>{step.label}</StepLabel>
+                  <StepContent>
+                    <Typography variant="caption" display="block" gutterBottom>{step.description}</Typography>
+                  </StepContent>
+                </Step>
+              ))}
+            </Stepper>
+            {activeStep === steps.length - 1 && (<Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>back to start</Button>)}
+          </Grid>
+        </Grid>
+      </Paper>
+      <Paper square elevation={3} sx={{ m: '15px' }}>
+        <AutoPlaySwipeableViews
+          axis='x'
+          index={activeImageStep}
+          onChangeIndex={handleStepChange}
+          enableMouseEvents
+        >
+          {images.map((step, index) => (
+            <div key={step.label}>
+              {Math.abs(activeImageStep - index) <= images.length ? (
+                <Box
+                  component="img"
+                  sx={{
+                    height: 400,
+                    display: 'block',
+                    objectFit: 'cover',
+                    maxWidth: 400,
+                    overflow: 'hidden',
+                    width: '100%',
+                  }}
+                  src={step.imgPath}
+                  alt={step.label}
+                />
+              ) : null}
+            </div>
+          ))}
+        </AutoPlaySwipeableViews>
+        <MobileStepper
+          variant="progress"
+          steps={images.length}
+          position="static"
+          activeStep={activeImageStep}
+          nextButton={
+            <Button
+              size="small"
+              onClick={handleNext}
+              disabled={activeImageStep === images.length - 1}
+            >
+              Next
+              <KeyboardArrowRight />
+            </Button>
+          }
+          backButton={
+            <Button size="small" onClick={handleBack} disabled={activeImageStep === 0}>
+              <KeyboardArrowLeft />
+              Back
+            </Button>
+          }
+        />
+      </Paper>
+    </>
+  );
+};
+
+export default AboutUs;
