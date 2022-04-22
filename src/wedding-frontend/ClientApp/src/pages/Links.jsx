@@ -8,7 +8,7 @@ import {
 import WhiteButton from '../components/WhiteButton';
 import PasswordPic from '../assets/link-password-pic.jpg';
 
-const Links = () => {
+const Links = (props) => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
   const [passphrase, setPassphrase] = useState('');
 
@@ -25,8 +25,9 @@ const Links = () => {
     const respData = await resp.text();
     console.debug('is valid passphrase?', respData);
 
-    setIsValidPassphrase(respData);
     localStorage.setItem('validPassphrase', respData);
+    setIsValidPassphrase(respData);
+    props.setIsValidPassphrase(respData);
   };
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import { blueGrey } from '@mui/material/colors';
 
 import AboutUs from './pages/AboutUs';
 import Background from './components/Background';
+import Faq from './pages/Faq';
 import Home from './pages/Home';
 import Info from './pages/Info';
 import Links from './pages/Links';
@@ -50,7 +51,7 @@ const App = () => {
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />
-          <Route path="links" element={<Links />} />
+          <Route path="links" element={<Links setIsValidPassphrase={setIsValidPassphrase} />} />
           {
             !isValidPassphrase ? <></> :
               (
@@ -59,6 +60,7 @@ const App = () => {
                   <Route path="rsvp" element={<Rsvp />} />
                   <Route path="info" element={<Info />} />
                   <Route path="registry" element={<Registry />} />
+                  <Route path="faq" element={<Faq />} />
                 </>
               )
           }
