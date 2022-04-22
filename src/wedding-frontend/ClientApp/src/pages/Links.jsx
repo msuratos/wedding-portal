@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 
 import WhiteButton from '../components/WhiteButton';
-import PasswordPic from '../assets/password-pic.jpg';
+import PasswordPic from '../assets/link-password-pic.jpg';
 
 const Links = () => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
