@@ -11,17 +11,32 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
 
-import WeddingPic from '../assets/link-password-pic.jpg';
-import ParkingPic from '../assets/parking.png';
+import Photo1 from '../assets/photoshoot/photo-1.JPG';
+import Photo3 from '../assets/photoshoot/photo-3.JPG';
+import Photo5 from '../assets/photoshoot/photo-5.JPG';
+import Photo6 from '../assets/photoshoot/photo-6.JPG';
+import Photo8 from '../assets/photoshoot/photo-8.JPG';
 
 const images = [
   {
-    label: 'Wedding Pic 1',
-    imgPath: WeddingPic
+    label: 'Pic 1',
+    imgPath: Photo1
   },
   {
-    label: 'Parking',
-    imgPath: ParkingPic
+    label: 'Pic 3',
+    imgPath: Photo3
+  },
+  {
+    label: 'Pic 5',
+    imgPath: Photo5
+  },
+  {
+    label: 'Pic 6',
+    imgPath: Photo6
+  },
+  {
+    label: 'Pic 8',
+    imgPath: Photo8
   }
 ];
 
@@ -148,12 +163,13 @@ const AboutUs = () => {
         >
           {images.map((step, index) => (
             <div key={step.label}>
-              {Math.abs(activeStep - index) <= 2 ? (
+              {Math.abs(activeImageStep - index) <= images.length ? (
                 <Box
                   component="img"
                   sx={{
-                    height: 255,
+                    height: 400,
                     display: 'block',
+                    objectFit: 'cover',
                     maxWidth: 400,
                     overflow: 'hidden',
                     width: '100%',
