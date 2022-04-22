@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppBar, Container, Toolbar, Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 
+import AboutUs from './pages/AboutUs';
 import Background from './components/Background';
 import Home from './pages/Home';
 import Info from './pages/Info';
@@ -53,6 +54,7 @@ const App = () => {
             !isValidPassphrase ? <></> :
               (
                 <>
+                  <Route path="aboutus" element={<AboutUs />} />
                   <Route path="rsvp" element={<Rsvp />} />
                   <Route path="info" element={<Info />} />
                 </>
