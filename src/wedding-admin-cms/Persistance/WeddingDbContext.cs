@@ -13,6 +13,7 @@ namespace wedding_admin_cms.Persistance
     public virtual DbSet<Entourage> Entourages { get; set; }
     public virtual DbSet<Guest> Guests { get; set; }
     public virtual DbSet<GuestGroup> GuestGroups { get; set; }
+    public virtual DbSet<Photo> Photos { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<UsersToWedding> UsersToWeddings { get; set; }
     public virtual DbSet<Wedding> Weddings { get; set; }
@@ -65,6 +66,18 @@ namespace wedding_admin_cms.Persistance
         build.Property(prop => prop.Value).IsRequired().HasMaxLength(1000);
 
         build.HasMany<Guest>(nav => nav.Guests).WithOne(nav => nav.GuestGroup).HasForeignKey(fk => fk.GuestGroupId).IsRequired(false);
+      });
+
+      modelBuilder.Entity<Photo>(build =>
+      {
+        build.HasKey(key => key.PhotoId);
+        build.Property(prop => prop.PhotoId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
+        build.Property(prop => prop.CreatedDate).ValueGeneratedOnAdd().HasDefaultValueSql("GETDATE()");
+        build.Property(prop => prop.FileName).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.FileType).IsRequired().HasMaxLength(10);
+        build.Property(prop => prop.ForPage).IsRequired().HasMaxLength(10);
+
+        build.HasOne<Wedding>(e => e.Wedding).WithMany(e => e.Photos).HasForeignKey(fk => fk.FkWeddingId);
       });
 
       modelBuilder.Entity<Role>(build => 

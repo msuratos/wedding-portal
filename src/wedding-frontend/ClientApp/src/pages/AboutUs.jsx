@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button, Box, Grid, MobileStepper, Paper, Step,
@@ -10,35 +10,6 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-
-import Photo1 from '../assets/photoshoot/photo-1.JPG';
-import Photo3 from '../assets/photoshoot/photo-3.JPG';
-import Photo5 from '../assets/photoshoot/photo-5.JPG';
-import Photo6 from '../assets/photoshoot/photo-6.JPG';
-import Photo8 from '../assets/photoshoot/photo-8.JPG';
-
-const images = [
-  {
-    label: 'Pic 1',
-    imgPath: Photo1
-  },
-  {
-    label: 'Pic 3',
-    imgPath: Photo3
-  },
-  {
-    label: 'Pic 5',
-    imgPath: Photo5
-  },
-  {
-    label: 'Pic 6',
-    imgPath: Photo6
-  },
-  {
-    label: 'Pic 8',
-    imgPath: Photo8
-  }
-];
 
 const steps = [
   {
@@ -110,6 +81,7 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 const AboutUs = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
+  const [images, setImages] = useState([]);
   const [activeImageStep, setActiveImageStep] = useState(0);
 
   const handleStep = (step) => () => {
@@ -120,20 +92,35 @@ const AboutUs = () => {
     setActiveStep(0);
   };
 
-  const handleNext = () => {
-    setActiveImageStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
   const handleBack = () => {
     setActiveImageStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStepChange = (step) => {
+  const handleImageNext = () => {
+    setActiveImageStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleImageStep = (step) => {
     setActiveImageStep(step);
   };
 
+  useEffect(() => {
+    // TODO: get vertical steppers dynamically
+    async function getImages() {
+      const resp = await fetch('/api/wedding/photos');
+
+      if (resp.ok)
+        setImages(await resp.json());
+      else
+        console.error('Error getting images');
+    }
+
+    getImages();
+  }, []);
+
   return (
     <>
+      {/* Vertical stepper of a timeline of how we met and about us */}
       <Paper elevation={3} sx={{ m: '15px' }}>
         <Grid container sx={{ p: '5px' }}>
           <Grid item xs={12}>
@@ -154,44 +141,30 @@ const AboutUs = () => {
           </Grid>
         </Grid>
       </Paper>
+
+      {/* Carousel of images of the wedding shoot */}
       <Paper square elevation={3} sx={{ m: '15px' }}>
-        <AutoPlaySwipeableViews
-          axis='x'
-          index={activeImageStep}
-          onChangeIndex={handleStepChange}
-          enableMouseEvents
-        >
+        <AutoPlaySwipeableViews axis='x' index={activeImageStep} onChangeIndex={handleImageStep} enableMouseEvents>
           {images.map((step, index) => (
             <div key={step.label}>
               {Math.abs(activeImageStep - index) <= images.length ? (
-                <Box
-                  component="img"
+                <Box component="img" src={step.imgPath} alt={step.label}
                   sx={{
                     height: 400,
                     display: 'block',
-                    objectFit: 'cover',
+                    objectFit: 'scale-down',
                     maxWidth: 400,
                     overflow: 'hidden',
                     width: '100%',
                   }}
-                  src={step.imgPath}
-                  alt={step.label}
                 />
               ) : null}
             </div>
           ))}
         </AutoPlaySwipeableViews>
-        <MobileStepper
-          variant="progress"
-          steps={images.length}
-          position="static"
-          activeStep={activeImageStep}
+        <MobileStepper variant="progress" steps={images.length} position="static" activeStep={activeImageStep}
           nextButton={
-            <Button
-              size="small"
-              onClick={handleNext}
-              disabled={activeImageStep === images.length - 1}
-            >
+            <Button size="small" onClick={handleImageNext} disabled={activeImageStep === images.length - 1}>
               Next
               <KeyboardArrowRight />
             </Button>

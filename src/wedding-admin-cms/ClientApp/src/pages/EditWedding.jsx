@@ -11,6 +11,7 @@ import RoleForm from '../components/EditWedding/RoleForm';
 import WeddingForm from '../components/EditWedding/WeddingForm';
 import EntourageForm from '../components/EditWedding/EntourageForm';
 import GuestForm from '../components/EditWedding/GuestForm';
+import PhotoForm from '../components/EditWedding/PhotoForm';
 
 const EditWedding = () => {
   const [activeTab, setActiveTab] = useState('1');
@@ -61,7 +62,9 @@ const EditWedding = () => {
         <NavItem>
           <NavLink active={activeTab === '5'} onClick={() => setActiveTab('5')}>Edit Guest</NavLink>
         </NavItem>
-        {/* TODO: create a tab for editing guest list */}
+        <NavItem>
+          <NavLink active={activeTab === '6'} onClick={() => setActiveTab('6')}>Edit Photos</NavLink>
+        </NavItem>
       </Nav>
       {showSuccessAlert && <UncontrolledAlert>Success!</UncontrolledAlert>}
       {showErrorAlert && <UncontrolledAlert color='danger'>Failed! Please try again</UncontrolledAlert>}
@@ -82,6 +85,9 @@ const EditWedding = () => {
         </TabPane>
         <TabPane tabId="5">
           <GuestForm />
+        </TabPane>
+        <TabPane tabId="6">
+          <PhotoForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPane>
       </TabContent>
     </div>

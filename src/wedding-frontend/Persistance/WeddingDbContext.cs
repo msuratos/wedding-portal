@@ -21,6 +21,7 @@ namespace wedding_frontend.Persistance
         public virtual DbSet<Entourage> Entourages { get; set; }
         public virtual DbSet<Guest> Guests { get; set; }
         public virtual DbSet<GuestGroup> GuestGroups { get; set; }
+        public virtual DbSet<Photo> Photos { get; set; }
         public virtual DbSet<Wedding> Weddings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -86,6 +87,31 @@ namespace wedding_frontend.Persistance
                 entity.Property(e => e.Value)
                     .IsRequired()
                     .HasMaxLength(1000);
+            });
+
+            modelBuilder.Entity<Photo>(entity =>
+            {
+                entity.HasIndex(e => e.FkWeddingId, "IX_Photos_FkWeddingId");
+
+                entity.Property(e => e.PhotoId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.FileName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.FileType)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.ForPage)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                entity.HasOne(d => d.FkWedding)
+                    .WithMany(p => p.Photos)
+                    .HasForeignKey(d => d.FkWeddingId);
             });
 
             modelBuilder.Entity<Wedding>(entity =>
