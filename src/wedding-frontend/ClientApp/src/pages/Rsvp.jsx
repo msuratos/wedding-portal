@@ -149,12 +149,16 @@ const Rsvp = () => {
                         </ListItemIcon>
                         <ListItemText id={guest.name} primary={guest.name} />
                         <ListItemIcon>
-                          <Checkbox edge="end" tabIndex={-1} checked={checked.indexOf(guest) !== -1}
+                          <Checkbox edge="end" tabIndex={-1} checked={guest.hasRsvpd || checked.indexOf(guest) !== -1}
+                            disabled={guest.hasRsvpd}
                             inputProps={{ 'aria-labelledby': guest.name }}
                           />
                         </ListItemIcon>
-                        {guest.relatedGuests.length === 0 ? <div style={{ height: '1.5em', width: '1.5em' }}></div> :
-                          (
+
+                        {/* align empty expand icons with items that also have expandicon */}
+                        {guest.relatedGuests.length === 0
+                          ? <div style={{ height: '1.5em', width: '1.5em' }}></div>
+                          : (
                             <>
                               {openNested.indexOf(guest) !== -1 ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                             </>
@@ -180,7 +184,8 @@ const Rsvp = () => {
                                     </ListItemIcon>
                                     <ListItemText id={relatedGuest.name} primary={relatedGuest.name} />
                                     <ListItemIcon>
-                                      <Checkbox edge="end" tabIndex={-1} checked={relatedChecked.indexOf(relatedGuest) !== -1}
+                                      <Checkbox edge="end" tabIndex={-1} checked={relatedGuest.hasRsvpd || relatedChecked.indexOf(relatedGuest) !== -1}
+                                        disabled={relatedGuest.hasRsvpd}
                                         inputProps={{ 'aria-labelledby': guest.name }}
                                       />
                                     </ListItemIcon>

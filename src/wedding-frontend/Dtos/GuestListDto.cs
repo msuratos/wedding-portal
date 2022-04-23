@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using wedding_frontend.Persistance.Entities;
 
 namespace wedding_frontend.Dtos
 {
@@ -7,10 +8,9 @@ namespace wedding_frontend.Dtos
   {
     public Guid WeddingId { get; set; }
     public Guid GuestId { get; set; }
-    public Guid? GuestGroupId { get; set; }
-    public string GroupType { get; set; }
-    public string GroupValue { get; set; }
+    public bool? HasRsvpd { get; set; }
     public string Name { get; set; }
+
     public ICollection<GuestListDto> RelatedGuests { get; set; }
   }
 }

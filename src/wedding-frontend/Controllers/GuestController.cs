@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -44,19 +43,22 @@ namespace wedding_frontend.Controllers
         .Where(w => w.WeddingId == weddingId && EF.Functions.Like(w.Name, $"%{nameSearchValue}%"))
         .Select(s => new GuestListDto
         {
+          GuestId = s.GuestId,
           WeddingId = s.WeddingId,
           Name = s.Name,
-          GuestId = s.GuestId,
-          GuestGroupId = s.GuestGroup.GuestGroupId,
-          GroupType = s.GuestGroup.Type,
-          GroupValue = s.GuestGroup.Value
+          HasRsvpd = s.HasRsvpd,
+          RelatedGuests = s.GuestGroup.Guests
+            .Where(w => w.GuestId != s.GuestId)
+            .Select(g => new GuestListDto
+            {
+              GuestId = g.GuestId,
+              WeddingId = g.WeddingId,
+              Name = g.Name,
+              HasRsvpd = g.HasRsvpd
+            })
+            .ToList()
         })
         .ToListAsync(cancellationToken);
-
-      foreach (var guest in similarGuests)
-      {
-        guest.RelatedGuests = await BuildRelatedGuests(guest.GuestGroupId, guest.GroupType, guest.GroupValue, cancellationToken);
-      }
 
       return Ok(similarGuests);
     }
@@ -84,21 +86,6 @@ namespace wedding_frontend.Controllers
       }
 
       return Ok();
-    }
-
-    private async Task<ICollection<GuestListDto>> BuildRelatedGuests(Guid? guestGroupId, string groupType, 
-      string groupValue, CancellationToken cancellationToken)
-    {
-      return await _dbContext.GuestGroups
-        .Where(w => w.GuestGroupId != guestGroupId && w.Type.Equals(groupType) && w.Value.Equals(groupValue))
-        .Select(s => new GuestListDto
-        {
-          GuestId = s.Guests.SingleOrDefault().GuestId,
-          WeddingId = s.Guests.SingleOrDefault().WeddingId,
-          Name = s.Guests.SingleOrDefault().Name,
-          GuestGroupId = s.GuestGroupId
-        })
-        .ToListAsync(cancellationToken);
     }
   }
 }
