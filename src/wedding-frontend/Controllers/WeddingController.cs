@@ -37,6 +37,26 @@ namespace wedding_frontend.Controllers
       return wedding;
     }
 
+    [HttpGet("photos")]
+    public async Task<IActionResult> GetPhotos(CancellationToken cancellationToken)
+    {
+      // Get wedding id based on subdomain
+      var host = Request.Host.Value;
+      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => host.ToLower().Contains(s.UrlSubDomain.ToLower()), cancellationToken);
+      var weddingId = wedding.WeddingId;
+
+      // Get photos from database
+      var photos = await _dbContext.Photos.Where(w => w.FkWeddingId.Equals(weddingId))
+        .Select(s => new
+        {
+          ImgPath = $"https://syzmic-wedding-cdn.azureedge.net/merlynn-wedding/{s.FileName}",
+          Label = $"Photo"
+        })
+        .ToListAsync(cancellationToken: cancellationToken);
+
+      return Ok(photos);
+    }
+
     [HttpPost]
     public async Task<IActionResult> ValidatePassphrase([FromBody] PassphraseValidationDto dto, CancellationToken cancellationToken)
     {

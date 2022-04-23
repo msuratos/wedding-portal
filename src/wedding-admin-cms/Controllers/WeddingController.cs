@@ -197,7 +197,7 @@ namespace wedding_admin_cms.Controllers
       // Get photos from database
       var photos = await _dbContext.Photos.Where(w => w.FkWeddingId.Equals(weddingId))
         .Select(s => $"https://syzmic-wedding-cdn.azureedge.net/merlynn-wedding/{s.FileName}")
-        .ToListAsync();
+        .ToListAsync(cancellationToken: cancellationToken);
 
       return Ok(photos);
     }
