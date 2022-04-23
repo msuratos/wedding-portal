@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button, Box, Grid, MobileStepper, Paper, Step,
@@ -120,20 +120,25 @@ const AboutUs = () => {
     setActiveStep(0);
   };
 
-  const handleNext = () => {
-    setActiveImageStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
   const handleBack = () => {
     setActiveImageStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStepChange = (step) => {
+  const handleImageNext = () => {
+    setActiveImageStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleImageStep = (step) => {
     setActiveImageStep(step);
   };
 
+  useEffect(() => {
+    // TODO: get steps info & images via rest api
+  }, []);
+
   return (
     <>
+      {/* Vertical stepper of a timeline of how we met and about us */}
       <Paper elevation={3} sx={{ m: '15px' }}>
         <Grid container sx={{ p: '5px' }}>
           <Grid item xs={12}>
@@ -154,18 +159,14 @@ const AboutUs = () => {
           </Grid>
         </Grid>
       </Paper>
+
+      {/* Carousel of images of the wedding shoot */}
       <Paper square elevation={3} sx={{ m: '15px' }}>
-        <AutoPlaySwipeableViews
-          axis='x'
-          index={activeImageStep}
-          onChangeIndex={handleStepChange}
-          enableMouseEvents
-        >
+        <AutoPlaySwipeableViews axis='x' index={activeImageStep} onChangeIndex={handleImageStep} enableMouseEvents>
           {images.map((step, index) => (
             <div key={step.label}>
               {Math.abs(activeImageStep - index) <= images.length ? (
-                <Box
-                  component="img"
+                <Box component="img" src={step.imgPath} alt={step.label}
                   sx={{
                     height: 400,
                     display: 'block',
@@ -174,24 +175,14 @@ const AboutUs = () => {
                     overflow: 'hidden',
                     width: '100%',
                   }}
-                  src={step.imgPath}
-                  alt={step.label}
                 />
               ) : null}
             </div>
           ))}
         </AutoPlaySwipeableViews>
-        <MobileStepper
-          variant="progress"
-          steps={images.length}
-          position="static"
-          activeStep={activeImageStep}
+        <MobileStepper variant="progress" steps={images.length} position="static" activeStep={activeImageStep}
           nextButton={
-            <Button
-              size="small"
-              onClick={handleNext}
-              disabled={activeImageStep === images.length - 1}
-            >
+            <Button size="small" onClick={handleImageNext} disabled={activeImageStep === images.length - 1}>
               Next
               <KeyboardArrowRight />
             </Button>
