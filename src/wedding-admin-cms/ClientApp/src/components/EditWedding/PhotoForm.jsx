@@ -1,7 +1,7 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Button, Col, FormGroup,
-  Input, Label, Row, Table
+  Input, Label, Row
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
@@ -66,7 +66,7 @@ const PhotoForm = (props) => {
     getPhotos();
   };
 
-  useEffect(() => { getPhotos() }, []);
+  useEffect(() => { getPhotos() }, [getPhotos]);
 
   return (
     <>
@@ -93,7 +93,7 @@ const PhotoForm = (props) => {
         <Col sm={12}>
           {fileUrls.map((val, index) => (
             <div style={{ margin: '5px' }}>
-              <img src={val} alt={`photo-${index}`} height={500} width={500} style={{ objectFit: 'scale-down' }} />
+              <img src={val} height={500} width={500} style={{ objectFit: 'scale-down' }} />
             </div>
           ))}
         </Col>
