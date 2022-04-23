@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Button, Col, Form, FormGroup,
+  Button, Col, FormGroup,
   Input, Label, Row, Table
 } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
@@ -8,6 +8,7 @@ import { useMsal } from '@azure/msal-react';
 const PhotoForm = (props) => {
   const { setErrorShowAlert, setSuccessShowAlert, wedding } = props;
   const [files, setFiles] = useState([]);
+  const [fileUrls, setFileUrls] = useState([]);
   const [fileValues, setFileValues] = useState('');
   const [loading, setLoading] = useState(false);
   const msal = useMsal();
@@ -19,6 +20,21 @@ const PhotoForm = (props) => {
       account: accounts[0]
     }
   }, [accounts]);
+
+  const getPhotos = async () => {
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const resp = await fetch('/wedding/photos', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${tokenCache.accessToken}`
+      }
+    });
+
+    if (resp.ok)
+      setFileUrls(await resp.json());
+    else
+      console.error('failed getting photos', await resp.text(), resp.statusText);
+  };
 
   const addPhotos = async (e) => {
     const tokenCache = await instance.acquireTokenSilent(silentRequest);
@@ -46,7 +62,11 @@ const PhotoForm = (props) => {
     setLoading(false);
     setFiles([]);
     setFileValues('');
+
+    getPhotos();
   };
+
+  useEffect(() => { getPhotos() }, []);
 
   return (
     <>
@@ -67,6 +87,15 @@ const PhotoForm = (props) => {
             <Col sm={6}><Button block type='submit' color='primary' onClick={addPhotos}>Submit</Button></Col>
             <Col sm={6}><Button block color='secondary'>Cancel</Button></Col>
           </Row>
+        </Col>
+      </Row>
+      <Row style={{ marginTop: '15px' }}>
+        <Col sm={12}>
+          {fileUrls.map((val, index) => (
+            <div style={{ margin: '5px' }}>
+              <img src={val} alt={`photo-${index}`} height={500} width={500} style={{ objectFit: 'scale-down' }} />
+            </div>
+          ))}
         </Col>
       </Row>
     </>

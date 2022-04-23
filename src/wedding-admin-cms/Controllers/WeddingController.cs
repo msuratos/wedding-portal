@@ -3,10 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web.Resource;
 using Microsoft.Net.Http.Headers;
@@ -26,11 +28,13 @@ namespace wedding_admin_cms.Controllers
   {
     const string scopeRequiredByAPI = "user.access";
 
+    private readonly IConfiguration _configuration;
     private readonly ILogger<WeddingController> _logger;
     private readonly WeddingDbContext _dbContext;
 
-    public WeddingController(ILogger<WeddingController> logger, WeddingDbContext dbContext)
+    public WeddingController(IConfiguration configuration, ILogger<WeddingController> logger, WeddingDbContext dbContext)
     {
+      _configuration = configuration;
       _logger = logger;
       _dbContext = dbContext;
     }
@@ -82,7 +86,7 @@ namespace wedding_admin_cms.Controllers
       try
       {
         var reader = new MultipartReader(mediaTypeHeader.Boundary.Value, Request.Body);
-        var section = await reader.ReadNextSectionAsync();
+        var section = await reader.ReadNextSectionAsync(cancellationToken);
 
         // This sample try to get the first file from request and save it
         // Make changes according to your needs in actual use
@@ -98,19 +102,41 @@ namespace wedding_admin_cms.Controllers
             // In short, it is necessary to restrict and verify the upload
             // Here, we just use the temporary folder and a random file name
             var permittedExtensions = new string[] { ".jpg", ".png" };
-            var fileSizeLimit = 10485760;
+            var fileSizeLimit = Convert.ToInt32(_configuration["FileSize"]);
 
-            var streamedFileContent = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState, permittedExtensions, fileSizeLimit);
+            var streamedFileBytes = await FileHelpers.ProcessStreamedFile(section, contentDisposition, ModelState, permittedExtensions, fileSizeLimit);
 
             if (ModelState.IsValid)
             {
               // Get the temporary folder, and combine a random file name with it
-              var fileName = Path.GetRandomFileName();
-              var saveToPath = Path.Combine(Path.GetTempPath(), fileName);
+              var fileExtension = new FileInfo(contentDisposition.FileName.Value).Extension;
+              var fileName = Path.GetRandomFileName() + fileExtension;
 
-              // TODO: change this to azure blob storage
-              using var targetStream = System.IO.File.Create(saveToPath);
-              await targetStream.WriteAsync(streamedFileContent, cancellationToken);
+              var connectionString = _configuration["AzureBlobConnectionString"];
+
+              // Create a BlobServiceClient object which will be used to create a container client
+              var blobServiceClient = new BlobServiceClient(connectionString);
+
+              // Create a unique name for the container
+              const string CONTAINER_NAME = "merlynn-wedding";
+
+              // Get a reference to blob container and blob client
+              var blobContainerClient = blobServiceClient.GetBlobContainerClient(CONTAINER_NAME);
+              var blobClient = blobContainerClient.GetBlobClient(fileName);
+
+              // Upload the file to blob
+              using var fileStream = new MemoryStream(streamedFileBytes);
+              await blobClient.UploadAsync(fileStream, true, cancellationToken);
+
+              // Save to database
+              await _dbContext.Photos.AddAsync(new Photo
+              {
+                FileName = fileName,
+                FileType = fileExtension,
+                ForPage = forPage,
+                FkWeddingId = weddingId
+              }, cancellationToken);
+              await _dbContext.SaveChangesAsync(cancellationToken);
             }
           }
           else
@@ -120,7 +146,7 @@ namespace wedding_admin_cms.Controllers
             ModelState.AddModelError("File", errorMessage);
           }
 
-          section = await reader.ReadNextSectionAsync();
+          section = await reader.ReadNextSectionAsync(cancellationToken);
         }
 
         if (ModelState.IsValid)
@@ -158,6 +184,22 @@ namespace wedding_admin_cms.Controllers
       await _dbContext.SaveChangesAsync(cancellationToken);
 
       return Ok(dto);
+    }
+
+    [HttpGet("photos")]
+    public async Task<IActionResult> GetPhotos(CancellationToken cancellationToken)
+    {
+      // Get wedding id based on subdomain
+      var host = Request.Host.Value;
+      var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => host.ToLower().Contains(s.UrlSubDomain.ToLower()), cancellationToken);
+      var weddingId = wedding.WeddingId;
+
+      // Get photos from database
+      var photos = await _dbContext.Photos.Where(w => w.FkWeddingId.Equals(weddingId))
+        .Select(s => $"https://syzmic-wedding-cdn.azureedge.net/merlynn-wedding/{s.FileName}")
+        .ToListAsync();
+
+      return Ok(photos);
     }
 
     [HttpGet]
