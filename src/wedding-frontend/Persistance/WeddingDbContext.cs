@@ -22,6 +22,7 @@ namespace wedding_frontend.Persistance
         public virtual DbSet<Guest> Guests { get; set; }
         public virtual DbSet<GuestGroup> GuestGroups { get; set; }
         public virtual DbSet<Photo> Photos { get; set; }
+        public virtual DbSet<SongRequest> SongRequests { get; set; }
         public virtual DbSet<Wedding> Weddings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -111,6 +112,21 @@ namespace wedding_frontend.Persistance
 
                 entity.HasOne(d => d.FkWedding)
                     .WithMany(p => p.Photos)
+                    .HasForeignKey(d => d.FkWeddingId);
+            });
+
+            modelBuilder.Entity<SongRequest>(entity =>
+            {
+                entity.HasIndex(e => e.FkWeddingId, "IX_SongRequests_FkWeddingId");
+
+                entity.Property(e => e.RequestedBy).HasMaxLength(100);
+
+                entity.Property(e => e.SongName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.HasOne(d => d.FkWedding)
+                    .WithMany(p => p.SongRequests)
                     .HasForeignKey(d => d.FkWeddingId);
             });
 
