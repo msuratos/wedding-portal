@@ -15,6 +15,7 @@ namespace wedding_admin_cms.Persistance
     public virtual DbSet<GuestGroup> GuestGroups { get; set; }
     public virtual DbSet<Photo> Photos { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<SongRequest> SongRequests { get; set; }
     public virtual DbSet<UsersToWedding> UsersToWeddings { get; set; }
     public virtual DbSet<Wedding> Weddings { get; set; }
 
@@ -85,6 +86,15 @@ namespace wedding_admin_cms.Persistance
         build.HasKey(key => key.RoleId);
         build.Property(prop => prop.RoleId).UseIdentityColumn();
         build.Property(prop => prop.Description);
+      });
+
+      modelBuilder.Entity<SongRequest>(build =>
+      {
+        build.HasKey(key => key.SongRequestId);
+        build.Property(prop => prop.SongRequestId).IsRequired().UseIdentityColumn();
+        build.Property(prop => prop.SongName).IsRequired().HasMaxLength(100);
+
+        build.HasOne<Wedding>(e => e.Wedding).WithMany(e => e.SongRequests).HasForeignKey(fk => fk.FkWeddingId);
       });
 
       modelBuilder.Entity<UsersToWedding>(build =>
