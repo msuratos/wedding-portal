@@ -16,9 +16,9 @@ const steps = [
     label: 'The Meeting',
     optional: '~August 2008 (Freshman HS)',
     picUrl: '',
-    description: `Tbh, we don't remember of our very first encouter. All we know is
+    description: `To be honest, we don't remember of our very first encouter. All we know is
               is that we met sometime in freshman year of high school, most likely
-              french class. Fun fact, Erlynn met Calvin first!`
+              french class or through mutual friends. Fun fact, Erlynn met Calvin first!`
   },
   {
     label: 'Something\'s Brewing.. 😉',
@@ -35,12 +35,20 @@ const steps = [
     optional: '2011-2012',
     picUrl: '',
     description: `During our senior year, homecoming was around the corner and Melvin
-              was wondering who take. One of friends, Kevin, had a conversation with him
-              suggesting to take Erlynn. Long behold, Melvin asked Erlynn to become his
+              was wondering who take. One of our friends, Kevin, had a conversation with him
+              suggesting to take Erlynn. Lo and behold, Melvin asked Erlynn to become his
               date to homecoming by asking her at the Nevada Trails park with some roses.
               The rest of the school year, we were in the 'talking' phase and were each
               other's date for the rest of the school dances: sadies & prom. Both had
               their own significant way of being asked: treasure hunt & flash mob.`,
+  },
+  {
+    label: 'The Debut!',
+    optional: 'May 27, 2020',
+    picUrl: '',
+    description: `For Erlynn's celebration of coming of age at 18, she asked Melvin
+              to be her debut partner! Thus igniting the spark between them even more
+              and growing closer together`,
   },
   {
     label: 'Official!',
@@ -60,11 +68,11 @@ const steps = [
     description: `After 7 years, it was time to make it permanent. Our love for each other
               has grown so much that we wanted to make it last forever. Melvin's way of
               the proposal was taking her out for dinner before she 'hangs' out with her
-              cousins. They were suppose to test of their friend's app which is a treasure
-              hunt. They had to go to several significant places to get the next clue. While
-              this was happening, friends and families were meeting at Nevada Trails Park, back
-              to where it all began, as this was the last place for the treasure hunt. The treasure
-              was Melvin asking Erlynn to become his wife!`,
+              cousins. They were suppose to test of their friend's treasure hunt app.
+              They had to go to several significant places for both of us to get the next clue.
+              While this was happening, friends and families were meeting at Nevada Trails Park,
+              back to where it all began, as this was the last place for the treasure hunt. The
+              treasure was Melvin asking Erlynn to become his wife!`,
   },
   {
     label: 'Wedding 1.0!',
@@ -73,6 +81,21 @@ const steps = [
     description: `We wanted to have the wedding at this date, however, due to COVID, it was
               difficult to plan a big wedding. So, we had a small civil wedding with close
               family.`
+  },
+  {
+    label: 'Got A Little Furball',
+    optional: 'October 9, 2020',
+    picUrl: '',
+    description: `We got our mini Australian Shepherd puppy weighing at 15 lbs! Fun fact,
+              his birthday is on our wedding day this year! He was born on July 8, 2022,
+              making him 2 years old on our wedding day!!`
+  },
+  {
+    label: 'Wedding 2.0!',
+    optional: 'July 8, 2022',
+    picUrl: '',
+    description: `The next milestone of our relationship, the big wedding we were hoping to
+              have. We're looking forward to celebrate this day with you!`
   }
 ];
 

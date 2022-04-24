@@ -46,7 +46,7 @@ const Faq = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant='body2' display='block'>
-                Although we love your children, unfortunately we aren’t able to accommodate them at this time because of budget & space constraints 😢
+                Although we love your children, unfortunately, we aren’t able to accommodate them at this time because of budget & space constraints 😢
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -72,7 +72,7 @@ const Faq = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant='body2' display='block'>
-                Please tab on the names of the church and venue under the 'Wedding Details' link and it should redirect you to the addresses on Google Maps
+                Please tap on the names of the church and venue under the 'Wedding Details' link; it should redirect you to the addresses on Google Maps
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -96,7 +96,7 @@ const Faq = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant='body2' display='block'>
-                Vegas summers are the worst, definitely not! It will all be indoors 😊
+                Definitely not, Vegas summers are the worst! It will all be indoors 😊
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -109,8 +109,8 @@ const Faq = () => {
             <AccordionDetails>
               <Typography variant='body2' display='block'>
                 Save money & stay with friends/family in town! If not, the venue will be around the Summerlin area. Hotels nearby include:
-                <Link component="button" variant="body2" onClick={() => window.open("https://www.redrockresort.com/")}>Red Rock Casino Resorts</Link> &
-                <Link component="button" variant="body2" onClick={() => window.open("https://www.suncoastcasino.com/")}>Spa and SunCoast Hotel & Casino</Link>
+                <Link component="button" variant="body2" onClick={() => window.open("https://www.redrockresort.com/")}>Red Rock Casino Resorts & Spa</Link> and
+                <Link component="button" variant="body2" onClick={() => window.open("https://www.suncoastcasino.com/")}>SunCoast Hotel & Casino</Link>
               </Typography>
             </AccordionDetails>
           </Accordion>

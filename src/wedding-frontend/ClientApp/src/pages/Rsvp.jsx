@@ -241,6 +241,7 @@ const Rsvp = () => {
             <Grid container spacing={1} sx={{ p: '5px' }}>
               <Grid item xs={12}>
                 <TextField label="Enter your song request(s)" variant="standard" value={songRequests}
+                  helperText="To add multiple requests, add commas ',' between each request; include artist"
                   onChange={(e) => setSongRequests(e.target.value)} fullWidth />
               </Grid>
               <Grid item xs={12}>
@@ -250,7 +251,7 @@ const Rsvp = () => {
               </Grid>
               <Grid item xs={12} sx={{ p: '5px' }}>
                 <Typography variant="caption" display="block" gutterBottom>
-                  To add multiple requests, add commas ',' between each request
+                  These song requests will help us decide what to play during the wedding
                 </Typography>
               </Grid>
             </Grid>
