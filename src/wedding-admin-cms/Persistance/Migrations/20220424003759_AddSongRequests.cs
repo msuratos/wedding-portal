@@ -14,6 +14,8 @@ namespace wedding_admin_cms.Persistance.Migrations
                     SongRequestId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SongName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    RequestedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    RequestedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FkWeddingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

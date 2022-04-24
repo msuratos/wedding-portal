@@ -35,6 +35,8 @@ const Song = () => {
             <thead>
               <tr>
                 <th>Song/Genre Name</th>
+                <th>Requested By</th>
+                <th>Requested Date</th>
               </tr>
             </thead>
             <tbody>
@@ -42,6 +44,8 @@ const Song = () => {
                 songs.map(song => (
                   <tr key={song?.songRequestId}>
                     <td>{song?.songName}</td>
+                    <td>{song?.requestedBy}</td>
+                    <td>{song?.requestedDate ? new Date(song?.requestedDate).toLocaleString('en-US') : null}</td>
                   </tr>
                 ))
               }

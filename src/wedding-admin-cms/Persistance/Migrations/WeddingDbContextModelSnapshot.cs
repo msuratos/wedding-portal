@@ -172,6 +172,13 @@ namespace wedding_admin_cms.Persistance.Migrations
                     b.Property<Guid>("FkWeddingId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("RequestedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("RequestedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SongName")
                         .IsRequired()
                         .HasMaxLength(100)

@@ -10,7 +10,7 @@ using wedding_admin_cms.Persistance;
 namespace wedding_admin_cms.Persistance.Migrations
 {
     [DbContext(typeof(WeddingDbContext))]
-    [Migration("20220424002203_AddSongRequests")]
+    [Migration("20220424003759_AddSongRequests")]
     partial class AddSongRequests
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -173,6 +173,13 @@ namespace wedding_admin_cms.Persistance.Migrations
 
                     b.Property<Guid>("FkWeddingId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RequestedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("RequestedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SongName")
                         .IsRequired()

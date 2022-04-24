@@ -93,6 +93,7 @@ namespace wedding_admin_cms.Persistance
         build.HasKey(key => key.SongRequestId);
         build.Property(prop => prop.SongRequestId).IsRequired().UseIdentityColumn();
         build.Property(prop => prop.SongName).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.RequestedBy).HasMaxLength(100);
 
         build.HasOne<Wedding>(e => e.Wedding).WithMany(e => e.SongRequests).HasForeignKey(fk => fk.FkWeddingId);
       });

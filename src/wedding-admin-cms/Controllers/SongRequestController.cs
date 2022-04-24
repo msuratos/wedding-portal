@@ -35,7 +35,7 @@ namespace wedding_admin_cms.Controllers
 
       // get song requests
       var songRequests = await _dbContext.SongRequests.Where(w => w.FkWeddingId == wedding.WeddingId)
-        .Select(s => new { s.SongRequestId, s.SongName }).ToListAsync(cancellationToken);
+        .Select(s => new { s.SongRequestId, s.SongName, s.RequestedBy, s.RequestedDate }).ToListAsync(cancellationToken);
       return Ok(songRequests);
     }
   }
