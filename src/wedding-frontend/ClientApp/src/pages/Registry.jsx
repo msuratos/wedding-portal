@@ -2,10 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Paper, Typography } from '@mui/material';
 
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import MoneyIcon from '@mui/icons-material/Money';
 
 const Registry = () => {
   const navigate = useNavigate();
@@ -18,21 +15,8 @@ const Registry = () => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant='p' align='center' display='block' gutterBottom>
-            Honestly, just monetary gifts is the best 😊
+            Weddings are expensive on top of still trying to "adult" our way through life 😭 So, we would greatly appreciate any monetary donations so start saving up for a future home 🙌🏽
           </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Button variant='contained' fullWidth><AttachMoneyIcon />Zelle</Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Button variant='contained' fullWidth><MoneyIcon />Cash</Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Button variant='contained' fullWidth><AccountBalanceIcon />Check</Button>
-            </Grid>
-          </Grid>
         </Grid>
       </Grid>
     </Paper>
