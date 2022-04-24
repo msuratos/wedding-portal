@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Col, Input, FormGroup, Row } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
@@ -51,7 +52,8 @@ const Home = () => {
       <h1>Welcome to your Wedding Portal,</h1>
       <p>where you can create your online wedding invitation, registry, about us page, and more!</p>
       <ul>
-        <li><a href='/edit-wedding'>Edit Wedding</a> Click this to edit your wedding information!</li>
+        <li><Link to='/edit-wedding'>Edit Wedding</Link> Click this to edit your wedding information!</li>
+        <li><Link to='/songs'>Song Requests</Link> Click this to view your wedding's song requests!</li>
         <li><a href='/'>Edit Registory</a> Click this to edit your wedding registry!</li>
         <li><a href='/'>Edit About Us</a> Click this to edit your <i>About Us</i> page</li>
       </ul>

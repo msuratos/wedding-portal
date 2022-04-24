@@ -42,6 +42,7 @@ namespace wedding_admin_cms.Controllers
         var fileInfo = new FileInfo(file.FileName);
         if (fileInfo.Extension != ".xlsx" && fileInfo.Extension != ".xls") return BadRequest($"file has to be in excel format; currently it's {fileInfo.Extension}");
 
+        // copy file to a local temp filepath
         var filePath = Path.GetTempPath();
         var fileName = Path.GetRandomFileName() + fileInfo.Extension;
 
@@ -49,14 +50,14 @@ namespace wedding_admin_cms.Controllers
         await file.CopyToAsync(stream, cancellationToken);
         stream.Close();
 
-        fileInfo = new FileInfo(filePath + fileName);
-
         // get the wedding based on current domain
         var subDomain = Request.Host.Value;
         var wedding = await _dbContext.Weddings
           .SingleOrDefaultAsync(s => subDomain.ToLower().Contains(s.UrlSubDomain.ToLower()), cancellationToken);
 
         // setting up the EPPlus package
+        fileInfo = new FileInfo(filePath + fileName);
+
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         using var package = new ExcelPackage(fileInfo);
         using var sheet = package.Workbook.Worksheets[0];
@@ -65,6 +66,7 @@ namespace wedding_admin_cms.Controllers
         string prevGuestName = string.Empty;    // used to group guests together that have the '+1'
         string prevAddress = string.Empty;      // used to group guests together that have the same address
 
+        // loop through each row in the excel file, skip first row because they're headers
         for (int rowIndex = 2; rowIndex <= rows; rowIndex++)
         {
           // skip the 'maybe' guests; identified as having an empty background color
@@ -85,32 +87,44 @@ namespace wedding_admin_cms.Controllers
             WeddingId = wedding.WeddingId
           };
 
+          // if guest name contains '+1', add them to the group of the previous
+          // it HAS to be after the previous guest in order to work properly
           if (guestName.Contains("+1"))
           {
-            guest.GuestGroup = new GuestGroup
+            var plusOneGuestGroup = new GuestGroup { Type = "plus one", Value = $"{prevGuestName} +1" };
+            guest.GuestGroup = plusOneGuestGroup;
+
+            var prevGuest = await _dbContext.Guests.SingleOrDefaultAsync(s => s.Name == prevGuestName, cancellationToken);
+            prevGuest.GuestGroup = plusOneGuestGroup;
+          }
+
+          // skip guests that have '+1' group id, that was assigned above and
+          // skip guests that have a red background; this signifies they do not have a grouping, insert as an individual
+          var addressBackground = sheet.Cells[rowIndex, 2].Style.Fill.BackgroundColor.Rgb;
+          if (guest.GuestGroup == null && string.IsNullOrEmpty(addressBackground))
+          {
+            // guests that are grouped by address have the first person in the group containing the 
+            // address value. That's why we have to keep track of the previous address
+            var addressValue = (string)sheet.Cells[rowIndex, 2].Value;
+
+            if (string.IsNullOrEmpty(addressValue))
             {
-              Type = "plus one",
-              Value = prevGuestName
-            };
+              var prevGuest = await _dbContext.Guests.SingleOrDefaultAsync(s => s.Name == prevGuestName, cancellationToken);
+              guest.GuestGroupId = prevGuest.GuestGroupId;
+            }
+            else
+            {
+              guest.GuestGroup = new GuestGroup
+              {
+                Type = "address",
+                Value = addressValue
+              };
+
+              prevAddress = addressValue;
+            }
           }
 
           prevGuestName = guestName;
-
-          // don't group guests that don't have an address yet, just insert them as individual guests
-          var addressBackground = sheet.Cells[rowIndex, 2].Style.Fill.BackgroundColor.Rgb;
-          if (guest.GuestGroup == null && string.IsNullOrEmpty(addressBackground))   // skip the guests that already have '+1' group type
-          {
-            var addressValue = (string)sheet.Cells[rowIndex, 2].Value;
-
-            if (string.IsNullOrEmpty(addressValue)) addressValue = prevAddress;
-            prevAddress = addressValue;
-
-            guest.GuestGroup = new GuestGroup
-            {
-              Type = "address",
-              Value = addressValue
-            };
-          }
 
           await _dbContext.Guests.AddAsync(guest, cancellationToken);
           await _dbContext.SaveChangesAsync(cancellationToken);

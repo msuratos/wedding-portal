@@ -10,6 +10,7 @@ namespace wedding_admin_cms.Persistance.Entities
       Entourage = new HashSet<Entourage>();
       Guests = new HashSet<Guest>();
       Photos = new HashSet<Photo>();
+      SongRequests = new HashSet<SongRequest>();
     }
     
     public Guid WeddingId { get; set; }
@@ -30,5 +31,6 @@ namespace wedding_admin_cms.Persistance.Entities
     public ICollection<Entourage> Entourage { get; set; }
     public ICollection<Guest> Guests { get; set; }
     public ICollection<Photo> Photos { get; set; }
+    public ICollection<SongRequest> SongRequests { get; set; }
   }
 }

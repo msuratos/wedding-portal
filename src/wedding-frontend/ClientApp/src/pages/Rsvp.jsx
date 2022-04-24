@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Alert, Button, Box, Checkbox, Collapse, Grid, List, ListItemButton, ListItemIcon,
@@ -18,6 +18,8 @@ const Rsvp = () => {
   const [nameSearchValue, setNameSearchValue] = useState('');
   const [openNested, setOpenNested] = useState([]);
   const [relatedChecked, setRelatedChecked] = useState([]);
+  const [showSongRequests, setShowSongRequests] = useState(false);
+  const [songRequests, setSongRequests] = useState('');
 
   const navigate = useNavigate();
 
@@ -74,6 +76,10 @@ const Rsvp = () => {
       setRelatedChecked([]);
       setMainGuests(null);
       setNameSearchValue('');
+
+      // once a guest has rsvp'd, then they should be able to add song requests anytime
+      setShowSongRequests(true);
+      localStorage.setItem('showSongRequests', true);
     }
     else {
       setMuiAlert({ type: 'success', message: 'something went wrong reserving you & your group. please try again', open: true });
@@ -89,6 +95,28 @@ const Rsvp = () => {
     setLoading(false);
     setMainGuests(respData);
   };
+
+  const songRequestClick = async () => {
+    const resp = await fetch('/api/songrequest', {
+      method: 'POST',
+      body: JSON.stringify({ songNames: songRequests }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (resp.ok) {
+      setMuiAlert({ message: 'successfully added your request!', open: true, type: 'success' });
+      setSongRequests('');
+    }
+    else
+      setMuiAlert({ message: 'could not add your request... try again', open: true, type: 'error' });
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem('showSongRequests'))
+      setShowSongRequests(true);
+  }, []);
 
   return (
     <>
@@ -112,7 +140,7 @@ const Rsvp = () => {
             <Button variant="contained" onClick={searchClick} disabled={nameSearchValue.length < 4} fullWidth>Search</Button>
           </Grid>
           <Grid item xs={12} sx={{ p: '5px' }}>
-            <Typography variant="caption" display="block" align="center" gutterBottom>
+            <Typography variant="caption" display="block" gutterBottom>
               Just a reminder that, although we love your children, unfortunately we aren’t able to accommodate them at this time because of budget & space constraints 😢
             </Typography>
           </Grid>
@@ -149,12 +177,16 @@ const Rsvp = () => {
                         </ListItemIcon>
                         <ListItemText id={guest.name} primary={guest.name} />
                         <ListItemIcon>
-                          <Checkbox edge="end" tabIndex={-1} checked={checked.indexOf(guest) !== -1}
+                          <Checkbox edge="end" tabIndex={-1} checked={guest.hasRsvpd || checked.indexOf(guest) !== -1}
+                            disabled={guest.hasRsvpd}
                             inputProps={{ 'aria-labelledby': guest.name }}
                           />
                         </ListItemIcon>
-                        {guest.relatedGuests.length === 0 ? <div style={{ height: '1.5em', width: '1.5em' }}></div> :
-                          (
+
+                        {/* align empty expand icons with items that also have expandicon */}
+                        {guest.relatedGuests.length === 0
+                          ? <div style={{ height: '1.5em', width: '1.5em' }}></div>
+                          : (
                             <>
                               {openNested.indexOf(guest) !== -1 ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                             </>
@@ -180,7 +212,8 @@ const Rsvp = () => {
                                     </ListItemIcon>
                                     <ListItemText id={relatedGuest.name} primary={relatedGuest.name} />
                                     <ListItemIcon>
-                                      <Checkbox edge="end" tabIndex={-1} checked={relatedChecked.indexOf(relatedGuest) !== -1}
+                                      <Checkbox edge="end" tabIndex={-1} checked={relatedGuest.hasRsvpd || relatedChecked.indexOf(relatedGuest) !== -1}
+                                        disabled={relatedGuest.hasRsvpd}
                                         inputProps={{ 'aria-labelledby': guest.name }}
                                       />
                                     </ListItemIcon>
@@ -197,6 +230,28 @@ const Rsvp = () => {
               </Grid>
               <Grid item xs={12}>
                 <Button variant="contained" onClick={rsvpClick} fullWidth>RSVP</Button>
+              </Grid>
+            </Grid>
+          </Paper>
+        )
+      }
+      {showSongRequests &&
+        (
+          <Paper elevation={3} sx={{ m: '15px' }}>
+            <Grid container spacing={1} sx={{ p: '5px' }}>
+              <Grid item xs={12}>
+                <TextField label="Enter your song request(s)" variant="standard" value={songRequests}
+                  onChange={(e) => setSongRequests(e.target.value)} fullWidth />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" onClick={songRequestClick} fullWidth>
+                  Add Song Request
+                </Button>
+              </Grid>
+              <Grid item xs={12} sx={{ p: '5px' }}>
+                <Typography variant="caption" display="block" gutterBottom>
+                  To add multiple requests, add commas ',' between each request
+                </Typography>
               </Grid>
             </Grid>
           </Paper>

@@ -12,6 +12,7 @@ namespace wedding_frontend.Persistance.Entities
             Entourages = new HashSet<Entourage>();
             Guests = new HashSet<Guest>();
             Photos = new HashSet<Photo>();
+            SongRequests = new HashSet<SongRequest>();
         }
 
         public Guid WeddingId { get; set; }
@@ -31,5 +32,6 @@ namespace wedding_frontend.Persistance.Entities
         public virtual ICollection<Entourage> Entourages { get; set; }
         public virtual ICollection<Guest> Guests { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }
+        public virtual ICollection<SongRequest> SongRequests { get; set; }
     }
 }
