@@ -244,7 +244,7 @@ const Rsvp = () => {
                   onChange={(e) => setSongRequests(e.target.value)} fullWidth />
               </Grid>
               <Grid item xs={12}>
-                <Button variant="contained" onClick={searchClick} onClick={songRequestClick} fullWidth>
+                <Button variant="contained" onClick={songRequestClick} fullWidth>
                   Add Song Request
                 </Button>
               </Grid>

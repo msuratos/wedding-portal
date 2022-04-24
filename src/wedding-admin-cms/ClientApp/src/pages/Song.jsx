@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Container, Row, Table } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
 
@@ -25,7 +25,7 @@ const Song = () => {
     }
 
     getSongRequests();
-  }, []);
+  }, [instance, silentRequest]);
 
   return (
     <Container>

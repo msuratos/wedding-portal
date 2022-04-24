@@ -1,4 +1,4 @@
-﻿export const getSongs = async (accessToken) => {
+export const getSongs = async (accessToken) => {
   const resp = await fetch('/api/songrequest', {
     method: 'GET',
     headers: {
