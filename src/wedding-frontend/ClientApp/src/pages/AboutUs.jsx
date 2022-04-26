@@ -29,21 +29,18 @@ const steps = [
               and were partners for a group project. We went to the library after
               school one day and during one of our breaks, I impressed her with
               some of my dance moves. Some would say this was the start of our love
-              story & us liking each other ;)
-              `,
+              story & us liking each other 😉`,
   },
   {
     label: 'Where It Began',
     optional: '2011-2012',
     picUrl: '',
-    description: `During our senior year, homecoming was around the corner and neither
-              of us were sure of who to go with. One of our friends, Kevin, randomly
-              had a conversation suggesting for me (Melvin) to ask Erlynn. Lo and behold,
-              I eventually asked her last minute to become my date to homecoming with a
+    description: `During our senior year, homecoming was around the corner. One of our friends,
+              Kevin, randomly had a conversation with me suggesting to ask Erlynn. Lo and behold,
+              I eventually asked her last minute to become my date with a
               treasure hunt & roses at Nevada Trails Park. Throughout the school year, we
               stayed in the 'talking' phase and were each other's dates for the rest of
-              the school dances (sadies & prom). We both had our own significant ways of
-              asking, a treasure hunt & flash mob respectively. Also, within this year,
+              the school dances (sadies & prom). Also, within this year,
               Erlynn celebrated her Debut (Philippine's version of a sweet 16), in which
               she asked me to be her debut partner. Thus, us getting to know each other
               more personally & igniting the spark even more.`,
@@ -64,8 +61,7 @@ const steps = [
     optional: 'November 9, 2019',
     picUrl: '',
     description: `After 7 years of dating, growing, and loving each other, it was time to make it permanent.
-              Our love for each other has grown so much that we wanted to make it last forever. The proposal
-              started off by taking her out for dinner before she hung out with her
+              The proposal started off by taking her out for dinner before she hung out with her
               cousins. They planned to "hang out" to test a "random friend's" treasure hunt app.
               Her cousins drove her to significant places that meant something to both of us.
               While this was happening, friends and families were gathering at Nevada Trails Park,
