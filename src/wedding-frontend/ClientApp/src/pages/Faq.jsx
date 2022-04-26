@@ -103,7 +103,7 @@ const Faq = () => {
           <Accordion expanded={expanded === 'panel7'} onChange={handleChange('panel7')}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel7bh-content" id="panel7bh-header">
               <Typography>
-                Where should we stay if ware from out of town?
+                Where should we stay if we're from out of town?
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
