@@ -8,8 +8,6 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import ParkingPicture from '../assets/parking.png';
-
 const Faq = () => {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
@@ -60,8 +58,6 @@ const Faq = () => {
               <Typography variant='body2' display='block'>
                 Please refer to the 'Wedding Details' link. Carpool if you can!
               </Typography>
-              <img src={ParkingPicture} alt="parking-pic" title="parking-pic" width='100%' style={{ objectFit: 'cover' }}
-                onClick={() => window.open(ParkingPicture)} />
             </AccordionDetails>
           </Accordion>
           <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
@@ -103,12 +99,12 @@ const Faq = () => {
           <Accordion expanded={expanded === 'panel7'} onChange={handleChange('panel7')}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel7bh-content" id="panel7bh-header">
               <Typography>
-                Where should we stay if ware from out of town?
+                Where should we stay if we're from out of town?
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant='body2' display='block'>
-                Save money & stay with friends/family in town! If not, the venue will be around the Summerlin area. Hotels nearby include:
+                Save money & stay with friends/family in town, if possible! If not, the venue will be around the Summerlin area. Hotels nearby include:
                 <Link component="button" variant="body2" onClick={() => window.open("https://www.redrockresort.com/")}>Red Rock Casino Resorts & Spa</Link> and
                 <Link component="button" variant="body2" onClick={() => window.open("https://www.suncoastcasino.com/")}>SunCoast Hotel & Casino</Link>
               </Typography>

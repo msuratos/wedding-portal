@@ -18,84 +18,84 @@ const steps = [
     picUrl: '',
     description: `To be honest, we don't remember of our very first encouter. All we know is
               is that we met sometime in freshman year of high school, most likely
-              french class or through mutual friends. Fun fact, Erlynn met Calvin first!`
+              french class or through mutual friends. Fun fact, Erlynn actually met Calvin first!`
   },
   {
     label: 'Something\'s Brewing.. 😉',
     optional: '~2009-2011',
     picUrl: '',
-    description: `Throughout high school, we've had classes together and were 
-              mutual friends. Then, junior year, we had physics class together
-              and were partners for a group project. One of the days, while working
-              on the project, Melvin decided to show off a little and perform a little
-              break dance routine. Maybe this was the start of our romance.`,
+    description: `Throughout high school, we had classes together and were 
+              mutual friends. Then, junior year, we had a physics class together
+              and were partners for a group project. We went to the library after
+              school one day and during one of our breaks, I impressed her with
+              some of my dance moves. Some would say this was the start of our love
+              story & us liking each other 😉`,
   },
   {
     label: 'Where It Began',
     optional: '2011-2012',
     picUrl: '',
-    description: `During our senior year, homecoming was around the corner and Melvin
-              was wondering who take. One of our friends, Kevin, had a conversation with him
-              suggesting to take Erlynn. Lo and behold, Melvin asked Erlynn to become his
-              date to homecoming by asking her at the Nevada Trails park with some roses.
-              The rest of the school year, we were in the 'talking' phase and were each
-              other's date for the rest of the school dances: sadies & prom. Both had
-              their own significant way of being asked: treasure hunt & flash mob.`,
-  },
-  {
-    label: 'The Debut!',
-    optional: 'May 27, 2020',
-    picUrl: '',
-    description: `For Erlynn's celebration of coming of age at 18, she asked Melvin
-              to be her debut partner! Thus igniting the spark between them even more
-              and growing closer together`,
+    description: `During our senior year, homecoming was around the corner. One of our friends,
+              Kevin, randomly had a conversation with me suggesting to ask Erlynn. Lo and behold,
+              I eventually asked her last minute to become my date with a
+              treasure hunt & roses at Nevada Trails Park. Throughout the school year, we
+              stayed in the 'talking' phase and were each other's dates for the rest of
+              the school dances (sadies & prom). Also, within this year,
+              Erlynn celebrated her Debut (Philippine's version of a sweet 16), in which
+              she asked me to be her debut partner. Thus, us getting to know each other
+              more personally & igniting the spark even more.`,
   },
   {
     label: 'Official!',
     optional: 'July 6, 2012',
     picUrl: '',
-    description: `After high school graduation in the middle of the summer, Melvin asked
-              Erlynn to officially become his girlfriend! It started out by asking Erlynn's
-              parents for permission, then had a long date that that ended up in Bellagio
-              water fountains. During the water show, that's when Melvin asked Erlynn
-              to become his girlfriend`,
+    description: `After high school graduation & in the middle of the summer, we decided to make it official. 
+              It started out by me asking Erlynn's parents for permission to date her, which was nerve
+              wrecking to say the least. Thankfully, they gladly accepted. I had a whole date planned out
+              that day that eventually ended up in the Bellagio water fountains. During the water show, that's
+              when I finally asked her to become my girlfriend.`,
   },
   // insert various trips and random occasions with pictures
   {
     label: 'Making It Permanent',
     optional: 'November 9, 2019',
     picUrl: '',
-    description: `After 7 years, it was time to make it permanent. Our love for each other
-              has grown so much that we wanted to make it last forever. Melvin's way of
-              the proposal was taking her out for dinner before she 'hangs' out with her
-              cousins. They were suppose to test of their friend's treasure hunt app.
-              They had to go to several significant places for both of us to get the next clue.
-              While this was happening, friends and families were meeting at Nevada Trails Park,
+    description: `After 7 years of dating, growing, and loving each other, it was time to make it permanent.
+              The proposal started off by taking her out for dinner before she hung out with her
+              cousins. They planned to "hang out" to test a "random friend's" treasure hunt app.
+              Her cousins drove her to significant places that meant something to both of us.
+              While this was happening, friends and families were gathering at Nevada Trails Park,
               back to where it all began, as this was the last place for the treasure hunt. The
-              treasure was Melvin asking Erlynn to become his wife!`,
+              final treasure was me proposing with a ring asking her to be my wife forever!`,
   },
   {
     label: 'Wedding 1.0!',
     optional: 'July 6, 2020',
     picUrl: '',
-    description: `We wanted to have the wedding at this date, however, due to COVID, it was
-              difficult to plan a big wedding. So, we had a small civil wedding with close
-              family.`
+    description: `We definitely wanted to keep our "dating" date as our wedding date and get married during
+              this time. However, due to COVID, it was difficult to plan a big wedding. So, we just ended up
+              having a small civil wedding with close family. It started out with a hot air balloon ride,
+              then a small ceremony at a random chapel in downtown LV (Viva Las Vegas! HAHA), and finally our
+              reception/lunch at the restaurant, Maggiano's. Small & simple, but still a day full of love.
+              Fun Fact, our wedding 2.0 will be catered by Maggiano's! `
   },
   {
     label: 'Got A Little Furball',
     optional: 'October 9, 2020',
     picUrl: '',
-    description: `We got our mini Australian Shepherd puppy weighing at 15 lbs! Fun fact,
-              his birthday is on our wedding day this year! He was born on July 8, 2022,
-              making him 2 years old on our wedding day!!`
+    description: `One day, we spontaneously decided to drive all the way to Idaho to adopt our mini
+              Australian Shepherd puppy, Astro Blue. He only weighed 15 lbs at the time compared to
+              his current weight at 38 lbs! Fun fact, his birthday is on our wedding day this year!
+              He was born on July 8, 2020, and will turn 2 years old that day! So it's partly a birthday
+              celebration too 😜`
   },
   {
     label: 'Wedding 2.0!',
     optional: 'July 8, 2022',
     picUrl: '',
-    description: `The next milestone of our relationship, the big wedding we were hoping to
-              have. We're looking forward to celebrate this day with you!`
+    description: `The next milestone of our relationship is our Catholic church wedding in July. We wanted 
+              to celebrate it big with all of you since it will also be our 10th year anniversary of being
+              together. We cannot wait & are looking forward to celebrate this special day with all of you!`
   }
 ];
 
