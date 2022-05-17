@@ -12,14 +12,14 @@ import { LogLevel } from "@azure/msal-browser";
  */
 export const b2cPolicies = {
   names: {
-    signUpSignIn: "B2C_1_signupsignin1"
+    signUpSignIn: process.env.REACT_APP_B2C_POLICY
   },
+  authorityDomain: process.env.REACT_APP_B2C_LOGIN_URL,
   authorities: {
     signUpSignIn: {
-      authority: "https://syzmicb2c.b2clogin.com/syzmicb2c.onmicrosoft.com/B2C_1_signupsignin1",
+      authority: `https://${process.env.REACT_APP_B2C_LOGIN_URL}/${process.env.REACT_APP_B2C_TENANT}/${process.env.REACT_APP_B2C_POLICY}`,
     }
   },
-  authorityDomain: "syzmicb2c.b2clogin.com"
 }
 
 
@@ -30,7 +30,7 @@ export const b2cPolicies = {
  */
 export const msalConfig = {
   auth: {
-    clientId: "3619d463-acfe-4a4a-bb7c-cd20212c6901", // This is the ONLY mandatory field that you need to supply.
+    clientId: process.env.REACT_APP_B2C_CLIENTID, // This is the ONLY mandatory field that you need to supply.
     authority: b2cPolicies.authorities.signUpSignIn.authority, // Choose SUSI as your default authority.
     knownAuthorities: [b2cPolicies.authorityDomain], // Mark your B2C tenant's domain as trusted.
     redirectUri: "/", // You must register this URI on Azure Portal/App Registration. Defaults to window.location.origin
@@ -75,7 +75,7 @@ export const msalConfig = {
 export const protectedResources = {
   apiWeddingPortal: {
     endpoint: "http://localhost:44303",
-    scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"], // e.g. api://xxxxxx/access_as_user
+    scopes: [`${process.env.REACT_APP_B2C_URL}/${process.env.REACT_APP_B2C_SCOPES}`], // e.g. api://xxxxxx/access_as_user
   },
 }
 

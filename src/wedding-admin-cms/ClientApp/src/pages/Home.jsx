@@ -13,12 +13,12 @@ const Home = () => {
   const msal = useMsal();
   const { accounts, instance } = msal;
 
-  const addWedding = async () => {
-    const silentRequest = {
-      scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
-      account: accounts[0]
-    };
+  const silentRequest = {
+    scopes: [`${process.env.REACT_APP_B2C_URL}/${process.env.REACT_APP_B2C_SCOPES}`],
+    account: accounts[0]
+  };
 
+  const addWedding = async () => {
     const tokenCache = await instance.acquireTokenSilent(silentRequest);
     const resp = await fetch(`wedding?weddingId=${weddingId}`, {
       method: 'PUT',
@@ -29,11 +29,6 @@ const Home = () => {
 
   useEffect(() => {
     async function getData() {
-      const silentRequest = {
-        scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
-        account: accounts[0]
-      };
-
       try {
         const tokenCache = await instance.acquireTokenSilent(silentRequest);
         const respData = await getWedding(tokenCache);
