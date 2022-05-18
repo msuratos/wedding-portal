@@ -63,3 +63,16 @@ jobs:
           app-name: ${{ secrets.FRONTEND_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - uses: azure/appservice-settings@v1
+        id: settings
+        with:
+          app-name: ${{ secrets.FRONTEND_WEBAPP_NAME }}
+          app-settings-json: '${{ secrets.FRONTEND_WEBAPP_APP_SETTINGS }}' 
+          connection-strings-json: '${{ secrets.FRONTEND_WEBAPP_CONNECTION_STRINGS }}'
+      - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
+      - run: |
+          az logout
