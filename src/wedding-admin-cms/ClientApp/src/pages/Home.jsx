@@ -6,6 +6,7 @@ import { useMsal } from '@azure/msal-react';
 import WeddingTable from '../components/WeddingTable';
 import { getWedding } from '../apis/weddingApi';
 
+// main home page component, default page.
 const Home = () => {
   const [weddingId, setWeddingId] = useState('');
   const [weddings, setWeddings] = useState([]);
