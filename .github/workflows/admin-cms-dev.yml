@@ -1,4 +1,4 @@
-name: build & deploy admin cms
+name: build & deploy admin cms dev
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'        # set this to the path to your web app project, defaults to the repository root
@@ -10,8 +10,6 @@ on:
       - main
     paths: 
       - '**/wedding-admin-cms/**'
-    types:
-    - closed
 
 jobs:
   build:
@@ -69,8 +67,8 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ secrets.ADMIN_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_ADMIN_WEBAPP_PUBLISH_PROFILE }}
+          app-name: ${{ secrets.ADMIN_WEBAPP_NAME }}-dev
+          publish-profile: ${{ secrets.AZURE_ADMIN_WEBAPP_DEV_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - uses: azure/login@v1
@@ -79,7 +77,7 @@ jobs:
       - uses: azure/appservice-settings@v1
         id: settings
         with:
-          app-name: ${{ secrets.ADMIN_WEBAPP_NAME }}
+          app-name: ${{ secrets.ADMIN_WEBAPP_NAME }}-dev
           app-settings-json: '${{ secrets.ADMIN_WEBAPP_APP_SETTINGS }}' 
           connection-strings-json: '${{ secrets.ADMIN_WEBAPP_CONNECTION_STRINGS }}'
       - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"

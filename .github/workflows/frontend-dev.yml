@@ -1,4 +1,4 @@
-name: build & deploy admin cms
+name: build & deploy frontend dev
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'        # set this to the path to your web app project, defaults to the repository root
@@ -9,9 +9,7 @@ on:
     branches: 
       - main
     paths: 
-      - '**/wedding-admin-cms/**'
-    types:
-    - closed
+      - '**/wedding-frontend/**'
 
 jobs:
   build:
@@ -34,43 +32,36 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        env:
-          REACT_APP_B2C_URL: ${{ secrets.REACT_B2C_URL }}
-          REACT_APP_B2C_LOGIN_URL: ${{ secrets.REACT_B2C_LOGIN_URL }}
-          REACT_APP_B2C_TENANT: ${{ secrets.REACT_B2C_TENANT }}
-          REACT_APP_B2C_POLICY: ${{ secrets.REACT_B2C_POLICY }}
-          REACT_APP_B2C_SCOPES: ${{ secrets.REACT_B2C_SCOPES }}
-          REACT_APP_B2C_CLIENTID: ${{ secrets.REACT_B2C_CLIENTID }}
-        run: cd ./src/wedding-admin-cms && dotnet build --configuration Release
+        run: cd ./src/wedding-frontend && dotnet build --configuration Release
 
       - name: dotnet publish
-        run: cd ./src/wedding-admin-cms && dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/admin-cms
+        run: cd ./src/wedding-frontend && dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/frontend
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: admin-cms-artifact
-          path: ${{env.DOTNET_ROOT}}/admin-cms
+          name: frontend-artifact
+          path: ${{env.DOTNET_ROOT}}/frontend
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Admin CMS'
+      name: 'Frontend'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: admin-cms-artifact
+          name: frontend-artifact
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ secrets.ADMIN_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_ADMIN_WEBAPP_PUBLISH_PROFILE }}
+          app-name: ${{ secrets.FRONTEND_WEBAPP_NAME }}-dev
+          publish-profile: ${{ secrets.AZURE_WEBAPP_DEV_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - uses: azure/login@v1
@@ -79,9 +70,9 @@ jobs:
       - uses: azure/appservice-settings@v1
         id: settings
         with:
-          app-name: ${{ secrets.ADMIN_WEBAPP_NAME }}
-          app-settings-json: '${{ secrets.ADMIN_WEBAPP_APP_SETTINGS }}' 
-          connection-strings-json: '${{ secrets.ADMIN_WEBAPP_CONNECTION_STRINGS }}'
+          app-name: ${{ secrets.FRONTEND_WEBAPP_NAME }}-dev
+          app-settings-json: '${{ secrets.FRONTEND_WEBAPP_APP_SETTINGS }}' 
+          connection-strings-json: '${{ secrets.FRONTEND_WEBAPP_CONNECTION_STRINGS }}'
       - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
       - run: |
           az logout

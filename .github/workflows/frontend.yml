@@ -10,6 +10,8 @@ on:
       - main
     paths: 
       - '**/wedding-frontend/**'
+    types:
+      - closed
 
 jobs:
   build:
