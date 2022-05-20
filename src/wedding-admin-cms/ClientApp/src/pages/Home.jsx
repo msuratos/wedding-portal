@@ -40,7 +40,7 @@ const Home = () => {
     };
 
     getData();
-  }, [accounts, instance]);
+  }, [accounts, instance, silentRequest]);
 
   return (
     <div>
