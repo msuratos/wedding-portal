@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using wedding_frontend.Dtos;
@@ -17,11 +17,13 @@ namespace wedding_frontend.Controllers
   [Route("api/[controller]")]
   public class WeddingController : ControllerBase
   {
+    private readonly IConfiguration _configuration;
     private readonly ILogger<WeddingController> _logger;
     private readonly WeddingDbContext _dbContext;
 
-    public WeddingController(ILogger<WeddingController> logger, WeddingDbContext dbContext)
+    public WeddingController(IConfiguration configuration, ILogger<WeddingController> logger, WeddingDbContext dbContext)
     {
+      _configuration = configuration;
       _logger = logger;
       _dbContext = dbContext;
     }
@@ -49,7 +51,7 @@ namespace wedding_frontend.Controllers
       var photos = await _dbContext.Photos.Where(w => w.FkWeddingId.Equals(weddingId))
         .Select(s => new
         {
-          ImgPath = $"https://syzmic-wedding-cdn.azureedge.net/merlynn-wedding/{s.FileName}",
+          ImgPath = $"{_configuration["AzureCdnUrl"]}/{s.FileName}",
           Label = $"Photo"
         })
         .ToListAsync(cancellationToken: cancellationToken);

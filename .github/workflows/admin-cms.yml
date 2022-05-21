@@ -2,7 +2,7 @@ name: build & deploy admin cms
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'        # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '5.0.404'             # set this to the .NET Core version to use
+  DOTNET_VERSION: '6.0.203'             # set this to the .NET Core version to use
 
 on:
   pull_request:
@@ -10,6 +10,8 @@ on:
       - main
     paths: 
       - '**/wedding-admin-cms/**'
+    types:
+    - closed
 
 jobs:
   build:
@@ -32,6 +34,13 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
+        env:
+          REACT_APP_B2C_URL: ${{ secrets.REACT_B2C_URL }}
+          REACT_APP_B2C_LOGIN_URL: ${{ secrets.REACT_B2C_LOGIN_URL }}
+          REACT_APP_B2C_TENANT: ${{ secrets.REACT_B2C_TENANT }}
+          REACT_APP_B2C_POLICY: ${{ secrets.REACT_B2C_POLICY }}
+          REACT_APP_B2C_SCOPES: ${{ secrets.REACT_B2C_SCOPES }}
+          REACT_APP_B2C_CLIENTID: ${{ secrets.REACT_B2C_CLIENTID }}
         run: cd ./src/wedding-admin-cms && dotnet build --configuration Release
 
       - name: dotnet publish
@@ -63,3 +72,16 @@ jobs:
           app-name: ${{ secrets.ADMIN_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_ADMIN_WEBAPP_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - uses: azure/login@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      - uses: azure/appservice-settings@v1
+        id: settings
+        with:
+          app-name: ${{ secrets.ADMIN_WEBAPP_NAME }}
+          app-settings-json: '${{ secrets.ADMIN_WEBAPP_APP_SETTINGS }}' 
+          connection-strings-json: '${{ secrets.ADMIN_WEBAPP_CONNECTION_STRINGS }}'
+      - run: echo "The webapp-url is ${{ steps.settings.outputs.webapp-url }}"
+      - run: |
+          az logout

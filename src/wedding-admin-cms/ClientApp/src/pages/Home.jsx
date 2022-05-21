@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Col, Input, FormGroup, Row } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
@@ -13,12 +13,14 @@ const Home = () => {
   const msal = useMsal();
   const { accounts, instance } = msal;
 
-  const addWedding = async () => {
-    const silentRequest = {
-      scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
+  const silentRequest = useMemo(() => {
+    return {
+      scopes: [`${process.env.REACT_APP_B2C_URL}/${process.env.REACT_APP_B2C_SCOPES}`],
       account: accounts[0]
-    };
+    }
+  }, [accounts]);
 
+  const addWedding = async () => {
     const tokenCache = await instance.acquireTokenSilent(silentRequest);
     const resp = await fetch(`wedding?weddingId=${weddingId}`, {
       method: 'PUT',
@@ -29,11 +31,6 @@ const Home = () => {
 
   useEffect(() => {
     async function getData() {
-      const silentRequest = {
-        scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
-        account: accounts[0]
-      };
-
       try {
         const tokenCache = await instance.acquireTokenSilent(silentRequest);
         const respData = await getWedding(tokenCache);
@@ -45,7 +42,7 @@ const Home = () => {
     };
 
     getData();
-  }, [accounts, instance]);
+  }, [accounts, instance, silentRequest]);
 
   return (
     <div>

@@ -11,7 +11,7 @@ const Song = () => {
 
   const silentRequest = useMemo(() => {
     return {
-      scopes: ["https://syzmicb2c.onmicrosoft.com/weddingportalapi/user.access"],
+      scopes: [`${process.env.REACT_APP_B2C_URL}/${process.env.REACT_APP_B2C_SCOPES}`],
       account: accounts[0]
     }
   }, [accounts]);
