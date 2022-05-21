@@ -4,6 +4,7 @@ import { useMsal } from '@azure/msal-react';
 
 import { getSongs } from '../apis/songApi';
 
+// TODO: make it more like a queue
 const Song = () => {
   const [songs, setSongs] = useState([]);
   const msal = useMsal();
