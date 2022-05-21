@@ -122,6 +122,18 @@ const Faq = () => {
               </Typography>
             </AccordionDetails>
           </Accordion>
+          <Accordion expanded={expanded === 'panel9'} onChange={handleChange('panel9')}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel9bh-content" id="panel9bh-header">
+              <Typography>
+                I can't make it to the ceremony, but I can make it to the reception. How do I RSVP?
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant='body2' display='block'>
+                Just hit the RSVP button on the main page! The RSVP is only for the reception, the ceremony doesn't require RSVP.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
         </Grid>
       </Grid>
     </Paper>
