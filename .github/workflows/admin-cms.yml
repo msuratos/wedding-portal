@@ -2,7 +2,7 @@ name: build & deploy admin cms
 
 env:
   AZURE_WEBAPP_PACKAGE_PATH: '.'        # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '5.0.404'             # set this to the .NET Core version to use
+  DOTNET_VERSION: '6.0.203'             # set this to the .NET Core version to use
 
 on:
   pull_request:
