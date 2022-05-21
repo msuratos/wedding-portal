@@ -32,6 +32,9 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
+        run: cd ./src/wedding-admin-cms && dotnet build --configuration Release
+
+      - name: dotnet publish
         env:
           REACT_APP_B2C_URL: ${{ secrets.REACT_B2C_URL }}
           REACT_APP_B2C_LOGIN_URL: ${{ secrets.REACT_B2C_LOGIN_URL }}
@@ -39,9 +42,6 @@ jobs:
           REACT_APP_B2C_POLICY: ${{ secrets.REACT_B2C_POLICY }}
           REACT_APP_B2C_SCOPES: ${{ secrets.REACT_B2C_SCOPES }}
           REACT_APP_B2C_CLIENTID: ${{ secrets.REACT_B2C_CLIENTID }}
-        run: cd ./src/wedding-admin-cms && dotnet build --configuration Release
-
-      - name: dotnet publish
         run: cd ./src/wedding-admin-cms && dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/admin-cms
 
       - name: Upload artifact for deployment job
