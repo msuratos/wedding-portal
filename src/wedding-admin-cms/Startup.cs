@@ -17,8 +17,8 @@ namespace wedding_admin_cms
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-
       services.AddControllersWithViews();
+      services.AddRazorPages();
       services.AddDbContext<WeddingDbContext>(opt => opt.UseSqlServer("Name=WeddingDbContext"));
 
       // Adds Microsoft Identity platform (AAD v2.0) support to protect this Api
@@ -59,6 +59,7 @@ namespace wedding_admin_cms
                   name: "default",
                   pattern: "{controller}/{action=Index}/{id?}");
 
+        endpoints.MapRazorPages();
         endpoints.MapFallbackToFile("index.html");
       });
     }
