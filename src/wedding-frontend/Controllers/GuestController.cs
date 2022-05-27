@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace wedding_frontend.Controllers
       // reference - https://docs.microsoft.com/en-us/sql/relational-databases/search/get-started-with-full-text-search?view=sql-server-ver15
       // reference - https://www.bricelam.net/2020/08/08/mssql-freetext-and-efcore.html
       var similarGuests = await _dbContext.Guests
-        .Where(w => w.WeddingId == weddingId && EF.Functions.Like(w.Name, $"%{nameSearchValue}%"))
+        .Where(w => w.WeddingId == weddingId && w.Name.ToLower().Contains(nameSearchValue.ToLower()))
         .Select(s => new GuestListDto
         {
           GuestId = s.GuestId,
@@ -66,6 +67,8 @@ namespace wedding_frontend.Controllers
     [HttpPost]
     public async Task<IActionResult> RsvpGuests([FromBody] ICollection<GuestListDto> rsvpGuests, CancellationToken cancellationToken)
     {
+      _logger.LogInformation("Updating guests' responses: {0}", JsonConvert.SerializeObject(rsvpGuests));
+
       // get the wedding id based on request url
       var subDomain = Request.Host.Value;
       var wedding = await _dbContext.Weddings.SingleOrDefaultAsync(s => subDomain.ToLower().Contains(s.UrlSubDomain.ToLower()), cancellationToken);
@@ -80,7 +83,7 @@ namespace wedding_frontend.Controllers
           .SingleOrDefaultAsync(s => s.WeddingId == weddingId && s.GuestId == guest.GuestId, cancellationToken);
 
         dbGuest.RsvpDate = DateTime.Now;
-        dbGuest.HasRsvpd = true;
+        dbGuest.HasRsvpd = !guest.HasRejected;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
       }
