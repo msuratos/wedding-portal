@@ -9,6 +9,7 @@ namespace wedding_frontend.Dtos
     public Guid WeddingId { get; set; }
     public Guid GuestId { get; set; }
     public bool? HasRsvpd { get; set; }
+    public bool HasRejected { get; set; }
     public string Name { get; set; }
 
     public ICollection<GuestListDto> RelatedGuests { get; set; }

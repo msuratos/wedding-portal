@@ -86,10 +86,10 @@ const GuestForm = () => {
             <Table responsive striped hover>
               <thead>
                 <tr>
-                  <th>Guest #</th>
                   <th>Guest Name</th>
                   <th>RSVP'd?</th>
-                  <th>RSVP'd Date</th>
+                  <th>Response Date</th>
+                  <th>Group By Value</th>
                 </tr>
               </thead>
               <tbody>
@@ -97,14 +97,21 @@ const GuestForm = () => {
                   guests.map((guest, index) => {
                     return (
                       <tr key={guest.guestId}>
-                        <td>{index + 1}</td>
                         <td>{guest.name}</td>
-                        <td>{guest.hasRsvpd ? 'Yes' : 'No'}</td>
+                        <td>{guest.hasRsvpd ? 'Yes' : guest.rsvpDate !== null ? 'No' : 'No Response'}</td>
                         <td>{guest?.rsvpDate ? new Date(guest.rsvpDate).toLocaleString('en-US') : null}</td>
+                        <td>{guest.groupValue}</td>
                       </tr>
                     );
                   })
                 }
+                {/* statistics row: Total guests, who responsed, respone value count */}
+                <tr>
+                  <td><b>Total Guests: {guests.length}</b></td>
+                  <td><b>'Yes' Guests: {guests.filter(guest => guest.hasRsvpd === true).length}</b></td>
+                  <td><b>'No' Guests: {guests.filter(guest => guest.hasRsvpd === false && guest.rsvpDate !== null).length}</b></td>
+                  <td><b>'No Response' Guests: {guests.filter(guest => guest.hasRsvpd === false && guest.rsvpDate === null).length}</b></td>
+                </tr>
               </tbody>
             </Table>
           </>

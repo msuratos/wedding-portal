@@ -57,8 +57,9 @@ const Rsvp = () => {
     setMuiAlert({ open: false });
   };
 
-  const rsvpClick = async () => {
+  const rsvpClick = async (hasRejected) => {
     const rsvpList = [...checked, ...relatedChecked];
+    rsvpList.forEach(el => { el.hasRejected = hasRejected; });
 
     const resp = await fetch('api/guest', {
       method: 'POST',
@@ -166,7 +167,7 @@ const Rsvp = () => {
         )
         : (
           <Paper elevation={3} sx={{ m: '15px' }}>
-            <Grid container sx={{ p: '5px' }}>
+            <Grid container spacing={1} sx={{ p: '5px' }}>
               <Grid item xs={12}>
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                   {mainGuests.map(guest => (
@@ -229,7 +230,10 @@ const Rsvp = () => {
                 </List>
               </Grid>
               <Grid item xs={12}>
-                <Button variant="contained" onClick={rsvpClick} fullWidth>RSVP</Button>
+                <Button variant="contained" onClick={(e) => rsvpClick(false)} fullWidth>RSVP</Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" sx={{ backgroundColor: '#909090' }} onClick={(e) => rsvpClick(true)} fullWidth>Can't Go 😢</Button>
               </Grid>
             </Grid>
           </Paper>
