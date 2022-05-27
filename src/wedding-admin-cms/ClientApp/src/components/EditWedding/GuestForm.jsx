@@ -89,7 +89,7 @@ const GuestForm = () => {
                   <th>Guest #</th>
                   <th>Guest Name</th>
                   <th>RSVP'd?</th>
-                  <th>RSVP'd Date</th>
+                  <th>Response Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -99,7 +99,7 @@ const GuestForm = () => {
                       <tr key={guest.guestId}>
                         <td>{index + 1}</td>
                         <td>{guest.name}</td>
-                        <td>{guest.hasRsvpd ? 'Yes' : 'No'}</td>
+                        <td>{guest.hasRsvpd ? 'Yes' : guest.rsvpDate !== null ? 'No' : 'No Response'}</td>
                         <td>{guest?.rsvpDate ? new Date(guest.rsvpDate).toLocaleString('en-US') : null}</td>
                       </tr>
                     );

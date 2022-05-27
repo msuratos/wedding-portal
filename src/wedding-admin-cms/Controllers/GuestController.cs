@@ -153,6 +153,7 @@ namespace wedding_admin_cms.Controllers
           GroupType = s.GuestGroup.Type,
           GroupValue = s.GuestGroup.Value
         })
+        .OrderBy(o => o.GroupValue)
         .ToListAsync(cancellationToken);
 
       return Ok(guestList);
