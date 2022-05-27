@@ -22,6 +22,8 @@ const Links = (props) => {
       headers: { 'Content-Type': 'application/json' }
     });
 
+    if (!resp.ok) throw new Error('invalid passphrase');
+
     const respData = await resp.text();
     console.debug('is valid passphrase?', respData);
 
