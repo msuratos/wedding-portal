@@ -98,7 +98,6 @@ const steps = [
               together. We cannot wait & are looking forward to celebrate this special day with all of you!`
   }
 ];
-
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const AboutUs = () => {
@@ -106,6 +105,7 @@ const AboutUs = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [images, setImages] = useState([]);
   const [activeImageStep, setActiveImageStep] = useState(0);
+
 
   const handleStep = (step) => () => {
     setActiveStep(step);
@@ -166,40 +166,43 @@ const AboutUs = () => {
       </Paper>
 
       {/* Carousel of images of the wedding shoot */}
-      <Paper square elevation={3} sx={{ m: '15px' }}>
-        <AutoPlaySwipeableViews axis='x' index={activeImageStep} onChangeIndex={handleImageStep} enableMouseEvents>
-          {images.map((step, index) => (
-            <div key={step.label}>
-              {Math.abs(activeImageStep - index) <= images.length ? (
-                <Box component="img" src={step.imgPath} alt={step.label}
-                  sx={{
-                    height: 400,
-                    display: 'block',
-                    objectFit: 'scale-down',
-                    maxWidth: 400,
-                    overflow: 'hidden',
-                    width: '100%',
-                  }}
-                />
-              ) : null}
-            </div>
-          ))}
-        </AutoPlaySwipeableViews>
-        <MobileStepper variant="progress" steps={images.length} position="static" activeStep={activeImageStep}
-          nextButton={
-            <Button size="small" onClick={handleImageNext} disabled={activeImageStep === images.length - 1}>
-              Next
-              <KeyboardArrowRight />
-            </Button>
-          }
-          backButton={
-            <Button size="small" onClick={handleBack} disabled={activeImageStep === 0}>
-              <KeyboardArrowLeft />
-              Back
-            </Button>
-          }
-        />
-      </Paper>
+      {images.length === 0 ? <></>
+        :
+        <Paper square elevation={3} sx={{ m: '15px' }}>
+          <AutoPlaySwipeableViews axis='x' index={activeImageStep} onChangeIndex={handleImageStep} enableMouseEvents>
+            {images.map((image, index) => (
+              <div key={image.photoId}>
+                {Math.abs(activeImageStep - index) <= images.length ? (
+                  <Box component="img" src={image.imgPath} alt={image.label}
+                    sx={{
+                      height: 400,
+                      display: 'block',
+                      objectFit: 'scale-down',
+                      maxWidth: 400,
+                      overflow: 'hidden',
+                      width: '100%',
+                    }}
+                  />
+                ) : null}
+              </div>
+            ))}
+          </AutoPlaySwipeableViews>
+          <MobileStepper variant="progress" steps={images.length} position="static" activeStep={activeImageStep}
+            nextButton={
+              <Button size="small" onClick={handleImageNext} disabled={activeImageStep === images.length - 1}>
+                Next
+                <KeyboardArrowRight />
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={handleBack} disabled={activeImageStep === 0}>
+                <KeyboardArrowLeft />
+                Back
+              </Button>
+            }
+          />
+        </Paper>
+      }
     </>
   );
 };
