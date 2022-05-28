@@ -14,6 +14,7 @@ import SongRequests from '../components/Rsvp/SongRequests';
 import { AlertContext } from '../App';
 
 const Rsvp = () => {
+  // TODO: switch to using useReducer?
   const [checked, setChecked] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mainGuests, setMainGuests] = useState(null);
@@ -23,7 +24,6 @@ const Rsvp = () => {
   const [showSongRequests, setShowSongRequests] = useState(false);
 
   const alertContext = useContext(AlertContext);
-
   const navigate = useNavigate();
 
   const handleToggle = (value) => () => {
