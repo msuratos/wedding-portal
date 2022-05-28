@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Alert, Button, Box, Checkbox, Collapse, Grid, List, ListItemButton, ListItemIcon,
-  ListItemText, ListSubheader, Paper, Skeleton, Snackbar, TextField, Typography
+  Button, Box, Checkbox, Collapse, Grid, List, ListItemButton, ListItemIcon,
+  ListItemText, ListSubheader, Paper, Skeleton, TextField, Typography
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -10,16 +10,19 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
+import SongRequests from '../components/Rsvp/SongRequests';
+import { AlertContext } from '../App';
+
 const Rsvp = () => {
   const [checked, setChecked] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mainGuests, setMainGuests] = useState(null);
-  const [muiAlert, setMuiAlert] = useState({ type: 'success', message: '', open: false })
   const [nameSearchValue, setNameSearchValue] = useState('');
   const [openNested, setOpenNested] = useState([]);
   const [relatedChecked, setRelatedChecked] = useState([]);
   const [showSongRequests, setShowSongRequests] = useState(false);
-  const [songRequests, setSongRequests] = useState('');
+
+  const alertContext = useContext(AlertContext);
 
   const navigate = useNavigate();
 
@@ -53,10 +56,6 @@ const Rsvp = () => {
     setRelatedChecked(newChecked);
   };
 
-  const onAlertClose = () => {
-    setMuiAlert({ open: false });
-  };
-
   const rsvpClick = async (hasRejected) => {
     const rsvpList = [...checked, ...relatedChecked];
     rsvpList.forEach(el => { el.hasRejected = hasRejected; });
@@ -70,7 +69,8 @@ const Rsvp = () => {
     });
 
     if (resp.ok) {
-      setMuiAlert({ type: 'success', message: 'Successfully RSVP\'d!', open: true });
+      const message = hasRejected ? 'Successfully rejected RSVP 😢' : 'Successfully RSP\'d!';
+      alertContext.setOptions({ type: 'success', message: message, open: true });
 
       setChecked([]);
       setOpenNested([]);
@@ -83,7 +83,7 @@ const Rsvp = () => {
       localStorage.setItem('showSongRequests', true);
     }
     else {
-      setMuiAlert({ type: 'success', message: 'something went wrong reserving you & your group. please try again', open: true });
+      alertContext.setOptions({ type: 'error', message: 'something went wrong reserving you & your group. please try again', open: true });
     }
   };
 
@@ -95,23 +95,6 @@ const Rsvp = () => {
 
     setLoading(false);
     setMainGuests(respData);
-  };
-
-  const songRequestClick = async () => {
-    const resp = await fetch('/api/songrequest', {
-      method: 'POST',
-      body: JSON.stringify({ songNames: songRequests }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (resp.ok) {
-      setMuiAlert({ message: 'successfully added your request!', open: true, type: 'success' });
-      setSongRequests('');
-    }
-    else
-      setMuiAlert({ message: 'could not add your request... try again', open: true, type: 'error' });
   };
 
   useEffect(() => {
@@ -239,36 +222,7 @@ const Rsvp = () => {
           </Paper>
         )
       }
-      {showSongRequests &&
-        (
-          <Paper elevation={3} sx={{ m: '15px' }}>
-            <Grid container spacing={1} sx={{ p: '5px' }}>
-              <Grid item xs={12}>
-                <TextField label="Enter your song request(s)" variant="standard" value={songRequests}
-                  helperText="To add multiple requests, add commas ',' between each request; include artist"
-                  onChange={(e) => setSongRequests(e.target.value)} fullWidth />
-              </Grid>
-              <Grid item xs={12}>
-                <Button variant="contained" onClick={songRequestClick} fullWidth>
-                  Add Song Request
-                </Button>
-              </Grid>
-              <Grid item xs={12} sx={{ p: '5px' }}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  These song requests will help us decide what to play during the wedding
-                </Typography>
-              </Grid>
-            </Grid>
-          </Paper>
-        )
-      }
-      <Snackbar key='bottom-center' anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        onClose={onAlertClose}
-        open={muiAlert.open}
-        autoHideDuration={3000}
-      >
-        <Alert severity={muiAlert.type} onClose={onAlertClose}>{muiAlert.message}</Alert>
-      </Snackbar>
+      { showSongRequests && <SongRequests /> }
     </>
   );
 };
