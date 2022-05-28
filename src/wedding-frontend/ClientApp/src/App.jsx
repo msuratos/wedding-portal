@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AppBar, Container, Toolbar, Typography } from '@mui/material';
@@ -13,6 +13,8 @@ import Links from './pages/Links';
 import NotFound from './pages/NotFound';
 import Registry from './pages/Registry';
 import Rsvp from './pages/Rsvp';
+
+export const ValidPassphraseContext = createContext({ isValidPassphrase: true, setIsValidPassphrase: () => { } });
 
 const App = () => {
   const [isValidPassphrase, setIsValidPassphrase] = useState(false);
@@ -40,25 +42,27 @@ const App = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Routes>
-        <Route path="/">
-          <Route index element={<Links setIsValidPassphrase={setIsValidPassphrase} />} />
-          <Route path="home" element={<Home />} />
-          {
-            !isValidPassphrase ? <></> :
-              (
-                <>
-                  <Route path="aboutus" element={<AboutUs />} />
-                  <Route path="rsvp" element={<Rsvp />} />
-                  <Route path="info" element={<Info />} />
-                  <Route path="registry" element={<Registry />} />
-                  <Route path="faq" element={<Faq />} />
-                </>
-              )
-          }
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <ValidPassphraseContext.Provider value={{ isValidPassphrase: isValidPassphrase, setIsValidPassphrase: setIsValidPassphrase }}>
+        <Routes>
+          <Route path="/">
+            <Route index element={<Links />} />
+            <Route path="home" element={<Home />} />
+            {
+              !isValidPassphrase ? <></> :
+                (
+                  <>
+                    <Route path="aboutus" element={<AboutUs />} />
+                    <Route path="rsvp" element={<Rsvp />} />
+                    <Route path="info" element={<Info />} />
+                    <Route path="registry" element={<Registry />} />
+                    <Route path="faq" element={<Faq />} />
+                  </>
+                )
+            }
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </ValidPassphraseContext.Provider>
     </BrowserRouter>
   );
 }

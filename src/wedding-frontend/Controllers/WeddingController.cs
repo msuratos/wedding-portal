@@ -51,6 +51,7 @@ namespace wedding_frontend.Controllers
       var photos = await _dbContext.Photos.Where(w => w.FkWeddingId.Equals(weddingId))
         .Select(s => new
         {
+          PhotoId = s.PhotoId,
           ImgPath = $"{_configuration["AzureCdnUrl"]}/{s.FileName}",
           Label = $"Photo"
         })

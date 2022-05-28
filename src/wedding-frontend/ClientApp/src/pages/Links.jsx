@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button, Grid, Input, Card,
   CardActions, CardContent, CardMedia
 } from '@mui/material';
 
+import { ValidPassphraseContext } from '../App';
 import WhiteButton from '../components/WhiteButton';
 import PasswordPic from '../assets/link-password-pic.jpg';
 
-const Links = (props) => {
-  const [isValidPassphrase, setIsValidPassphrase] = useState(false);
+const Links = () => {
+  const { isValidPassphrase, setIsValidPassphrase } = useContext(ValidPassphraseContext);
   const [passphrase, setPassphrase] = useState('');
 
   const navigate = useNavigate();
@@ -29,18 +30,7 @@ const Links = (props) => {
 
     localStorage.setItem('validPassphrase', respData);
     setIsValidPassphrase(respData);
-    props.setIsValidPassphrase(respData);
   };
-
-  useEffect(() => {
-    function isExistingValidPassphrase() {
-      // check local storage
-      if (localStorage.getItem('validPassphrase'))
-        setIsValidPassphrase(true);
-    };
-
-    isExistingValidPassphrase();
-  }, []);
 
   return (
     <>
