@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button, Box, Grid, MobileStepper, Paper, Step,
   StepContent, StepLabel, Stepper, Typography
 } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
+
+import { AlertContext } from '../App';
+import { getWeddingPhotos } from '../apis/weddingApi';
+import ListPageLayout from '../components/ListPageLayout';
 
 const steps = [
   {
@@ -101,11 +104,11 @@ const steps = [
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const AboutUs = () => {
-  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const [images, setImages] = useState([]);
   const [activeImageStep, setActiveImageStep] = useState(0);
 
+  const alertContext = useContext(AlertContext);
 
   const handleStep = (step) => () => {
     setActiveStep(step);
@@ -130,40 +133,37 @@ const AboutUs = () => {
   useEffect(() => {
     // TODO: get vertical steppers dynamically
     async function getImages() {
-      const resp = await fetch('/api/wedding/photos');
-
-      if (resp.ok)
-        setImages(await resp.json());
-      else
-        console.error('Error getting images');
+      try {
+        const images = await getWeddingPhotos();
+        setImages(images);
+      }
+      catch (error) {
+        console.error(error);
+        alertContext.setOptions({ type: 'error', message: error.message, open: true });
+      }
     }
 
     getImages();
-  }, []);
+  }, [alertContext]);
 
   return (
     <>
       {/* Vertical stepper of a timeline of how we met and about us */}
-      <Paper elevation={3} sx={{ m: '15px' }}>
-        <Grid container sx={{ p: '5px' }}>
-          <Grid item xs={12}>
-            <Button onClick={() => navigate(-1)}><ArrowBackIcon />back to links</Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Stepper nonLinear activeStep={activeStep} orientation="vertical">
-              {steps.map((step, index) => (
-                <Step key={step.label}>
-                  <StepLabel optional={step.optional} onClick={handleStep(index)}>{step.label}</StepLabel>
-                  <StepContent>
-                    <Typography variant="caption" display="block" gutterBottom>{step.description}</Typography>
-                  </StepContent>
-                </Step>
-              ))}
-            </Stepper>
-            {activeStep === steps.length - 1 && (<Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>back to start</Button>)}
-          </Grid>
+      <ListPageLayout>
+        <Grid item xs={12}>
+          <Stepper nonLinear activeStep={activeStep} orientation="vertical">
+            {steps.map((step, index) => (
+              <Step key={step.label}>
+                <StepLabel optional={step.optional} onClick={handleStep(index)}>{step.label}</StepLabel>
+                <StepContent>
+                  <Typography variant="caption" display="block" gutterBottom>{step.description}</Typography>
+                </StepContent>
+              </Step>
+            ))}
+          </Stepper>
+          {activeStep === steps.length - 1 && (<Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>back to start</Button>)}
         </Grid>
-      </Paper>
+      </ListPageLayout>
 
       {/* Carousel of images of the wedding shoot */}
       {images.length === 0 ? <></>
