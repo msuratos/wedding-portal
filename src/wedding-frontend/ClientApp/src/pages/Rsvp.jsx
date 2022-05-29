@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import {
   Button, Box, Checkbox, Collapse, Grid, List, ListItemButton, ListItemIcon,
@@ -7,11 +6,11 @@ import {
 } from '@mui/material';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
+import ListPageLayout from '../components/ListPageLayout';
 import SongRequests from '../components/Rsvp/SongRequests';
 import { AlertContext } from '../App';
 import { rsvpGuest, searchGuest } from '../apis/guestApi';
@@ -41,7 +40,6 @@ const Rsvp = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const alertContext = useContext(AlertContext);
-  const navigate = useNavigate();
 
   const handleToggle = (value, guestType) => () => {
     let currentIndex = -1;
@@ -81,7 +79,7 @@ const Rsvp = () => {
     try {
       await rsvpGuest(rsvpList);
 
-      const message = hasRejected ? 'Successfully rejected RSVP 😢' : 'Successfully RSP\'d!';
+      const message = hasRejected ? 'Successfully rejected RSVP 😢' : 'Successfully RSVP\'d!';
       alertContext.setOptions({ type: 'success', message: message, open: true });
 
       // reset state values
@@ -110,32 +108,24 @@ const Rsvp = () => {
 
   return (
     <>
-      <Paper elevation={3} sx={{ m: '15px' }}>
-        <Grid container spacing={1} sx={{ p: '5px' }}>
-          <Grid item xs={12}>
-            <Button onClick={() => navigate(-1)}><ArrowBackIcon />back</Button>
-            <Typography variant="h4" sx={{ textAlign: 'center' }}>
-              RSVP
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-              <GroupAddIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-              <TextField label="Enter Your Name" variant="standard" error={nameSearchValue.length < 4}
-                helperText={nameSearchValue.length < 4 ? 'enter at least 4 characters' : null}
-                value={nameSearchValue} onChange={e => setNameSearchValue(e.target.value)} fullWidth />
-            </Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" onClick={searchClick} disabled={nameSearchValue.length < 4} fullWidth>Search</Button>
-          </Grid>
-          <Grid item xs={12} sx={{ p: '5px' }}>
-            <Typography variant="caption" display="block" gutterBottom>
-              Just a reminder that, although we love your children, unfortunately we aren’t able to accommodate them at this time because of budget & space constraints 😢
-            </Typography>
-          </Grid>
+      <ListPageLayout hasTitle title='RSVP'>
+        <Grid item xs={12}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+            <GroupAddIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+            <TextField label="Enter Your Name" variant="standard" error={nameSearchValue.length < 4}
+              helperText={nameSearchValue.length < 4 ? 'enter at least 4 characters' : null}
+              value={nameSearchValue} onChange={e => setNameSearchValue(e.target.value)} fullWidth />
+          </Box>
         </Grid>
-      </Paper>
+        <Grid item xs={12}>
+          <Button variant="contained" onClick={searchClick} disabled={nameSearchValue.length < 4} fullWidth>Search</Button>
+        </Grid>
+        <Grid item xs={12} sx={{ p: '5px' }}>
+          <Typography variant="caption" display="block" gutterBottom>
+            Just a reminder that, although we love your children, unfortunately we aren’t able to accommodate them at this time because of budget & space constraints 😢
+          </Typography>
+        </Grid>
+      </ListPageLayout>
       {state.mainGuests === null
         ? (
           <>
@@ -228,7 +218,7 @@ const Rsvp = () => {
           </Paper>
         )
       }
-      { state.showSongRequests && <SongRequests /> }
+      {state.showSongRequests && <SongRequests />}
     </>
   );
 };
