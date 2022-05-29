@@ -14,6 +14,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 import SongRequests from '../components/Rsvp/SongRequests';
 import { AlertContext } from '../App';
+import { rsvpGuest, searchGuest } from '../apis/guestApi';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -77,15 +78,9 @@ const Rsvp = () => {
     const rsvpList = [...state.checked, ...state.relatedChecked];
     rsvpList.forEach(el => { el.hasRejected = hasRejected; });
 
-    const resp = await fetch('api/guest', {
-      method: 'POST',
-      body: JSON.stringify(rsvpList),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    try {
+      await rsvpGuest(rsvpList);
 
-    if (resp.ok) {
       const message = hasRejected ? 'Successfully rejected RSVP 😢' : 'Successfully RSP\'d!';
       alertContext.setOptions({ type: 'success', message: message, open: true });
 
@@ -96,18 +91,16 @@ const Rsvp = () => {
       // once a guest has rsvp'd, then they should be able to add song requests anytime
       localStorage.setItem('showSongRequests', true);
     }
-    else {
+    catch (error) {
+      console.error(error);
       alertContext.setOptions({ type: 'error', message: 'something went wrong reserving you & your group. please try again', open: true });
     }
   };
 
   const searchClick = async () => {
     dispatch({ type: 'guestsearch/inprogress' });
-
-    const resp = await fetch(`api/guest?nameSearchValue=${nameSearchValue}`);
-    const respData = await resp.json();
-
-    dispatch({ type: 'guestsearch/successful', payload: respData });
+    const guests = await searchGuest(nameSearchValue);
+    dispatch({ type: 'guestsearch/successful', payload: guests });
   };
 
   useEffect(() => {

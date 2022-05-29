@@ -5,31 +5,33 @@ import {
   CardActions, CardContent, CardMedia
 } from '@mui/material';
 
-import { ValidPassphraseContext } from '../App';
+import { AlertContext, ValidPassphraseContext } from '../App';
+import { validatePassphrase } from '../apis/weddingApi';
 import WhiteButton from '../components/WhiteButton';
 import PasswordPic from '../assets/link-password-pic.jpg';
 
 const Links = () => {
+  const alertContext = useContext(AlertContext);
   const { isValidPassphrase, setIsValidPassphrase } = useContext(ValidPassphraseContext);
   const [passphrase, setPassphrase] = useState('');
 
   const navigate = useNavigate();
 
-  const validatePassphrase = async () => {
-    console.debug('validating passphrase');
-    const resp = await fetch('api/wedding', {
-      method: 'POST',
-      body: JSON.stringify({ passphrase }),
-      headers: { 'Content-Type': 'application/json' }
-    });
+  const validatePassphraseClick = async () => {
+    try {
+      const isValidPassphrase = await validatePassphrase(passphrase);
+      localStorage.setItem('validPassphrase', isValidPassphrase);
+      setIsValidPassphrase(isValidPassphrase);
 
-    if (!resp.ok) throw new Error('invalid passphrase');
-
-    const respData = await resp.text();
-    console.debug('is valid passphrase?', respData);
-
-    localStorage.setItem('validPassphrase', respData);
-    setIsValidPassphrase(respData);
+      if (isValidPassphrase)
+        alertContext.setOptions({ type: 'success', message: 'Valid Passphrase!', open: true });
+      else
+        alertContext.setOptions({ type: 'error', message: 'Invalid Passphrase', open: true });
+    }
+    catch (error) {
+      console.error(error);
+      alertContext.setOptions({ type: 'error', message: error, open: true });
+    }
   };
 
   return (
@@ -44,7 +46,7 @@ const Links = () => {
                   value={passphrase} onChange={(e) => setPassphrase(e.target.value)} autoFocus fullWidth />
               </CardContent>
               <CardActions>
-                <Button variant="contained" onClick={validatePassphrase} fullWidth>Submit</Button>
+                <Button variant="contained" onClick={validatePassphraseClick} fullWidth>Submit</Button>
               </CardActions>
             </Card>
           )

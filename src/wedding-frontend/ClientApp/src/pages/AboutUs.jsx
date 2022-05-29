@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import {
   Button, Box, Grid, MobileStepper, Paper, Step,
   StepContent, StepLabel, Stepper, Typography
 } from '@mui/material';
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
+
+import { AlertContext } from '../App';
+import { getWeddingPhotos } from '../apis/weddingApi';
 
 const steps = [
   {
@@ -106,6 +111,7 @@ const AboutUs = () => {
   const [images, setImages] = useState([]);
   const [activeImageStep, setActiveImageStep] = useState(0);
 
+  const alertContext = useContext(AlertContext);
 
   const handleStep = (step) => () => {
     setActiveStep(step);
@@ -130,12 +136,14 @@ const AboutUs = () => {
   useEffect(() => {
     // TODO: get vertical steppers dynamically
     async function getImages() {
-      const resp = await fetch('/api/wedding/photos');
-
-      if (resp.ok)
-        setImages(await resp.json());
-      else
-        console.error('Error getting images');
+      try {
+        const images = await getWeddingPhotos();
+        setImages(images);
+      }
+      catch (error) {
+        console.error(error);
+        alertContext.setOptions({ type: 'error', message: error.message, open: true });
+      }
     }
 
     getImages();
