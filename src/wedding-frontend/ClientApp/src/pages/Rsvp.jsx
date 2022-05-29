@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import {
   Button, Box, Checkbox, Collapse, Grid, List, ListItemButton, ListItemIcon,
   ListItemText, ListSubheader, Paper, Skeleton, TextField, Typography
 } from '@mui/material';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -13,51 +15,66 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import SongRequests from '../components/Rsvp/SongRequests';
 import { AlertContext } from '../App';
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'guestsearch/inprogress':
+      return { ...state, loading: true };
+    case 'guestsearch/successful':
+      return { ...state, loading: false, mainGuests: action.payload };
+    case 'rsvp/successful':
+      return { ...state, checked: [], loading: false, mainGuests: null, relatedChecked: [], showSongRequests: true };
+    case 'songrequest':
+      return { ...state, showSongRequests: action.payload };
+    case 'toggle':
+      // return whatever the payload is. It should be either { checked: [] } or { relatedChecked: [] }
+      return { ...state, ...action.payload };
+    default:
+      throw new Error('invalid action for reducer');
+  }
+}
+
 const Rsvp = () => {
-  // TODO: switch to using useReducer?
-  const [checked, setChecked] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [mainGuests, setMainGuests] = useState(null);
   const [nameSearchValue, setNameSearchValue] = useState('');
-  const [openNested, setOpenNested] = useState([]);
-  const [relatedChecked, setRelatedChecked] = useState([]);
-  const [showSongRequests, setShowSongRequests] = useState(false);
+
+  const initialState = { checked: [], loading: false, mainGuests: null, relatedChecked: [], showSongRequests: false };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const alertContext = useContext(AlertContext);
   const navigate = useNavigate();
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-    const newOpenNested = [...openNested];
+  const handleToggle = (value, guestType) => () => {
+    let currentIndex = -1;
+    let checkedGuestsList = [];
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-      newOpenNested.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-      newOpenNested.splice(currentIndex, 1);
+    // populate the variables above with respective guest array (main guests or related guests to main guest)
+    switch (guestType) {
+      case 'main':
+        currentIndex = state.checked.indexOf(value);
+        checkedGuestsList = [...state.checked];
+        break;
+      case 'related':
+        currentIndex = state.relatedChecked.indexOf(value);
+        checkedGuestsList = [...state.relatedChecked];
+        break;
+      default:
+        throw new Error('toggling guest checkbox failed, incorrect guest list type', guestType);
     }
 
-    setChecked(newChecked);
-    setOpenNested(newOpenNested);
-  };
+    // add or remove newly checked/toggled guests to respective guest array (main guests or related guests to main guest)
+    if (currentIndex === -1)
+      checkedGuestsList.push(value)
+    else
+      checkedGuestsList.splice(currentIndex, 1);
 
-  const handleRelatedToggle = (value) => () => {
-    const currentIndex = relatedChecked.indexOf(value);
-    const newChecked = [...relatedChecked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setRelatedChecked(newChecked);
+    // save state (useReducer)
+    if (guestType === 'main')
+      dispatch({ type: 'toggle', payload: { checked: checkedGuestsList } });
+    else if (guestType === 'related')
+      dispatch({ type: 'toggle', payload: { relatedChecked: checkedGuestsList } });
   };
 
   const rsvpClick = async (hasRejected) => {
-    const rsvpList = [...checked, ...relatedChecked];
+    const rsvpList = [...state.checked, ...state.relatedChecked];
     rsvpList.forEach(el => { el.hasRejected = hasRejected; });
 
     const resp = await fetch('api/guest', {
@@ -72,14 +89,11 @@ const Rsvp = () => {
       const message = hasRejected ? 'Successfully rejected RSVP 😢' : 'Successfully RSP\'d!';
       alertContext.setOptions({ type: 'success', message: message, open: true });
 
-      setChecked([]);
-      setOpenNested([]);
-      setRelatedChecked([]);
-      setMainGuests(null);
+      // reset state values
+      dispatch({ type: 'rsvp/successful' });
       setNameSearchValue('');
 
       // once a guest has rsvp'd, then they should be able to add song requests anytime
-      setShowSongRequests(true);
       localStorage.setItem('showSongRequests', true);
     }
     else {
@@ -88,18 +102,17 @@ const Rsvp = () => {
   };
 
   const searchClick = async () => {
-    setLoading(true);
+    dispatch({ type: 'guestsearch/inprogress' });
 
     const resp = await fetch(`api/guest?nameSearchValue=${nameSearchValue}`);
     const respData = await resp.json();
 
-    setLoading(false);
-    setMainGuests(respData);
+    dispatch({ type: 'guestsearch/successful', payload: respData });
   };
 
   useEffect(() => {
     if (localStorage.getItem('showSongRequests'))
-      setShowSongRequests(true);
+      dispatch({ type: 'songrequest', payload: true })
   }, []);
 
   return (
@@ -130,10 +143,10 @@ const Rsvp = () => {
           </Grid>
         </Grid>
       </Paper>
-      {mainGuests === null
+      {state.mainGuests === null
         ? (
           <>
-            {!loading ? <></>
+            {!state.loading ? <></>
               : (
                 <Paper elevation={3} sx={{ m: '15px' }}>
                   <Grid container sx={{ p: '5px' }}>
@@ -153,15 +166,15 @@ const Rsvp = () => {
             <Grid container spacing={1} sx={{ p: '5px' }}>
               <Grid item xs={12}>
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                  {mainGuests.map(guest => (
+                  {state.mainGuests.map(guest => (
                     <>
-                      <ListItemButton key={guest.guestId} role={undefined} onClick={handleToggle(guest)} dense>
+                      <ListItemButton key={guest.guestId} role={undefined} onClick={handleToggle(guest, 'main')} dense>
                         <ListItemIcon>
                           <AccountCircleIcon edge="start" />
                         </ListItemIcon>
                         <ListItemText id={guest.name} primary={guest.name} />
                         <ListItemIcon>
-                          <Checkbox edge="end" tabIndex={-1} checked={guest.hasRsvpd || checked.indexOf(guest) !== -1}
+                          <Checkbox edge="end" tabIndex={-1} checked={guest.hasRsvpd || state.checked.indexOf(guest) !== -1}
                             disabled={guest.hasRsvpd}
                             inputProps={{ 'aria-labelledby': guest.name }}
                           />
@@ -172,14 +185,14 @@ const Rsvp = () => {
                           ? <div style={{ height: '1.5em', width: '1.5em' }}></div>
                           : (
                             <>
-                              {openNested.indexOf(guest) !== -1 ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                              {state.checked.indexOf(guest) !== -1 ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                             </>
                           )
                         }
                       </ListItemButton>
                       {guest.relatedGuests.length === 0 ? <></> :
                         (
-                          <Collapse in={openNested.indexOf(guest) !== -1} timeout="auto" unmountOnExit>
+                          <Collapse key={`${guest.guestId}-collapse`} in={state.checked.indexOf(guest) !== -1} timeout="auto" unmountOnExit>
                             <List
                               subheader={
                                 <ListSubheader component="div">
@@ -190,15 +203,15 @@ const Rsvp = () => {
                             >
                               {
                                 guest.relatedGuests.map(relatedGuest => (
-                                  <ListItemButton key={relatedGuest.guestId} sx={{ pl: 4 }} onClick={handleRelatedToggle(relatedGuest)}>
+                                  <ListItemButton key={relatedGuest.guestId} sx={{ pl: 4 }} onClick={handleToggle(relatedGuest, 'related')}>
                                     <ListItemIcon>
                                       <AccountCircleIcon edge="start" />
                                     </ListItemIcon>
                                     <ListItemText id={relatedGuest.name} primary={relatedGuest.name} />
                                     <ListItemIcon>
-                                      <Checkbox edge="end" tabIndex={-1} checked={relatedGuest.hasRsvpd || relatedChecked.indexOf(relatedGuest) !== -1}
+                                      <Checkbox edge="end" tabIndex={-1} checked={relatedGuest.hasRsvpd || state.relatedChecked.indexOf(relatedGuest) !== -1}
                                         disabled={relatedGuest.hasRsvpd}
-                                        inputProps={{ 'aria-labelledby': guest.name }}
+                                        inputProps={{ 'aria-labelledby': relatedGuest.name }}
                                       />
                                     </ListItemIcon>
                                   </ListItemButton>
@@ -222,7 +235,7 @@ const Rsvp = () => {
           </Paper>
         )
       }
-      { showSongRequests && <SongRequests /> }
+      { state.showSongRequests && <SongRequests /> }
     </>
   );
 };
