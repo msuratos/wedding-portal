@@ -129,6 +129,18 @@ const Faq = () => {
             </Typography>
           </AccordionDetails>
         </Accordion>
+        <Accordion expanded={expanded === 'panel10'} onChange={handleChange('panel10')}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel10bh-content" id="panel10bh-header">
+            <Typography>
+              Are masks required?
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant='body2' display='block'>
+              No, masks are optional at both the ceremony and reception. However, if you feel unwell, we strongly recommend that you wear one for the sake of others. Thanks!
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
       </Grid>
     </ListPageLayout>
   );
