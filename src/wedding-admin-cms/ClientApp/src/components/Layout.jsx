@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from 'reactstrap';
+import { Card, Container } from '@mui/material';
 import { NavMenu } from './NavMenu';
 
 export const Layout = (props) => {
@@ -7,7 +7,9 @@ export const Layout = (props) => {
     <div>
       <NavMenu />
       <Container>
-        {props.children}
+        <Card elevation={3} sx={{ p: '15px' }}>
+          {props.children}
+        </Card>
       </Container>
     </div>
   );
