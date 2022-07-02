@@ -69,6 +69,26 @@ namespace wedding_admin_cms.Persistance
         build.HasMany<Guest>(nav => nav.Guests).WithOne(nav => nav.GuestGroup).HasForeignKey(fk => fk.GuestGroupId).IsRequired(false);
       });
 
+      modelBuilder.Entity<FoodItem>(build =>
+      {
+        build.HasKey(key => key.FoodId);
+        build.Property(prop => prop.FoodTypeId).IsRequired();   // foreign key
+        build.Property(prop => prop.WeddingId).IsRequired();  // foreign key
+        build.Property(prop => prop.FoodId).UseIdentityColumn();
+        build.Property(prop => prop.Food).HasMaxLength(100).IsUnicode();
+        build.Property(prop => prop.Description).IsUnicode();
+
+        build.HasOne<FoodType>(nav => nav.FoodType).WithMany(nav => nav.FoodItems).HasForeignKey(fk => fk.FoodTypeId);
+        build.HasOne<Wedding>(nav => nav.Wedding).WithMany(nav => nav.FoodItems).HasForeignKey(fk => fk.WeddingId);
+      });
+
+      modelBuilder.Entity<FoodType>(build =>
+      {
+        build.HasKey(key => key.FoodTypeId);
+        build.Property(prop => prop.FoodTypeId).UseIdentityColumn();
+        build.Property(prop => prop.Type).HasMaxLength(50).IsRequired();
+      });
+
       modelBuilder.Entity<Photo>(build =>
       {
         build.HasKey(key => key.PhotoId);

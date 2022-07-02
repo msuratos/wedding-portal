@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wedding_admin_cms.Persistance;
 
 namespace wedding_admin_cms.Persistance.Migrations
 {
     [DbContext(typeof(WeddingDbContext))]
-    partial class WeddingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220702045216_AddFoodItems")]
+    partial class AddFoodItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
