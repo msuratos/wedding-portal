@@ -6,6 +6,11 @@ import Home from './pages/Home';
 import EditWedding from './pages/EditWedding';
 import Song from './pages/Song';
 
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 import './custom.css'
 
 const App = () => {

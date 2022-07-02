@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
+import Typography from '@mui/material/Typography';
 
 import WeddingTable from '../WeddingTable';
 import { createWedding, updateWedding } from '../../apis/weddingApi';
@@ -101,8 +102,9 @@ const WeddingForm = (props) => {
           ? <p><em> Loading...</em></p>
           : (
             <>
-              <h1 id="tabelLabel">Wedding</h1>
-              <p>This tab lists information about your wedding.</p>
+              <Typography variant="subtitle2" gutterBottom component="div">
+                This tab lists and edits information about your wedding.
+              </Typography>
               <Form>
                 <FormGroup row>
                   <Label xs={12} sm={2} for="bride">Bride</Label>

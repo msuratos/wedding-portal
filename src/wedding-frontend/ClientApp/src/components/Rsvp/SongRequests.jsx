@@ -1,21 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import { AlertContext } from '../../App';
+import { addSongRequest } from '../../apis/songRequestApi';
 
 const SongRequests = () => {
   const [songRequests, setSongRequests] = useState('');
   const alertContext = useContext(AlertContext);
 
   const songRequestClick = async () => {
-    const resp = await fetch('/api/songrequest', {
-      method: 'POST',
-      body: JSON.stringify({ songNames: songRequests }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const areSongsAddedSuccessfully = await addSongRequest(songRequests);
 
-    if (resp.ok) {
+    if (areSongsAddedSuccessfully) {
       alertContext.setOptions({ message: 'successfully added your request!', open: true, type: 'success' });
       setSongRequests('');
     }

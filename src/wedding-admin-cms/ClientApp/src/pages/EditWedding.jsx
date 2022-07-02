@@ -1,9 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Nav, NavItem, NavLink,
-  TabContent, TabPane, UncontrolledAlert
-} from 'reactstrap';
 import { useMsal } from '@azure/msal-react';
+
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
 
 import { getWedding } from '../apis/weddingApi';
 import MessageForm from '../components/EditWedding/MessageForm';
@@ -13,8 +16,37 @@ import EntourageForm from '../components/EditWedding/EntourageForm';
 import GuestForm from '../components/EditWedding/GuestForm';
 import PhotoForm from '../components/EditWedding/PhotoForm';
 
+// custom component to show a certain panel when a certain tab is active
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+// helper function to help create id and aria-controls props for Tab component
+function a11yProps(index) {
+  return {
+    id: `vertical-tab-${index}`,
+    'aria-controls': `vertical-tabpanel-${index}`,
+  };
+}
+
 const EditWedding = () => {
-  const [activeTab, setActiveTab] = useState('1');
+  const [activeTab, setActiveTab] = useState(1);
   
   const [showSuccessAlert, setSuccessShowAlert] = useState(false);
   const [showErrorAlert, setErrorShowAlert] = useState(false);
@@ -33,6 +65,10 @@ const EditWedding = () => {
     }
   }, [accounts]);
 
+  const handleTabChange = (event, newValue) => {
+        setActiveTab(newValue);
+  };
+
   useEffect(() => {
     const init = async () => {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
@@ -43,53 +79,48 @@ const EditWedding = () => {
     init();
   }, [instance, silentRequest]);
 
+
   return (
     <div>
       {/* TODO: possibly only make the first tab active until a valid wedding exists */}
-      <Nav tabs>
-        <NavItem>
-          <NavLink active={activeTab === '1'} onClick={() => setActiveTab('1')}>Edit Wedding</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink active={activeTab === '2'} onClick={() => setActiveTab('2')}>Edit Message</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink active={activeTab === '3'} onClick={() => setActiveTab('3')}>Edit Roles</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink active={activeTab === '4'} onClick={() => setActiveTab('4')}>Edit Entourage</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink active={activeTab === '5'} onClick={() => setActiveTab('5')}>Edit Guest</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink active={activeTab === '6'} onClick={() => setActiveTab('6')}>Edit Photos</NavLink>
-        </NavItem>
-      </Nav>
-      {showSuccessAlert && <UncontrolledAlert>Success!</UncontrolledAlert>}
-      {showErrorAlert && <UncontrolledAlert color='danger'>Failed! Please try again</UncontrolledAlert>}
-      <TabContent activeTab={activeTab}>
-        <TabPane tabId="1">
+      <Box sx={{ width: '100%' }}>
+        {showSuccessAlert && <Alert severity='success'>Success!</Alert>}
+        {showErrorAlert && <Alert severity='error'>Failed! Please try again</Alert>}
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}         
+          aria-label="Edit Wedding Table"
+          textColor="primary"
+        >
+          <Tab value={1} label="Edit Wedding" {...a11yProps(1)} />
+          <Tab value={2} label="Edit Message" {...a11yProps(2)} />
+          <Tab value={3} label="Edit Roles" {...a11yProps(3)} />
+          <Tab value={4} label="Edit Entourage" {...a11yProps(4)} />
+          <Tab value={5} label="Edit Guest" {...a11yProps(5)} />
+          <Tab value={6} label="Edit Photos" {...a11yProps(6)} />
+        </Tabs>
+        <Divider />
+        <TabPanel value={activeTab} index={1}>
           {/* TODO: switch to redux? */}
           <WeddingForm wedding={wedding} setErrorShowAlert={setErrorShowAlert}
-            setSuccessShowAlert={setSuccessShowAlert} setWedding={setWedding} />
-        </TabPane>
-        <TabPane tabId="2">
+          setSuccessShowAlert={setSuccessShowAlert} setWedding={setWedding} />
+        </TabPanel>
+        <TabPanel value={activeTab} index={2}>
           <MessageForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
-        </TabPane>
-        <TabPane tabId="3">
+        </TabPanel>
+        <TabPanel value={activeTab} index={3}>
           <RoleForm setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
-        </TabPane>
-        <TabPane tabId="4">
+        </TabPanel>
+        <TabPanel value={activeTab} index={4}>
           <EntourageForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
-        </TabPane>
-        <TabPane tabId="5">
+        </TabPanel>
+        <TabPanel value={activeTab} index={5}>
           <GuestForm />
-        </TabPane>
-        <TabPane tabId="6">
+        </TabPanel>
+        <TabPanel value={activeTab} index={6}>
           <PhotoForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
-        </TabPane>
-      </TabContent>
+        </TabPanel>
+      </Box>
     </div>
   );
 };
