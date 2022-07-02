@@ -8,7 +8,7 @@ namespace wedding_admin_cms.Persistance.Migrations
     protected override void Up(MigrationBuilder migrationBuilder)
     {
       migrationBuilder.CreateTable(
-          name: "FoodType",
+          name: "FoodTypes",
           columns: table => new
           {
             FoodTypeId = table.Column<int>(type: "int", nullable: false)
@@ -17,11 +17,11 @@ namespace wedding_admin_cms.Persistance.Migrations
           },
           constraints: table =>
           {
-            table.PrimaryKey("PK_FoodType", x => x.FoodTypeId);
+            table.PrimaryKey("PK_FoodTypes", x => x.FoodTypeId);
           });
 
       migrationBuilder.CreateTable(
-          name: "FoodItem",
+          name: "FoodItems",
           columns: table => new
           {
             FoodId = table.Column<int>(type: "int", nullable: false)
@@ -33,15 +33,15 @@ namespace wedding_admin_cms.Persistance.Migrations
           },
           constraints: table =>
           {
-            table.PrimaryKey("PK_FoodItem", x => x.FoodId);
+            table.PrimaryKey("PK_FoodItems", x => x.FoodId);
             table.ForeignKey(
-                      name: "FK_FoodItem_FoodType_FoodTypeId",
+                      name: "FK_FoodItems_FoodTypes_FoodTypeId",
                       column: x => x.FoodTypeId,
-                      principalTable: "FoodType",
+                      principalTable: "FoodTypes",
                       principalColumn: "FoodTypeId",
                       onDelete: ReferentialAction.Cascade);
             table.ForeignKey(
-                      name: "FK_FoodItem_Weddings_WeddingId",
+                      name: "FK_FoodItems_Weddings_WeddingId",
                       column: x => x.WeddingId,
                       principalTable: "Weddings",
                       principalColumn: "WeddingId",
@@ -49,28 +49,28 @@ namespace wedding_admin_cms.Persistance.Migrations
           });
 
       migrationBuilder.CreateIndex(
-          name: "IX_FoodItem_FoodTypeId",
-          table: "FoodItem",
+          name: "IX_FoodItems_FoodTypeId",
+          table: "FoodItems",
           column: "FoodTypeId");
 
       migrationBuilder.CreateIndex(
-          name: "IX_FoodItem_WeddingId",
-          table: "FoodItem",
+          name: "IX_FoodItems_WeddingId",
+          table: "FoodItems",
           column: "WeddingId");
 
       // seed the food type table
-      migrationBuilder.InsertData("FoodType", "Type", "Appetizer");
-      migrationBuilder.InsertData("FoodType", "Type", "Entree");
-      migrationBuilder.InsertData("FoodType", "Type", "Dessert");
+      migrationBuilder.InsertData("FoodTypes", "Type", "Appetizer");
+      migrationBuilder.InsertData("FoodTypes", "Type", "Entree");
+      migrationBuilder.InsertData("FoodTypes", "Type", "Dessert");
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)
     {
       migrationBuilder.DropTable(
-          name: "FoodItem");
+          name: "FoodItems");
 
       migrationBuilder.DropTable(
-          name: "FoodType");
+          name: "FoodTypes");
     }
   }
 }

@@ -13,14 +13,23 @@ namespace wedding_admin_cms.Persistance
     public virtual DbSet<Entourage> Entourages { get; set; }
     public virtual DbSet<Guest> Guests { get; set; }
     public virtual DbSet<GuestGroup> GuestGroups { get; set; }
+    public virtual DbSet<FoodItem> FoodItems { get; set; }
+    public virtual DbSet<FoodType> FoodTypes { get; set; }
     public virtual DbSet<Photo> Photos { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<SongRequest> SongRequests { get; set; }
     public virtual DbSet<UsersToWedding> UsersToWeddings { get; set; }
     public virtual DbSet<Wedding> Weddings { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+      if (!optionsBuilder.IsConfigured)
+        optionsBuilder.UseSqlServer("Server=(localdb)\\ProjectModels;Database=WeddingPortal;User Id=appWeddingPortal;Password=Pa$$w0rd");
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      // TODO: put all of these in their own configurations file folder
       modelBuilder.Entity<Wedding>(build =>
       {
         build.HasKey(key => key.WeddingId);

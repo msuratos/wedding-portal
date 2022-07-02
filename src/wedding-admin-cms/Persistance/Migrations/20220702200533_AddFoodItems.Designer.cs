@@ -10,7 +10,7 @@ using wedding_admin_cms.Persistance;
 namespace wedding_admin_cms.Persistance.Migrations
 {
     [DbContext(typeof(WeddingDbContext))]
-    [Migration("20220702045216_AddFoodItems")]
+    [Migration("20220702200533_AddFoodItems")]
     partial class AddFoodItems
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,7 +79,7 @@ namespace wedding_admin_cms.Persistance.Migrations
 
                     b.HasIndex("WeddingId");
 
-                    b.ToTable("FoodItem");
+                    b.ToTable("FoodItems");
                 });
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.FoodType", b =>
@@ -98,7 +98,7 @@ namespace wedding_admin_cms.Persistance.Migrations
 
                     b.HasKey("FoodTypeId");
 
-                    b.ToTable("FoodType");
+                    b.ToTable("FoodTypes");
                 });
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.Guest", b =>

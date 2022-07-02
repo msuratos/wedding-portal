@@ -77,7 +77,7 @@ namespace wedding_admin_cms.Persistance.Migrations
 
                     b.HasIndex("WeddingId");
 
-                    b.ToTable("FoodItem");
+                    b.ToTable("FoodItems");
                 });
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.FoodType", b =>
@@ -96,7 +96,7 @@ namespace wedding_admin_cms.Persistance.Migrations
 
                     b.HasKey("FoodTypeId");
 
-                    b.ToTable("FoodType");
+                    b.ToTable("FoodTypes");
                 });
 
             modelBuilder.Entity("wedding_admin_cms.Persistance.Entities.Guest", b =>
