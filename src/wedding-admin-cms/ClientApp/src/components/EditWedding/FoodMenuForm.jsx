@@ -16,13 +16,21 @@ import Typography from '@mui/material/Typography';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
 
-import { getFoodItemsForWedding } from '../../apis/foodItemApi';
+import { addFoodItemForWedding, getFoodItemsForWedding } from '../../apis/foodItemApi';
 
 const FoodMenuForm = (props) => {
+  // state variables to populate the list of food items for the wedding
   const [foodItems, setFoodItems] = useState([]);
   const [foodTypes, setFoodTypes] = useState([]);
-  const { weddingId } = props;
 
+  // state variables to be used when adding a food item
+  const [foodName, setFoodName] = useState('');
+  const [foodType, setFoodType] = useState(1);
+  const [foodDesc, setFoodDesc] = useState('');
+
+  const { weddingId, setErrorShowAlert, setSuccessShowAlert } = props;
+
+  // MSAL, Azure B2C SSO, logic
   const msal = useMsal();
   const { instance, accounts } = msal;
 
@@ -33,20 +41,43 @@ const FoodMenuForm = (props) => {
     }
   }, [accounts]);
 
+  // add food item button click event handler
+  const addFoodItemButtonClick = async () => {
+    if (!foodName || !foodDesc) {
+      setErrorShowAlert(true); setTimeout(() => setErrorShowAlert(false), 3000);
+      console.error('food name and/or food description fields are empty.');
+
+      // TODO: show error in TextFields by passing values to 'error' and 'helperText' props
+
+      return;
+    }
+
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const resp = await addFoodItemForWedding({ food: foodName, description: foodDesc, foodTypeId: foodType, weddingId }, tokenCache.accessToken);
+
+    if (resp.ok) {
+      setSuccessShowAlert(true); setTimeout(() => setSuccessShowAlert(false), 3000);
+
+      // reset state variables for adding food item
+      setFoodName(''); setFoodDesc(''); setFoodType(1);
+    }
+    else {
+      setErrorShowAlert(true); setTimeout(() => setErrorShowAlert(false), 3000);
+    }
+  };
+
   useEffect(() => {
     const init = async () => {
       const tokenCache = await instance.acquireTokenSilent(silentRequest);
       const foodItems = await getFoodItemsForWedding(weddingId, tokenCache.accessToken);
       const foodTypes = foodItems.map(el => el.foodType).filter((value, index, self) => self.indexOf(value) === index); // gets distinct food types
 
-      console.info('food items and food types', foodItems, foodTypes);
-
       setFoodItems(foodItems);
       setFoodTypes(foodTypes);
     };
 
     init();
-  }, []);
+  }, [instance, silentRequest, weddingId]);
 
   return (
     <>
@@ -54,26 +85,27 @@ const FoodMenuForm = (props) => {
       <Typography variant='subtitle2'>Add Food Item</Typography>
       <Grid container spacing={1}>
         <Grid item xs={12} md={6}>
-          <TextField id="food-name" label="Food" variant="outlined" fullWidth />
+          <TextField id="food-name" label="Food" variant="outlined" value={foodName} onChange={e => setFoodName(e.target.value)} fullWidth />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField id="food-type" label="Food Type" variant="outlined" fullWidth select>
+          <TextField id="food-type" label="Food Type" variant="outlined" value={foodType} onChange={e => setFoodType(e.target.value)} fullWidth select>
+            {/* TODO: populate from api rather hardcode */}
             <MenuItem key='Appetizer' value={1}>
               Appetizer
             </MenuItem>
-            <MenuItem key='Entree' value={1}>
+            <MenuItem key='Entree' value={2}>
               Entree
             </MenuItem>
-            <MenuItem key='Dessert' value={1}>
+            <MenuItem key='Dessert' value={3}>
               Dessert
             </MenuItem>
           </TextField>
         </Grid>
         <Grid item xs={12}>
-          <TextField id="food-desc" label="Description" variant="outlined" multiline fullWidth />
+          <TextField id="food-desc" label="Description" variant="outlined" value={foodDesc} onChange={e => setFoodDesc(e.target.value)} multiline fullWidth />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained">Add Food</Button>
+          <Button onClick={addFoodItemButtonClick} variant="contained">Add Food</Button>
         </Grid>
       </Grid>
 
@@ -108,6 +140,7 @@ const FoodMenuForm = (props) => {
                             {/* TODO: put a delete icon button, to delete the selected food item */}
                           </ListItemButton>
                         );
+                      else return <></>;
                     })}
                   </List>
                 </Collapse>
