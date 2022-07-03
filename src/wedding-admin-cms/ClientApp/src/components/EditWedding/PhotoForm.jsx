@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo, useState } from 'react';
+  import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import {
   Button, Col, FormGroup,
   Input, Label, Row
@@ -91,6 +91,7 @@ const PhotoForm = (props) => {
       </Row>
       <Row style={{ marginTop: '15px' }}>
         <Col sm={12}>
+          {/* TODO: switch to using Image List in MUI */}
           {fileUrls.map((val, index) => (
             <div style={{ margin: '5px' }}>
               <img src={val} alt={`file-${index}`} height={500} width={500} style={{ objectFit: 'scale-down' }} />

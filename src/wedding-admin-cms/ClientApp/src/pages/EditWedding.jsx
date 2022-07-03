@@ -9,12 +9,13 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 
 import { getWedding } from '../apis/weddingApi';
+import EntourageForm from '../components/EditWedding/EntourageForm';
+import FoodMenuForm from '../components/EditWedding/FoodMenuForm';
+import GuestForm from '../components/EditWedding/GuestForm';
 import MessageForm from '../components/EditWedding/MessageForm';
+import PhotoForm from '../components/EditWedding/PhotoForm';
 import RoleForm from '../components/EditWedding/RoleForm';
 import WeddingForm from '../components/EditWedding/WeddingForm';
-import EntourageForm from '../components/EditWedding/EntourageForm';
-import GuestForm from '../components/EditWedding/GuestForm';
-import PhotoForm from '../components/EditWedding/PhotoForm';
 
 // custom component to show a certain panel when a certain tab is active
 function TabPanel(props) {
@@ -79,7 +80,6 @@ const EditWedding = () => {
     init();
   }, [instance, silentRequest]);
 
-
   return (
     <div>
       {/* TODO: possibly only make the first tab active until a valid wedding exists */}
@@ -88,16 +88,19 @@ const EditWedding = () => {
         {showErrorAlert && <Alert severity='error'>Failed! Please try again</Alert>}
         <Tabs
           value={activeTab}
-          onChange={handleTabChange}         
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
           aria-label="Edit Wedding Table"
           textColor="primary"
         >
           <Tab value={1} label="Edit Wedding" {...a11yProps(1)} />
           <Tab value={2} label="Edit Message" {...a11yProps(2)} />
-          <Tab value={3} label="Edit Roles" {...a11yProps(3)} />
+          <Tab value={3} label="Edit Guest" {...a11yProps(5)} />
           <Tab value={4} label="Edit Entourage" {...a11yProps(4)} />
-          <Tab value={5} label="Edit Guest" {...a11yProps(5)} />
-          <Tab value={6} label="Edit Photos" {...a11yProps(6)} />
+          <Tab value={5} label="Edit Photos" {...a11yProps(6)} />
+          <Tab value={6} label="Edit Food Menu" {...a11yProps(6)} />
+          <Tab value={7} label="Edit Roles" {...a11yProps(3)} />
         </Tabs>
         <Divider />
         <TabPanel value={activeTab} index={1}>
@@ -109,16 +112,19 @@ const EditWedding = () => {
           <MessageForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPanel>
         <TabPanel value={activeTab} index={3}>
-          <RoleForm setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
+          <GuestForm />
         </TabPanel>
         <TabPanel value={activeTab} index={4}>
           <EntourageForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPanel>
         <TabPanel value={activeTab} index={5}>
-          <GuestForm />
+          <PhotoForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPanel>
         <TabPanel value={activeTab} index={6}>
-          <PhotoForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
+          <FoodMenuForm weddingId={wedding.weddingId} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
+        </TabPanel>
+        <TabPanel value={activeTab} index={7}>
+          <RoleForm setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPanel>
       </Box>
     </div>
