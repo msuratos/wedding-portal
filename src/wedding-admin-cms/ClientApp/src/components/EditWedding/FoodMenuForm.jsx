@@ -1,12 +1,16 @@
 ﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useMsal } from '@azure/msal-react';
 
+import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import FastfoodIcon from '@mui/icons-material/Fastfood';
@@ -46,7 +50,37 @@ const FoodMenuForm = (props) => {
 
   return (
     <>
-      <Typography variant='subtitle2'>Food Menu</Typography>
+      {/* Section to add food item */}
+      <Typography variant='subtitle2'>Add Food Item</Typography>
+      <Grid container spacing={1}>
+        <Grid item xs={12} md={6}>
+          <TextField id="food-name" label="Food" variant="outlined" fullWidth />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField id="food-type" label="Food Type" variant="outlined" fullWidth select>
+            <MenuItem key='Appetizer' value={1}>
+              Appetizer
+            </MenuItem>
+            <MenuItem key='Entree' value={1}>
+              Entree
+            </MenuItem>
+            <MenuItem key='Dessert' value={1}>
+              Dessert
+            </MenuItem>
+          </TextField>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField id="food-desc" label="Description" variant="outlined" multiline fullWidth />
+        </Grid>
+        <Grid item xs={12}>
+          <Button variant="contained">Add Food</Button>
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ mb: '15px', mt: '15px' }} />
+
+      {/* Section to list all the food items for the selcted wedding */}
+      <Typography variant='subtitle2'>Food Item(s)</Typography>
       <List dense>
         {foodTypes.map(foodType => (
           <React.Fragment key={foodType}>
@@ -71,6 +105,7 @@ const FoodMenuForm = (props) => {
                               <FastfoodIcon />
                             </ListItemIcon>
                             <ListItemText primary={foodItem.food} secondary={foodItem.description} />
+                            {/* TODO: put a delete icon button, to delete the selected food item */}
                           </ListItemButton>
                         );
                     })}
