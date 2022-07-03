@@ -1,4 +1,4 @@
-﻿export const addFoodItemForWedding = async (foodItem, accessToken) => {
+export const addFoodItemForWedding = async (foodItem, accessToken) => {
   const resp = await fetch(`/api/fooditem`, {
     method: 'POST',
     body: JSON.stringify(foodItem),

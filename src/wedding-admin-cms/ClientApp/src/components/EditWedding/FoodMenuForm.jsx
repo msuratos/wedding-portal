@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useMsal } from '@azure/msal-react';
 
 import Button from '@mui/material/Button';
