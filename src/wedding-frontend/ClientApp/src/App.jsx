@@ -7,12 +7,13 @@ import { blueGrey } from '@mui/material/colors';
 import AboutUs from './pages/AboutUs';
 import Background from './components/Background';
 import Faq from './pages/Faq';
+import FoodMenu from './pages/FoodMenu';
 import Home from './pages/Home';
 import Info from './pages/Info';
 import Links from './pages/Links';
 import NotFound from './pages/NotFound';
 import Registry from './pages/Registry';
-import Rsvp from './pages/Rsvp';
+//import Rsvp from './pages/Rsvp';
 
 export const AlertContext = createContext({ options: { message: '', messageType: 'success', open: false }, setOptions: () => { } });
 export const ValidPassphraseContext = createContext({ isValidPassphrase: true, setIsValidPassphrase: () => { } });
@@ -55,7 +56,9 @@ const App = () => {
                   (
                     <>
                       <Route path="aboutus" element={<AboutUs />} />
-                      <Route path="rsvp" element={<Rsvp />} />
+                      <Route path="menu" element={<FoodMenu />} />
+                      {/* TODO: only show before latest rsvp date. */}
+                      {/* <Route path="rsvp" element={<Rsvp />} /> */}
                       <Route path="info" element={<Info />} />
                       <Route path="registry" element={<Registry />} />
                       <Route path="faq" element={<Faq />} />

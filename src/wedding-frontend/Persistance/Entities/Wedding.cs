@@ -10,6 +10,7 @@ namespace wedding_frontend.Persistance.Entities
         public Wedding()
         {
             Entourages = new HashSet<Entourage>();
+            FoodItems = new HashSet<FoodItem>();
             Guests = new HashSet<Guest>();
             Photos = new HashSet<Photo>();
             SongRequests = new HashSet<SongRequest>();
@@ -30,6 +31,7 @@ namespace wedding_frontend.Persistance.Entities
         public string Passphrase { get; set; }
 
         public virtual ICollection<Entourage> Entourages { get; set; }
+        public virtual ICollection<FoodItem> FoodItems { get; set; }
         public virtual ICollection<Guest> Guests { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }
         public virtual ICollection<SongRequest> SongRequests { get; set; }
