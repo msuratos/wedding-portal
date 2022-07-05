@@ -15,6 +15,7 @@ import GuestForm from '../components/EditWedding/GuestForm';
 import MessageForm from '../components/EditWedding/MessageForm';
 import PhotoForm from '../components/EditWedding/PhotoForm';
 import RoleForm from '../components/EditWedding/RoleForm';
+import ScheduleForm from '../components/EditWedding/ScheduleForm';
 import WeddingForm from '../components/EditWedding/WeddingForm';
 
 // custom component to show a certain panel when a certain tab is active
@@ -96,11 +97,12 @@ const EditWedding = () => {
         >
           <Tab value={1} label="Edit Wedding" {...a11yProps(1)} />
           <Tab value={2} label="Edit Message" {...a11yProps(2)} />
-          <Tab value={3} label="Edit Guest" {...a11yProps(5)} />
+          <Tab value={3} label="Edit Guest" {...a11yProps(3)} />
           <Tab value={4} label="Edit Entourage" {...a11yProps(4)} />
-          <Tab value={5} label="Edit Photos" {...a11yProps(6)} />
-          <Tab value={6} label="Edit Food Menu" {...a11yProps(6)} />
-          <Tab value={7} label="Edit Roles" {...a11yProps(3)} />
+          <Tab value={5} label="Edit Photos" {...a11yProps(5)} />
+          <Tab value={6} label="Edit Schedule" {...a11yProps(6)} />
+          <Tab value={7} label="Edit Food Menu" {...a11yProps(7)} />
+          <Tab value={8} label="Edit Roles" {...a11yProps(8)} />
         </Tabs>
         <Divider />
         <TabPanel value={activeTab} index={1}>
@@ -121,9 +123,12 @@ const EditWedding = () => {
           <PhotoForm wedding={wedding} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPanel>
         <TabPanel value={activeTab} index={6}>
-          <FoodMenuForm weddingId={wedding.weddingId} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
+          <ScheduleForm weddingId={wedding.weddingId} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPanel>
         <TabPanel value={activeTab} index={7}>
+          <FoodMenuForm weddingId={wedding.weddingId} setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
+        </TabPanel>
+        <TabPanel value={activeTab} index={8}>
           <RoleForm setErrorShowAlert={setErrorShowAlert} setSuccessShowAlert={setSuccessShowAlert} />
         </TabPanel>
       </Box>
