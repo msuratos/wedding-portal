@@ -40,6 +40,7 @@ namespace wedding_admin_cms.Controllers
       var foodItems = await _context.FoodItems
         .Where(w => w.WeddingId == weddingId)
         .Include(nav => nav.FoodType)
+        .OrderBy(o => o.FoodType.FoodTypeId)
         .Select(s => new FoodItemDto
         {
           FoodId = s.FoodId,
