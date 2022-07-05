@@ -25,18 +25,19 @@ const Schedule = () => {
   return (
     <ListPageLayout>
       <Grid item xs={12}>
-        <Typography variant='subtitle2' sx={{textAlign: 'center'}}>Schedule</Typography>
-        <List className='custom-list' dense>
+        <Typography variant='h2' sx={{ fontFamily: 'Rastanty', textAlign: 'center' }}>Schedule</Typography>
+        <Divider />
+        <List dense>
           {schedule.map((sched, index) => (
             <React.Fragment key={sched.scheduleId}>
               <ListItem alignItems='center' sx={{ justifyContent: 'center' }} disablePadding>
-                <Typography variant='h5' gutterBottom>{sched.activity}</Typography>
+                <Typography variant='h4' sx={{fontFamily: 'Rastanty'}} gutterBottom>{sched.activity}</Typography>
               </ListItem>
               <ListItem alignItems='center' sx={{ justifyContent: 'center' }} disablePadding>
                 <Typography variant='caption' gutterBottom>
-                  {new Date(sched.activityStartTime).toLocaleTimeString()}
+                  {new Date(sched.activityStartTime).toLocaleTimeString('en-us', { hour: 'numeric', minute: 'numeric' })}
                   -
-                  {new Date(sched.activityEndTime).toLocaleTimeString()}
+                  {new Date(sched.activityEndTime).toLocaleTimeString('en-us', { hour: 'numeric', minute: 'numeric' })}
                 </Typography>
               </ListItem>
               <ListItem alignItems='center' sx={{ justifyContent: 'center', height: '3vh' }} disablePadding>
@@ -45,8 +46,9 @@ const Schedule = () => {
               {index !== (schedule.length - 1)
                 ? <></>
                 : (
-                  <ListItem alignItems='center' sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                    <Typography variant='h6'>End of the night, thanks for celebrating with us! 🙌🏽🎉🥂</Typography>
+                  <ListItem alignItems='center' sx={{ justifyContent: 'center', textAlign: 'center', flexDirection: 'column' }}>
+                    <Typography variant='h4' sx={{ fontFamily: 'Rastanty' }}>End of the night, thanks for celebrating with us!</Typography>
+                    <Typography variant='h6'>🙌🏽🎉🥂</Typography>
                   </ListItem>
                 )
               }
