@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import ListPageLayout from '../components/ListPageLayout';
-import { getSchedule } from '../apis/scheduleApi';
 
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
+
+import ListPageLayout from '../components/ListPageLayout';
+import { getSchedule } from '../apis/scheduleApi';
+import './Schedule.css';
 
 const Schedule = () => {
   const [schedule, setSchedule] = useState([]);
@@ -23,8 +25,8 @@ const Schedule = () => {
   return (
     <ListPageLayout>
       <Grid item xs={12}>
-        <Typography variant='subtitle2'>Schedule</Typography>
-        <List dense>
+        <Typography variant='subtitle2' sx={{textAlign: 'center'}}>Schedule</Typography>
+        <List className='custom-list' dense>
           {schedule.map((sched, index) => (
             <React.Fragment key={sched.scheduleId}>
               <ListItem alignItems='center' sx={{ justifyContent: 'center' }} disablePadding>
