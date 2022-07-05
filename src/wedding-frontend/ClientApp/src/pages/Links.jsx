@@ -63,6 +63,9 @@ const Links = () => {
                   <Grid item xs={12}>
                     <WhiteButton fullWidth onClick={() => navigate('/menu')}>Menu</WhiteButton>
                   </Grid>
+                  <Grid item xs={12}>
+                    <WhiteButton fullWidth onClick={() => navigate('/schedule')}>Schedule</WhiteButton>
+                  </Grid>
                   {/* TODO: only show before latest rsvp date. */}
                   {/*<Grid item xs={12}>*/}
                   {/*  <WhiteButton fullWidth onClick={() => navigate('/rsvp')}>RSVP</WhiteButton>*/}
