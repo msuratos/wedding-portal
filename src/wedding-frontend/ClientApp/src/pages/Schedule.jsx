@@ -56,26 +56,6 @@ const Schedule = () => {
           ))}
         </List>
       </Grid>
-      {/*<TableContainer component={Paper}>*/}
-      {/*  <Table sx={{ minWidth: 650 }} size='small'>*/}
-      {/*    <TableHead>*/}
-      {/*      <TableRow>*/}
-      {/*        <TableCell>Activity</TableCell>*/}
-      {/*        <TableCell align="right">Start Time</TableCell>*/}
-      {/*        <TableCell align="right">End Time</TableCell>*/}
-      {/*      </TableRow>*/}
-      {/*    </TableHead>*/}
-      {/*    <TableBody>*/}
-      {/*      {schedule.map(sched => (*/}
-      {/*        <TableRow key={sched.activity}>*/}
-      {/*          <TableCell>{sched.activity}</TableCell>*/}
-      {/*          <TableCell align="right">{new Date(sched.activityStartTime).toLocaleString('en-US')}</TableCell>*/}
-      {/*          <TableCell align="right">{new Date(sched.activityEndTime).toLocaleString('en-US')}</TableCell>*/}
-      {/*        </TableRow>*/}
-      {/*      ))}*/}
-      {/*    </TableBody>*/}
-      {/*  </Table>*/}
-      {/*</TableContainer>*/}
     </ListPageLayout>
   );
 };
