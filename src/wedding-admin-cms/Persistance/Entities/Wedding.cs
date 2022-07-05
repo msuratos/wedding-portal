@@ -11,6 +11,7 @@ namespace wedding_admin_cms.Persistance.Entities
       Guests = new HashSet<Guest>();
       FoodItems = new HashSet<FoodItem>();
       Photos = new HashSet<Photo>();
+      Schedules = new HashSet<Schedule>();
       SongRequests = new HashSet<SongRequest>();
     }
     
@@ -33,6 +34,7 @@ namespace wedding_admin_cms.Persistance.Entities
     public ICollection<Guest> Guests { get; set; }
     public ICollection<FoodItem> FoodItems { get; set; }
     public ICollection<Photo> Photos { get; set; }
+    public ICollection<Schedule> Schedules { get; set; }
     public ICollection<SongRequest> SongRequests { get; set; }
   }
 }
