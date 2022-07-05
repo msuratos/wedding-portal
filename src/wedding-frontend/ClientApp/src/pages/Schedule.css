@@ -1,3 +1,7 @@
-﻿.custom-list {
-  font-family: 'Allura', cursive;  
+﻿@font-face {
+  font-family: Rastanty;
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../assets/fonts/Rastanty Cortez.ttf') format('truetype'), url('../assets/fonts/Rastanty Cortez.otf') format('opentype');
 }
