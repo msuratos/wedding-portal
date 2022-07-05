@@ -117,7 +117,8 @@ namespace wedding_admin_cms.Persistance
         build.HasKey(key => key.ScheduleId);
         build.Property(prop => prop.ScheduleId).UseIdentityColumn();
         build.Property(prop => prop.Activity).HasMaxLength(100).IsRequired();
-        build.Property(prop => prop.ActivityDateTime).IsRequired();
+        build.Property(prop => prop.ActivityStartTime).IsRequired();
+        build.Property(prop => prop.ActivityEndTime).IsRequired();
 
         build.HasOne<Wedding>(nav => nav.Wedding).WithMany(nav => nav.Schedules).HasForeignKey(fk => fk.WeddingId);
       });

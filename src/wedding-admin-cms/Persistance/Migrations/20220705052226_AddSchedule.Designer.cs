@@ -10,7 +10,7 @@ using wedding_admin_cms.Persistance;
 namespace wedding_admin_cms.Persistance.Migrations
 {
     [DbContext(typeof(WeddingDbContext))]
-    [Migration("20220705032408_AddSchedule")]
+    [Migration("20220705052226_AddSchedule")]
     partial class AddSchedule
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -228,7 +228,10 @@ namespace wedding_admin_cms.Persistance.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("ActivityDateTime")
+                    b.Property<DateTime>("ActivityEndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ActivityStartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("WeddingId")

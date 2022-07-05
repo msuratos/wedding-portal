@@ -226,7 +226,10 @@ namespace wedding_admin_cms.Persistance.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("ActivityDateTime")
+                    b.Property<DateTime>("ActivityEndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ActivityStartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("WeddingId")

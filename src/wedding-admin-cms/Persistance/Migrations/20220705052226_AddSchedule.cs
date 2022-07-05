@@ -15,7 +15,8 @@ namespace wedding_admin_cms.Persistance.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     WeddingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Activity = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ActivityDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ActivityStartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ActivityEndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
