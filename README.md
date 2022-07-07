@@ -5,16 +5,10 @@ Another wedding registry portal with an added twist!
 - [x] Admin page to edit wedding information: ceremony details, reception details, entourage, about us, registery, etc...
 - [x] Actual public frontend site for the wedding
 - [x] RSVP
-- [ ] Song requests
+- [ ] Trivia
 - [ ] Slide show
-- [ ] Trivia
 - [ ] Games
-
-## _TODO_
-- [ ] Song Requests Queueing
-- [ ] Slideshow Queueing
-- [ ] Trivia
-- [ ] Games
+- [ ] Song requests
 
 ## _Notes_
 

@@ -19,8 +19,17 @@ namespace wedding_admin_cms.Persistance
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<Schedule> Schedules { get; set; }
     public virtual DbSet<SongRequest> SongRequests { get; set; }
+    public virtual DbSet<Trivia> Trivias { get; set; }
+    public virtual DbSet<TriviaQuestion> TriviaQuestions { get; set; }
+    public virtual DbSet<TriviaUserAnswer> TriviaUserAnswers { get; set; }
     public virtual DbSet<UsersToWedding> UsersToWeddings { get; set; }
     public virtual DbSet<Wedding> Weddings { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+      if (!optionsBuilder.IsConfigured)
+        optionsBuilder.UseSqlServer("Server=(localdb)\\ProjectModels;Database=WeddingPortal;User Id=appWeddingPortal;Password=Pa$$w0rd");
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -131,6 +140,43 @@ namespace wedding_admin_cms.Persistance
         build.Property(prop => prop.RequestedBy).HasMaxLength(100);
 
         build.HasOne<Wedding>(e => e.Wedding).WithMany(e => e.SongRequests).HasForeignKey(fk => fk.FkWeddingId);
+      });
+
+      modelBuilder.Entity<Trivia>(build =>
+      {
+        build.HasKey(key => key.TriviaId);
+        build.Property(prop => prop.TriviaId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
+        build.Property(prop => prop.CreatedDate).ValueGeneratedOnAdd().HasDefaultValueSql("GETDATE()");
+        build.Property(prop => prop.Description).IsUnicode();
+        build.Property(prop => prop.IsOpen).IsRequired().HasDefaultValue(false);
+        build.Property(prop => prop.Title).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.WeddingId).IsRequired();
+
+        build.HasOne<Wedding>(nav => nav.Wedding).WithMany(nav => nav.Trivias).HasForeignKey(fk => fk.WeddingId);
+      });
+
+      modelBuilder.Entity<TriviaQuestion>(build =>
+      {
+        build.HasKey(key => key.TriviaQuestionId);
+        build.Property(prop => prop.TriviaQuestionId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
+        build.Property(prop => prop.Answer).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.Question).IsRequired();
+        build.Property(prop => prop.SortRank).IsRequired().HasDefaultValue(10);
+        build.Property(prop => prop.TriviaId).IsRequired();
+
+        build.HasOne<Trivia>(nav => nav.Trivia).WithMany(nav => nav.TriviaQuestions).HasForeignKey(fk => fk.TriviaId);
+      });
+
+      modelBuilder.Entity<TriviaUserAnswer>(build =>
+      {
+        build.HasKey(key => key.TriviaUserAnswerId);
+        build.Property(prop => prop.TriviaUserAnswerId).ValueGeneratedOnAdd().HasDefaultValueSql("NEWID()");
+        build.Property(prop => prop.CreatedDate).ValueGeneratedOnAdd().HasDefaultValueSql("GETDATE()");
+        build.Property(prop => prop.TriviaQuestionId).IsRequired();
+        build.Property(prop => prop.UserAnswer).IsRequired().HasMaxLength(100);
+        build.Property(prop => prop.Username).IsRequired().HasMaxLength(100);
+
+        build.HasOne<TriviaQuestion>(nav => nav.TriviaQuestion).WithMany(nav => nav.TriviaUserAnswers).HasForeignKey(fk => fk.TriviaQuestionId);
       });
 
       modelBuilder.Entity<UsersToWedding>(build =>
