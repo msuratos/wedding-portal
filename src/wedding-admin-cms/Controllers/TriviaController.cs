@@ -15,7 +15,7 @@ namespace wedding_admin_cms.Controllers
   [RequiredScope(requiredScope)]  // comment if you want to skip OAuth while debugging
   public class TriviaController : ControllerBase
   {
-    const string requiredScope = "User.Access";
+    const string requiredScope = "user.access";
 
     private readonly ILogger<TriviaController> _logger;
     private readonly WeddingDbContext _context;
@@ -86,6 +86,24 @@ namespace wedding_admin_cms.Controllers
 
       var trivia = await _context.Trivias
         .Include(i => i.TriviaQuestions)
+        .Select(s => new
+        {
+          s.WeddingId,
+          s.TriviaId,
+          s.Title,
+          s.Description,
+          s.IsOpen,
+          TriviaQuestions = s.TriviaQuestions
+            .Select(se => new
+            {
+              se.TriviaQuestionId,
+              se.Question,
+              se.Answer,
+              se.SortRank
+            })
+            .OrderBy(o => o.SortRank)
+            .ToList()
+        })
         .SingleOrDefaultAsync(a => a.WeddingId == weddingId, cancellationToken);
 
       return Ok(trivia);

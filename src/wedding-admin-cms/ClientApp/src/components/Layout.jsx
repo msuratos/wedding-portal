@@ -6,7 +6,7 @@ export const Layout = (props) => {
   return (
     <div>
       <NavMenu />
-      <Container>
+      <Container maxWidth='xl'>
         <Card elevation={3} sx={{ p: '15px' }}>
           {props.children}
         </Card>
