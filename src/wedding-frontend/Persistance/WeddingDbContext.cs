@@ -26,13 +26,17 @@ namespace wedding_frontend.Persistance
         public virtual DbSet<Photo> Photos { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<SongRequest> SongRequests { get; set; }
+        public virtual DbSet<Trivia> Trivias { get; set; }
+        public virtual DbSet<TriviaQuestion> TriviaQuestions { get; set; }
+        public virtual DbSet<TriviaUserAnswer> TriviaUserAnswers { get; set; }
         public virtual DbSet<Wedding> Weddings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Name=WeddingDbContext");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=(localdb)\\ProjectModels;Database=WeddingPortal;User Id=appWeddingPortal;Password=Pa$$w0rd");
             }
         }
 
@@ -170,6 +174,67 @@ namespace wedding_frontend.Persistance
                 entity.HasOne(d => d.FkWedding)
                     .WithMany(p => p.SongRequests)
                     .HasForeignKey(d => d.FkWeddingId);
+            });
+
+            modelBuilder.Entity<Trivia>(entity =>
+            {
+                entity.HasIndex(e => e.WeddingId, "IX_Trivias_WeddingId");
+
+                entity.Property(e => e.TriviaId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.IsOpen)
+                    .IsRequired()
+                    .HasDefaultValueSql("(CONVERT([bit],(0)))");
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.HasOne(d => d.Wedding)
+                    .WithMany(p => p.Trivia)
+                    .HasForeignKey(d => d.WeddingId);
+            });
+
+            modelBuilder.Entity<TriviaQuestion>(entity =>
+            {
+                entity.HasIndex(e => e.TriviaId, "IX_TriviaQuestions_TriviaId");
+
+                entity.Property(e => e.TriviaQuestionId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Answer)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Question).IsRequired();
+
+                entity.Property(e => e.SortRank).HasDefaultValueSql("((10))");
+
+                entity.HasOne(d => d.Trivia)
+                    .WithMany(p => p.TriviaQuestions)
+                    .HasForeignKey(d => d.TriviaId);
+            });
+
+            modelBuilder.Entity<TriviaUserAnswer>(entity =>
+            {
+                entity.HasIndex(e => e.TriviaQuestionId, "IX_TriviaUserAnswers_TriviaQuestionId");
+
+                entity.Property(e => e.TriviaUserAnswerId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UserAnswer)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.HasOne(d => d.TriviaQuestion)
+                    .WithMany(p => p.TriviaUserAnswers)
+                    .HasForeignKey(d => d.TriviaQuestionId);
             });
 
             modelBuilder.Entity<Wedding>(entity =>
