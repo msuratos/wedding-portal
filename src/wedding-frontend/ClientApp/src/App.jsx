@@ -14,6 +14,7 @@ import Links from './pages/Links';
 import NotFound from './pages/NotFound';
 import Registry from './pages/Registry';
 import Schedule from './pages/Schedule';
+import Trivia from './pages/Trivia';
 //import Rsvp from './pages/Rsvp';
 
 export const AlertContext = createContext({ options: { message: '', messageType: 'success', open: false }, setOptions: () => { } });
@@ -57,11 +58,12 @@ const App = () => {
                   (
                     <>
                       <Route path="aboutus" element={<AboutUs />} />
+                      <Route path="info" element={<Info />} />
                       <Route path="menu" element={<FoodMenu />} />
                       <Route path="schedule" element={<Schedule />} />
+                      <Route path="trivia" element={<Trivia />} />
                       {/* TODO: only show before latest rsvp date. */}
                       {/* <Route path="rsvp" element={<Rsvp />} /> */}
-                      <Route path="info" element={<Info />} />
                       <Route path="registry" element={<Registry />} />
                       <Route path="faq" element={<Faq />} />
                     </>
