@@ -21,7 +21,7 @@ export const AlertContext = createContext({ options: { message: '', messageType:
 export const ValidPassphraseContext = createContext({ isValidPassphrase: true, setIsValidPassphrase: () => { } });
 
 const App = () => {
-  const [isValidPassphrase, setIsValidPassphrase] = useState(false);
+  const [isValidPassphrase, setIsValidPassphrase] = useState(true);
   const [muiOptions, setMuiOptions] = useState({ message: '', messageType: 'success', open: false });
 
   useEffect(() => {
