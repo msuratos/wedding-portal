@@ -24,9 +24,6 @@ const Trivia = () => {
   // state for mobilestepper, mobile view
   const [activeStep, setActiveStep] = useState(0);
 
-  // state to see if trivia is close
-  const [isTriviaClosed, setIsTriviaClosed] = useState(false);
-
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
