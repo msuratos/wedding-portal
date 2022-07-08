@@ -109,6 +109,24 @@ namespace wedding_admin_cms.Controllers
       return Ok(trivia);
     }
 
+    [HttpPost("status")]
+    public async Task<IActionResult> CloseTrivia([FromBody] CloseTriviaDto request, CancellationToken cancellationToken)
+    {
+      _logger.LogInformation("{0}ing trivia", request.Status);
+
+      // validate wedding id
+      if (request.WeddingId == Guid.Empty) throw new Exception($"Invalid wedding id: {request.WeddingId}. Should not be an empty GUID");
+      if (!await _context.Weddings.AnyAsync(a => a.WeddingId == request.WeddingId, cancellationToken))
+        throw new Exception($"Invalid wedding id, could not find the relatd wedding");
+
+      var trivia = await _context.Trivias.SingleOrDefaultAsync(s => s.WeddingId == request.WeddingId && s.TriviaId == request.TriviaId, cancellationToken);
+
+      trivia.IsOpen = request.Status;
+      await _context.SaveChangesAsync(cancellationToken);
+
+      return Created("/", trivia);
+    }
+
     // TODO: Get trivia results; retrieve who the winner is
   }
 }

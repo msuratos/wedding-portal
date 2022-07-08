@@ -14,7 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { addTrivia, getTrivia } from '../../apis/triviaApi';
+import { addTrivia, closeTrivia, getTrivia } from '../../apis/triviaApi';
 import { MenuItem } from '@mui/material';
 
 const TriviaForm = (props) => {
@@ -59,6 +59,17 @@ const TriviaForm = (props) => {
     const resp = await addTrivia(questionToAdd, tokenCache.accessToken);
 
     if (resp.ok) setSuccessShowAlert(true);
+    else setErrorShowAlert(true);
+  };
+
+  const closeTriviaButtonClick = async (status) => {
+    console.log(status);
+
+    const statusDto = { weddingId, triviaId: trivia.triviaId, status };
+    const tokenCache = await instance.acquireTokenSilent(statusDto, silentRequest);
+    const resp = await closeTrivia(tokenCache.accessToken);
+
+    if (resp.ok) setShowSuccessAlert(true);
     else setErrorShowAlert(true);
   };
 
@@ -129,7 +140,7 @@ const TriviaForm = (props) => {
                 <Button onClick={addTriviaQuestionButtonClick} variant="contained" fullWidth>Add Trivia Question</Button>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Button onClick={addTriviaQuestionButtonClick}
+                <Button onClick={() => closeTriviaButtonClick(trivia.isOpen ? 'close' : 'open')}
                   variant="contained" color={trivia.isOpen ? 'error' : 'success'}
                   fullWidth
                 >

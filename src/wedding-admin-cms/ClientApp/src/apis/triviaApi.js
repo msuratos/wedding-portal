@@ -21,3 +21,16 @@ export const getTrivia = async (weddingId, accessToken) => {
 
   return await resp.json();
 };
+
+export const closeTrivia = async (status, accessToken) => {
+  const resp = await fetch('/api/trivia/status', {
+    method: 'POST',
+    body: JSON.stringify(status),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
+    }
+  });
+
+  return resp;
+};
