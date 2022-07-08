@@ -24,6 +24,9 @@ const Trivia = () => {
   // state for mobilestepper, mobile view
   const [activeStep, setActiveStep] = useState(0);
 
+  // state to see if trivia is close
+  const [isTriviaClosed, setIsTriviaClosed] = useState(false);
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -51,8 +54,7 @@ const Trivia = () => {
       localStorage.setItem('completed', true);
     }
     else {
-      alert('Something went wrong, please try again');
-      console.error(resp.statusText, await resp.text());
+      alert(`Something went wrong, please try again or ${await resp.text()}`);
     }
 
     if (activeStep + 1 === questions.length)
@@ -89,41 +91,42 @@ const Trivia = () => {
       <Grid item xs={12} sx={{ pt: '10px' }}>
         {
           completedForm ? <Typography variant='h6' gutterBotom>You have submitted already, no retries 😊</Typography>
-            :
-            !canSeeQuestions
-              ? (
-                <>
-                  <TextField label='Full Name' sx={{ mb: '5px' }} value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
-                  <Button color='primary' variant='contained' onClick={onUsernameButtonClick} fullWidth>Submit</Button>
-                </>
-              )
-              : (
-                <>
-                  <SwipeableViews axis='x' index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
-                    {questions.map(question => (
-                      <div key={question.triviaQuestionId}>
-                        <Typography variant='h6' gutterBottom sx={{ textAlign: 'center' }}>{question.question}</Typography>
-                        <Button color='primary' variant='contained' sx={{ width: '50%' }} onClick={() => onHimHerButtonClick('Him', question.triviaQuestionId)}>Him</Button>
-                        <Button color='secondary' variant='contained' sx={{ width: '50%' }} onClick={() => onHimHerButtonClick('Her', question.triviaQuestionId)}>Her</Button>
-                      </div>
-                    ))}
-                  </SwipeableViews>
-                  <MobileStepper steps={questions.length} position="static" activeStep={activeStep}
-                    nextButton={
-                      <Button size="small" onClick={handleNext} disabled={activeStep === questions.length - 1}>
-                        Next
-                        <KeyboardArrowRight />
-                      </Button>
-                    }
-                    backButton={
-                      <Button size="small" onClick={handleBack} disabled={true}>
-                        <KeyboardArrowLeft />
-                        Back
-                      </Button>
-                    }
-                  />
-                </>
-              )
+            : !trivia.isOpen ? <Typography variant='h6' sx={{ textAlign: 'center' }} gutterBttom>Trivia is closed... 😢</Typography>
+              :
+              !canSeeQuestions
+                ? (
+                  <>
+                    <TextField label='Full Name' sx={{ mb: '5px' }} value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
+                    <Button color='primary' variant='contained' onClick={onUsernameButtonClick} fullWidth>Submit</Button>
+                  </>
+                )
+                : (
+                  <>
+                    <SwipeableViews axis='x' index={activeStep} onChangeIndex={handleStepChange} enableMouseEvents>
+                      {questions.map(question => (
+                        <div key={question.triviaQuestionId}>
+                          <Typography variant='h6' gutterBottom sx={{ textAlign: 'center' }}>{question.question}</Typography>
+                          <Button color='primary' variant='contained' sx={{ width: '50%' }} onClick={() => onHimHerButtonClick('Him', question.triviaQuestionId)}>Him</Button>
+                          <Button color='secondary' variant='contained' sx={{ width: '50%' }} onClick={() => onHimHerButtonClick('Her', question.triviaQuestionId)}>Her</Button>
+                        </div>
+                      ))}
+                    </SwipeableViews>
+                    <MobileStepper steps={questions.length} position="static" activeStep={activeStep}
+                      nextButton={
+                        <Button size="small" onClick={handleNext} disabled={activeStep === questions.length - 1}>
+                          Next
+                          <KeyboardArrowRight />
+                        </Button>
+                      }
+                      backButton={
+                        <Button size="small" onClick={handleBack} disabled={true}>
+                          <KeyboardArrowLeft />
+                          Back
+                        </Button>
+                      }
+                    />
+                  </>
+                )
         }
       </Grid>
     </ListPageLayout>
