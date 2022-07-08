@@ -65,11 +65,11 @@ const TriviaForm = (props) => {
   const closeTriviaButtonClick = async (status) => {
     console.log(status);
 
-    const statusDto = { weddingId, triviaId: trivia.triviaId, status };
-    const tokenCache = await instance.acquireTokenSilent(statusDto, silentRequest);
-    const resp = await closeTrivia(tokenCache.accessToken);
+    const statusDto = { weddingId, triviaId: trivia.triviaId, status: status === 'close' ? false : true };
+    const tokenCache = await instance.acquireTokenSilent(silentRequest);
+    const resp = await closeTrivia(statusDto, tokenCache.accessToken);
 
-    if (resp.ok) setShowSuccessAlert(true);
+    if (resp.ok) setSuccessShowAlert(true);
     else setErrorShowAlert(true);
   };
 
